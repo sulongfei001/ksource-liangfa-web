@@ -1,0 +1,75 @@
+*{
+padding: 0;
+margin: 0;
+font-family: "Droid Sans Fallback";
+font-size: 12px;
+}
+body{
+   background: #f4f4f4;
+}
+.bgcw{
+   background-color: #fff
+}
+.mt10{
+margin-top: 10px;
+}
+table{
+border: none;
+border-collapse:collapse;
+width: 100%;
+}
+table tr td{
+   padding: 8px 8px 5px 10px;
+}
+table tr .tabRight{
+	width: 30%;
+	color: #666;
+}
+.top_text{
+	font-size: 12px !important;
+	padding: 5px 10px 5px 10px;
+}
+.top_text span:nth-child(1){
+	color: #555;
+}
+.top_text span:nth-child(2){
+	text-align:right;
+	float: right;
+}
+.icon_down{
+	background:url(down_arrw.png) no-repeat  center right 10px ;
+	background-size:auto 60%;
+	padding-right: 10px;
+	width: 20px;
+	height: 20px;
+}
+.icon_up{
+	background:url(up_arrw.png) no-repeat  center right 10px ;
+	background-size:auto 60%;
+	padding-right: 10px;
+	width: 20px;
+	height: 20px;
+}
+.con_name{
+	height: 20px;
+	line-height: 20px;
+	margin-top: 8px;
+}
+.mark_line{
+	display: inline-block;
+	width: 4px;
+	height: 18px;
+	background: #038ED8;
+	font-size: 12px;
+	color: #038ED8;
+	vertical-align: middle;
+	margin-right: 10px;
+	
+}
+.this_content {
+	width: 100%;
+}
+.this_content .tabcontent{
+	width:100%;
+	display: block;
+}

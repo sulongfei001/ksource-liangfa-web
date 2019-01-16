@@ -1,0 +1,57 @@
+.table-grid {
+	margin-top: 10px;
+	border: 1px solid #CCCCCC;
+	width: 100%
+}
+
+.table-grid thead {
+	height: 32px
+}
+
+.table-grid caption {
+	border-width: 1px 1px medium;
+	border-style: solid solid none;
+	border-color: #a8cfeb #a8cfeb currentColor;
+	height: 14px;
+	text-align: left;
+	color: #1c568a;
+	padding-top: 5px;
+	padding-left: 5px;
+	font-weight: bold;
+	background-color: #dfeafb
+}
+
+.table-grid td {
+	height: 22px;
+	padding: 4px 4px 4px 4px;
+	border-right: dotted 1px #CCCCCC;
+	border-bottom: solid 1px #CCCCCC;
+	text-align: left;
+	padding-left: 5px;
+	word-break: break-all
+}
+
+.even span,.odd span {
+	cursor: pointer
+}
+
+.table-grid .even {
+	height: 22px;
+	background-color: #fff
+}
+
+a.link {
+	padding-left: 20px;
+	cursor: pointer;
+	color: blue;
+	font-size: 12px;
+	text-decoration: none;
+	height:20px;
+	line-height:20px;
+	display:inline;
+	
+}
+
+a.link.del {
+	background: url(../images/icon/icons_del.png) 0 -3px no-repeat;
+}

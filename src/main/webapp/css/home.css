@@ -1,0 +1,52 @@
+    body,html{height:100%;}
+    body{ padding:0px; margin:0;   overflow:hidden;}  
+    .l-link{ display:block; height:26px; line-height:26px; padding-left:10px; text-decoration:underline; color:#333;}
+    .l-link2{text-decoration:underline; color:white; margin-left:2px;margin-right:2px;}
+    .l-layout-top{background:#102A49; color:White;}
+    .l-layout-bottom{ background:#E5EDEF; text-align:center;}
+    #pageloading{position:absolute; left:0px; top:0px; background:white url('loading.gif') no-repeat center; width:100%; height:100%;z-index:99999;}
+    .l-link{ display:block; text-decoration:none; cursor:hand; line-height:22px; height:22px; padding-left:16px; margin:4px;}
+    /* .l-link-over{ background:#FFEEAC;}  */
+    .l-winbar{ background:#2B5A76; height:30px; position:absolute; left:0px; bottom:0px; width:100%; z-index:99999;}
+    .space{ color:#E7E7E7;}
+	fieldset, span img{margin: 4px 0px 0px 0px; width:16px; height:15px;}
+	.l-topmenu{ padding:0px; float:right; margin-right:5px; margin-top:15px;}
+	.l-topmenu-logo {background:url(../images/top_logo_hubei.jpg) no-repeat;overflow:hidden; height:78px; width:585px; margin:0px; padding:0px;float: left;}
+	.l-topmenu-welcome{margin-top:27px; font-size:10pt;}
+	.l-topmenu-welcome a{height:26px;display:block;width:100px;text-indent:23px; text-decoration:none;color:#FFF;line-height:26px; float: right;}
+	
+	a.re_login{background:url(../images/re_login.gif) no-repeat left; }
+	a.work_flow{background:url(../images/btn_02.gif) no-repeat left;margin-left: 5px;}
+	a.change_pwd{background:url(../images/btn_01.png) no-repeat left;margin-left: 5px;}
+	a.quit {background:url(../images/exit.gif) no-repeat left;margin-left: 5px;}
+	.top_banner{  display:block;  font-size:10pt; float:left; padding-left:5px; color:#ffffff;}
+	.top_banner span{ margin-right:20px;}
+	.login_info{margin-top:40px; text-align:right;color:#FFF; text-decoration:none;font-size: 13px; padding-right:10px;}
+	.left_menu{background: url(../images/ykt_menu1.jpg) no-repeat scroll 0 0 transparent;}
+	
+.l-layout-header {
+    background: url("../images/layout-header-over.jpg") no-repeat  #E5EFFE;
+    color: #183152;
+    cursor: pointer;
+    font-weight: bold;
+    height: 36px;
+    line-height: 36px;
+    overflow: hidden;
+    padding-left: 10px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+    margin-bottom:10px;
+}
+
+.buttom {
+    background: url("../images/buttom.jpg") repeat-x scroll 0 0 transparent;
+    height: 32px;
+    line-height:32px; 
+    font-size:13px;
+    color:#FFF;
+    text-align:center;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
+}

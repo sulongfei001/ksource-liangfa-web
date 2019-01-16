@@ -1,0 +1,2473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.mapper.StatCaseMapper">
+
+	<!-- 报表钻取页面需要展示的案件详细信息 -->
+    <resultMap id="caseDetailMap" type="com.ksource.liangfa.model.SCase" >
+        <result property="caseId" column="CASE_ID" />
+        <result property="caseNo" column="CASE_NO" />
+        <result property="caseName" column="CASE_NAME" />
+        <result property="caseState" column="CASE_STATE" />
+        <result property="caseStateName" column="CASE_STATE_NAME"/>
+        <result property="inputTime" column="INPUT_TIME" />
+        <result property="lianTime" column="LIAN_TIME" />
+        <result property="latestPocessTime" column="LATEST_POCESS_TIME" />
+        <result property="procKey" column="PROC_KEY"/>
+        <result property="platformId" column="PLATFORM_ID"/>
+    </resultMap>
+    
+	<resultMap id="yisifaMap" type="com.ksource.liangfa.model.SCase">
+        <result property="caseId" column="CASE_ID" />
+        <result property="caseNo" column="CASE_NO" />
+        <result property="caseName" column="CASE_NAME" />
+        <result property="inputer" column="INPUTER" />
+        <result property="inputTime" column="INPUT_TIME" />
+        <result property="chufaTime" column="CHUFA_TIME" />
+        <result property="amountInvolved" column="AMOUNT_INVOLVED" />
+        <result property="platformId" column="PLATFORM_ID"/>		
+        <result property="inputerOrgCode" column="INPUTER_ORG_CODE"/>
+        <result property="caseState" column="CASE_STATE" />
+        <result property="caseStateName" column="CASE_STATE_NAME"/>
+       	<result property="goodsInvolved" column="GOODS_INVOLVED"/> 
+        <result property="xianyirenName" column="XIANYIREN_NAME"/>
+        <result property="companyName" column="COMPANY_NAME"/>
+        <result property="orgName" column="ORG_NAME"/>
+        <result property="anfaTime" column="ANFA_TIME" jdbcType="TIMESTAMP"/>
+        <result property="anfaAddress" column="ANFA_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="identifyType" column="IDENTIFY_TYPE" jdbcType="DECIMAL"/>
+        <result property="regionId" column="REGION_ID" jdbcType="DECIMAL"/>
+	</resultMap>
+
+    <resultMap type="com.ksource.liangfa.model.SCase" id="listMap">
+        <result property="platformId" column="PLATFORM_ID"/>
+        <result property="caseId" column="CASE_ID"/>
+        <result property="caseNo" column="CASE_NO"/>
+        <result property="caseName" column="CASE_NAME"/>
+        <result property="caseState" column="CASE_STATE"/>
+        <result property="caseStateName" column="CASE_STATE_NAME"/>
+        <result property="amountInvolved" column="AMOUNT_INVOLVED"/>
+        <result property="lianTime" column="LIAN_TIME"/>
+        <result property="latestPocessTime" column="LATEST_POCESS_TIME"/>
+        <result property="regionId" column="REGION_ID"/>
+        <result property="inputerOrgCode" column="INPUTER_ORG_CODE"/>
+        <result property="inputerOrgName" column="INPUTER_ORG_NAME"/>
+        <result property="regionName" column="REGION_NAME"/>
+    </resultMap>
+
+	<!--根据行政区划和指标查询案件信息 (仅供报表查询条件使用) -->
+    <sql id="CaseStateQuery">
+        <if test="chufaState!=null" >
+            AND T.CHUFA_STATE=#{chufaState}
+        </if>
+        <if test="yisongState!=null" >
+            <if test="yisongState==4" >
+            	AND (T.YISONG_STATE = 2 OR T.YISONG_STATE = 3)
+            </if>
+            <if test="yisongState!=4">
+            	AND T.YISONG_STATE=#{yisongState}
+            </if>
+        </if>
+        <if test="lianState!=null" >
+            AND T.LIAN_STATE = #{lianState}
+        </if>
+        <if test="daibuState!=null" >
+            AND T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="qisuState!=null" >
+            AND T.QISU_STATE = #{qisuState}
+        </if>
+        <if test="panjueState!=null" >
+            AND T.PANJUE_STATE = #{panjueState}
+        </if>
+        <if test="jieanState!=null" >
+            AND T.JIEAN_STATE = #{jieanState}
+        </if>
+        <if test="caseState!=null" >
+            AND T.CASE_STATE=#{caseState}
+        </if>
+        <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+        <if test="caseNo!=null" >
+            AND T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!=null" >
+            AND T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        <if test="procKey!=null" >
+            AND T.PROC_KEY = #{procKey}
+        </if>
+    </sql>
+    
+    
+    <!--根据指标钻取案件信息 (案件综合统计报表使用)   -->
+    <select id="getStateListStat" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+      SELECT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID
+     FROM mv_get_case T,lf_region r
+     WHERE 1=1 AND T.REGION_ID=R.REGION_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+		<if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+     	<if test="regionId!=null">
+     		and T.REGION_ID LIKE #{regionId} ||'%'
+     	</if>
+     	<if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+        <if test="inputerOrgCode!=null" >
+            AND T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+            AND T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+           AND T.MONTH_CODE =#{monthCode}
+        </if>
+        <if test="yearCode!=null" >
+            AND T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+        
+        <if test="quarterCode!=null" >
+	         <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+        
+		<include refid="CaseStateQuery"/>
+		<!-- 自定义统计查询条件 -->
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+    </select>
+	<select id="getStateCountStat" parameterType="com.ksource.liangfa.model.SCase" resultType="int">
+       SELECT 
+		COUNT(T.CASE_ID)
+		FROM mv_get_case T,lf_region r
+     	WHERE 1=1 AND T.REGION_ID=R.REGION_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+		<if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+        <if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+        <if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+        <if test="inputerOrgCode!=null" >
+            AND T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+           AND  T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+            AND T.MONTH_CODE =#{monthCode}
+        </if>
+        <if test="yearCode!=null" >
+            AND T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+         
+         <if test="quarterCode" >
+	         <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+         
+		<include refid="CaseStateQuery"/>
+		<!-- 自定义统计查询条件 -->
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+    </select>
+    
+    <!--直接移送和建议移送案件总数 (案件综合统计报表使用) -->
+     <select id="getYisongListStat" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+       SELECT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID
+     FROM mv_get_case T,lf_region r 
+        WHERE T.REGION_ID=R.REGION_ID
+        <if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+        <if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+ 		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE  #{regionId} || '%'
+        </if>
+        <if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+		<if test="yisongState!=null" >
+            AND T.YISONG_STATE in (2,3)
+        </if>
+        <if test="caseNo!=null" >
+           AND  T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!=null" >
+            AND T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        <if test="inputerOrgCode!=null" >
+            AND T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+           AND  T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+            AND T.MONTH_CODE =#{monthCode}
+        </if>
+        <if test="yearCode!=null" >
+           AND  T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+        
+         <if test="quarterCode" >
+	          <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+        
+         <if test="inputStartTime!=null" >
+           AND 	T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+    </select>
+	<select id="getYisongCountStat" parameterType="com.ksource.liangfa.model.SCase" resultType="int">
+ 		SELECT 
+		COUNT(T.CASE_ID)
+		FROM mv_get_case T,lf_region r 
+        WHERE T.REGION_ID=R.REGION_ID
+        <if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+        <if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+ 		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} || '%'
+        </if>
+        <if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+		<if test="yisongState!=null" >
+            AND T.YISONG_STATE in (2,3)
+        </if>
+        <if test="caseNo!=null" >
+            AND T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!=null" >
+            AND T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        <if test="inputerOrgCode!=null" >
+            AND T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+           AND  T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+           AND  T.MONTH_CODE =#{monthCode}
+        </if>
+        <if test="yearCode!=null" >
+           AND  T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+        
+         <if test="quarterCode" >
+	          <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+        
+         <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+    </select>
+    
+     
+    <!--根据行政区划查询逮捕案件信息 (案件综合统计报表用)  -->
+    <select id="getDaibuCaseListStat" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+		SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K,lf_region r 
+    WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.REGION_ID=R.REGION_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+     	<if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+		<if test="regionId!=null" >
+           AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+        <if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+        <if test="daibuState!=null" >
+            AND T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo!=null" >
+            AND T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!=null" >
+           AND  T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+			AND K.DAIBU_STATE=3
+		<if test="inputerOrgCode!=null" >
+           AND  T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+            AND T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+            AND T.MONTH_CODE =#{monthCode}
+        </if>
+		<if test="yearCode!=null" >
+            AND T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+         
+         <if test="quarterCode" >
+	          <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+	</select>
+    <select id="getDaibuCaseCountStat" parameterType="com.ksource.liangfa.model.SCase" resultType="int">
+		SELECT COUNT(0)
+		FROM 
+		(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID
+		FROM mv_get_case T,LF_CASE_XIANYIREN K,lf_region r 
+   	 WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.REGION_ID=R.REGION_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+     	<if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+        <if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+        <if test="daibuState!=null" >
+           AND  T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo!=null" >
+            AND T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!=null" >
+            AND T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+			AND K.DAIBU_STATE=3
+		<if test="inputerOrgCode!=null" >
+            AND T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+            AND T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+            AND T.MONTH_CODE =#{monthCode}
+        </if>
+		<if test="yearCode!=null" >
+           AND T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+         
+         <if test="quarterCode" >
+	         <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           AND 	T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>)AA
+	</select>
+
+
+	<!--根据行政区划查询提请逮捕案件信息 (案件综合统计报表用)   -->
+    <select id="getDaibuAndQisuCaseListStat" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+		SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K,lf_region r
+    WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.REGION_ID=R.REGION_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+		<if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+     	<if test="tiqingDaibuState!=null" >
+            AND (K.DAIBU_STATE=2 or K.DAIBU_STATE=3) 
+        </if>
+        <if test="yisongQisuState!=null" >
+            AND K.TIQINGQISU_STATE = 2
+        </if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+        <if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+        <if test="daibuState!=null" >
+            AND T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo!=null" >
+            AND T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!=null" >
+            AND T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+			
+		<if test="inputerOrgCode!=null" >
+            AND T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+            AND T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+            AND T.MONTH_CODE =#{monthCode}
+        </if>
+		<if test="yearCode!=null" >
+            AND T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+         
+         <if test="quarterCode!=null" >
+	         <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+	</select>
+    <select id="getDaibuAndQisuCaseCountStat" parameterType="com.ksource.liangfa.model.SCase" resultType="int">
+		SELECT COUNT(0)
+		FROM 
+		(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID 
+		FROM mv_get_case T,LF_CASE_XIANYIREN K,lf_region r
+    	WHERE T.CASE_ID=K.CASE_ID
+    	AND T.PLATFORM_ID=K.PLATFORM_ID
+     	AND T.REGION_ID=R.REGION_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+		<if test="level!=null" >
+            AND R.R_LEVEL=#{level}
+        </if>
+		<if test="tiqingDaibuState!=null" >
+            AND (K.DAIBU_STATE=2 or K.DAIBU_STATE=3) 
+        </if>
+        <if test="yisongQisuState!=null" >
+           AND  K.TIQINGQISU_STATE = 2
+        </if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+        <if test="regionParentId!=null"><!-- 按层级统计 市直钻取使用 -->
+     		and R.PARENT_ID = #{regionParentId}
+     	</if>
+        <if test="daibuState!=null" >
+            AND T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo!=null" >
+            AND T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!=null" >
+            AND T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+		<if test="inputerOrgCode!=null" >
+            AND T.INPUTER_ORG_CODE =#{inputerOrgCode}
+        </if>
+        <if test="platformId!=null" >
+            AND T.PLATFORM_ID =#{platformId}
+        </if>
+        <if test="monthCode!=null" >
+            AND T.MONTH_CODE =#{monthCode}
+        </if>
+		<if test="yearCode!=null" >
+            AND T.MONTH_CODE like #{yearCode}||'%'
+        </if>
+         
+         <if test="quarterCode!=null" >
+	         <if test="quarterCode==1">
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 01
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 03
+	         </if>
+            <if test="quarterCode==2" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 04
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 06
+	         </if>
+	         <if test="quarterCode==3" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 07
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 09
+	         </if>
+	         <if test="quarterCode==4" >
+	         	AND to_char(t.INPUT_TIME,'MM') &gt;= 10
+	         	and to_char(t.INPUT_TIME,'MM') &lt;= 12
+	         </if>
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>)AA
+	</select> 
+	
+    <select id="getYisongListByOrg" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+      SELECT AA.CASE_ID, AA.CASE_NO,AA.CASE_NAME,AA.CASE_STATE,AA.CASE_STATE_NAME,AA.INPUT_TIME,AA.LIAN_TIME,
+      AA.LATEST_POCESS_TIME,AA.PROC_KEY,AA.PLATFORM_ID
+ 	  FROM 
+ 	(
+        SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID,O.INDUSTRY_ID
+     FROM mv_get_case T, LF_PLATFORM_ORGANISE O,LF_REGION R
+     WHERE T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID=O.PLATFORM_ID
+      AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+      AND T.REGION_ID=R.REGION_ID
+        <if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+        <if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="yisongState != null">
+     		and  T.YISONG_STATE in (2,3)
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if> 
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>	
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>        	
+        ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <!-- <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		 ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+		ORDER BY AA.LATEST_POCESS_TIME DESC,AA.CASE_ID
+    </select>
+    
+	<select id="getYisongCountByOrg" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+ 	 SELECT COUNT(AA.CASE_ID)
+ 	 FROM 
+ 	(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID,O.INDUSTRY_ID
+     FROM mv_get_case T, LF_PLATFORM_ORGANISE O,LF_REGION R
+     WHERE T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID=O.PLATFORM_ID
+      AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+      AND T.REGION_ID=R.REGION_ID
+        <if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+      	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="yisongState != null">
+     		and  T.YISONG_STATE in (2,3)
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if> 
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <!-- <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		 ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+    </select>	
+    
+     <select id="getDaibuCaseListByOrg" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+   		SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K, LF_PLATFORM_ORGANISE O
+    WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.REGION_ID=O.REGION_ID
+     AND T.PLATFORM_ID=O.PLATFORM_ID
+     AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+     AND K.DAIBU_STATE=3
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+ 		<if test="daibuState != null ">
+           and T.DAIBU_STATE = #{daibuState}
+        </if>
+		 <if test="inputStartTime != null ">
+           and  	T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+            and 	T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if> 
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>    
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>            
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+	</select>
+    <select id="getDaibuCaseCountByOrg" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+		SELECT COUNT(DISTINCT T.CASE_ID) 
+	    FROM mv_get_case T,LF_CASE_XIANYIREN K, LF_PLATFORM_ORGANISE O
+	    WHERE T.CASE_ID=K.CASE_ID
+	     AND T.PLATFORM_ID=K.PLATFORM_ID
+	     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+	     AND T.REGION_ID=O.REGION_ID
+	     AND T.PLATFORM_ID=O.PLATFORM_ID
+	     AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+	     AND K.DAIBU_STATE=3
+	     <if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+ 		<if test="daibuState != null ">
+          and   T.DAIBU_STATE = #{daibuState}
+        </if>
+		 <if test="inputStartTime != null ">
+           and 	T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+           and 	T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>                
+       </select> 
+       
+	<select id="getOrgStateList" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap" >
+ 	  SELECT AA.CASE_ID, AA.CASE_NO,AA.CASE_NAME,AA.CASE_STATE,AA.CASE_STATE_NAME,AA.INPUT_TIME,AA.LIAN_TIME,
+       AA.LATEST_POCESS_TIME,AA.PROC_KEY,AA.PLATFORM_ID
+ 	  FROM 
+ 		(SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID,
+       O.INDUSTRY_ID
+       FROM mv_get_case T,LF_PLATFORM_ORGANISE O,LF_REGION R
+        WHERE T.REGION_ID = O.REGION_ID
+     	AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     	AND T.PLATFORM_ID=O.PLATFORM_ID
+     	AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+     	AND T.REGION_ID=R.REGION_ID
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        
+		<include refid="CaseStateQuery"/>
+		<!-- 自定义统计查询条件 -->
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <!-- <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		   ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+		ORDER BY AA.LATEST_POCESS_TIME DESC,AA.CASE_ID
+    </select>
+	<select id="getOrgStateCount" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+ 		SELECT COUNT(AA.CASE_ID)
+ 	  FROM 
+ 		(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID,O.INDUSTRY_ID
+       FROM mv_get_case T,LF_PLATFORM_ORGANISE O,LF_REGION R
+        WHERE T.REGION_ID = O.REGION_ID
+     	AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     	AND T.PLATFORM_ID=O.PLATFORM_ID
+     	AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+     	AND T.REGION_ID=R.REGION_ID
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        
+		<include refid="CaseStateQuery"/>
+		<!-- 自定义统计查询条件 -->
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <!-- <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		   ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+    </select>  
+    
+    <select id="getDaibuCaseListByIndustry" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+		SELECT AA.CASE_ID, AA.CASE_NO,AA.CASE_NAME,AA.CASE_STATE,AA.CASE_STATE_NAME,AA.INPUT_TIME,AA.LIAN_TIME,
+       AA.LATEST_POCESS_TIME,AA.PROC_KEY,AA.PLATFORM_ID
+ 	  FROM 
+ 		(SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID,O.INDUSTRY_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K,LF_PLATFORM_ORGANISE O,LF_REGION R
+    WHERE T.CASE_ID=K.CASE_ID
+      AND T.PLATFORM_ID=K.PLATFORM_ID
+      AND T.REGION_ID = O.REGION_ID
+      AND T.INPUTER_ORG_CODE = O.ORG_CODE
+      AND T.PLATFORM_ID = O.PLATFORM_ID
+      AND K.DAIBU_STATE=3
+      AND T.REGION_ID=R.REGION_ID
+      <if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+      <if test="policeType==2">
+     	and T.police_type=2
+      </if>
+      <!-- 此条件仅供按行业统计报表使用 -->
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        <if test="daibuState != null">
+          and T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+		 <if test="inputStartTime != null ">
+           	 and T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+           	 and T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+        
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <!-- <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		 ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+		ORDER BY AA.LATEST_POCESS_TIME DESC,AA.CASE_ID
+	</select>
+    <select id="getDaibuCaseCountByIndustry" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+		SELECT COUNT(AA.CASE_ID)
+ 	  	FROM 
+ 		(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID,O.INDUSTRY_ID 
+	    FROM mv_get_case T,LF_CASE_XIANYIREN K,LF_PLATFORM_ORGANISE O,LF_REGION R
+	    WHERE T.CASE_ID=K.CASE_ID
+	      AND T.PLATFORM_ID=K.PLATFORM_ID
+	      AND T.REGION_ID = O.REGION_ID
+	      AND T.INPUTER_ORG_CODE = O.ORG_CODE
+	      AND T.PLATFORM_ID = O.PLATFORM_ID
+	      AND K.DAIBU_STATE=3
+	      AND T.REGION_ID=R.REGION_ID
+	      <if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+      <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        <if test="daibuState != null">
+          and T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+		 <if test="inputStartTime != null ">
+           	 and T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+           	 and T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+        )AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <!-- <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		 ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+	</select>
+	
+	<!--根据行政区划查询提请逮捕案件信息 (案件综合统计报表用)  -->
+    <select id="getDaibuAndQisuCaseListByIndustry" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+		SELECT AA.CASE_ID, AA.CASE_NO,AA.CASE_NAME,AA.CASE_STATE,AA.CASE_STATE_NAME,AA.INPUT_TIME,AA.LIAN_TIME,
+        AA.LATEST_POCESS_TIME,AA.PROC_KEY,AA.PLATFORM_ID
+ 	  FROM 
+ 		(SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID,O.INDUSTRY_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K,LF_PLATFORM_ORGANISE O,LF_REGION R
+    WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID = O.PLATFORM_ID
+     AND T.REGION_ID=R.REGION_ID
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+     	<if test="tiqingDaibuState != null ">
+           AND (K.DAIBU_STATE=2 or K.DAIBU_STATE=3) 
+        </if>
+        <if test="yisongQisuState != null ">
+           and K.TIQINGQISU_STATE = 2
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        <if test="daibuState != null">
+          and T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+		 <if test="inputStartTime != null ">
+           	 and T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+           	 and T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		<!--  <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		 ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+		ORDER BY AA.LATEST_POCESS_TIME DESC,AA.CASE_ID
+	</select>
+    <select id="getDaibuAndQisuCaseCountByIndustry" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+	SELECT COUNT(AA.CASE_ID)
+ 	  FROM 
+ 	(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID,O.INDUSTRY_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K,LF_PLATFORM_ORGANISE O,LF_REGION R
+    WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID = O.PLATFORM_ID
+     AND T.REGION_ID=R.REGION_ID
+     	<if test="industryId!=null and industryId!=''">
+     		and T.industry_id=#{industryId}
+     	</if>
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+     	<if test="tiqingDaibuState != null ">
+           AND (K.DAIBU_STATE=2 or K.DAIBU_STATE=3) 
+        </if>
+        <if test="yisongQisuState != null ">
+           and K.TIQINGQISU_STATE = 2
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        <if test="daibuState != null">
+          and T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+		 <if test="inputStartTime != null ">
+           	 and T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+           	 and T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <!-- <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if> -->
+		 ) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+	</select>
+	
+	<sql id="yisiFaCaseField">
+		<trim>
+			<if test="inputerOrgCode != null and inputerOrgCode != ' '">
+				AND c1.INPUTER_ORG_CODE = #{inputerOrgCode}
+			</if>
+			<choose>
+				<when test="startMoney != null and endMoney != null ">
+		      <![CDATA[
+		       	AND  c1.AMOUNT_INVOLVED >= #{startMoney,jdbcType=DECIMAL} AND c1.AMOUNT_INVOLVED  <= #{endMoney,jdbcType=DECIMAL}
+		       	AND  c2.AMOUNT_INVOLVED >= #{startMoney,jdbcType=DECIMAL} AND c2.AMOUNT_INVOLVED  <= #{endMoney,jdbcType=DECIMAL}
+		       	]]>
+				</when>
+				<when test="endMoney != null ">
+		      <![CDATA[
+			      	AND  c1.AMOUNT_INVOLVED  <= (#{endMoney,jdbcType=DECIMAL})
+			      		AND  c2.AMOUNT_INVOLVED  <= (#{endMoney,jdbcType=DECIMAL})
+			   ]]>
+				</when>
+				<when test="startMoney != null and amountInvolved==null">
+		      <![CDATA[
+			      	AND  c1.AMOUNT_INVOLVED >= #{startMoney,jdbcType=DECIMAL}
+			      		AND  c2.AMOUNT_INVOLVED >= #{startMoney,jdbcType=DECIMAL}
+			  ]]>
+				</when>
+			</choose>
+	        <if test="address != null and address != ''">
+	        	and	c1.anfa_address = c2.anfa_address
+	        	and c1.anfa_address is not null
+	        </if>			
+			<if test="shijian != null and shijian != ''">
+				and	c1.anfa_time = c2.anfa_time
+	        	and c1.anfa_time is not null				
+			</if>
+			<if test="wupin != null and wupin != ''">
+				and c1.GOODS_INVOLVED = c2.GOODS_INVOLVED 
+				and c1.GOODS_INVOLVED IS NOT NULL 
+				and c1.GOODS_INVOLVED != '无'
+				and c2.GOODS_INVOLVED != '无'
+				and c1.GOODS_INVOLVED != '0'
+				and c2.GOODS_INVOLVED != '0'
+			</if>
+			<if test="jianding != null and jianding != ''">
+				and c1.identify_type = c2.identify_type 
+				and c1.identify_type IS NOT NULL 
+				and c1.identify_type != 6
+			</if>
+			<if test="dangshiren !=null and dangshiren != '' ">
+				and c1.XIANYIREN_name = c2.XIANYIREN_name
+			</if>
+			<if test="danwei !=null and danwei !='' ">
+				and c1.COMPANY_name = c2.COMPANY_name
+			</if>
+			<choose>
+				<when test="startTime !=null and endTime !=null ">
+						<![CDATA[ 
+						and  (c1.input_time >= #{startTime,jdbcType=TIMESTAMP} and c1.input_time < #{endTime,jdbcType=TIMESTAMP} +   interval   '1'  day)
+						and  (c2.input_time >= #{startTime,jdbcType=TIMESTAMP} and c2.input_time < #{endTime,jdbcType=TIMESTAMP} +   interval   '1'  day)
+						]]>
+				</when>
+				<when test="startTime !=null ">
+						<![CDATA[ and c1.input_time >= #{startTime,jdbcType=TIMESTAMP}]]>
+						<![CDATA[ and c2.input_time >= #{startTime,jdbcType=TIMESTAMP}]]>
+				</when>
+				<when test="endTime !=null  ">
+						<![CDATA[ and c1.input_time < #{endTime,jdbcType=TIMESTAMP} +   interval   '1'  day]]>
+						<![CDATA[ and c2.input_time < #{endTime,jdbcType=TIMESTAMP} +   interval   '1'  day]]>						
+				</when>
+			</choose>
+			<if test="yearCode!=null and yearCode!=''"> 
+				AND  TO_CHAR(c1.INPUT_TIME,'yyyy')=${yearCode}
+				AND  TO_CHAR(c2.INPUT_TIME,'yyyy')=${yearCode}
+			</if>
+			<if test="quarterCode!=null and quarterCode!=''">
+				AND TO_CHAR(c1.INPUT_TIME,'Q')=${quarterCode}
+				AND TO_CHAR(c2.INPUT_TIME,'Q')=${quarterCode}
+			</if>
+			<if test="monthCode!=null and monthCode!=''"> 
+				AND TO_CHAR(c1.INPUT_TIME,'MM')=${monthCode}
+				AND TO_CHAR(c2.INPUT_TIME,'MM')=${monthCode}
+			</if>
+		</trim>
+	</sql>	
+	
+	<select id="getYisiFaCaseCount" parameterType="java.util.Map" resultType="java.lang.Integer" >
+		SELECT COUNT(0)
+		    FROM
+		    (SELECT DISTINCT c1.CASE_ID,c1.CASE_NO,c1.CASE_NAME,c1.INPUTER,c1.INPUT_TIME,c1.CHUFA_TIME,c1.ANFA_ADDRESS,
+		    c1.AMOUNT_INVOLVED,c1.platform_id,c1.inputer_org_code,c1.PROC_DEF_ID,
+		    c1.CASE_STATE,c1.PROC_KEY,c1.GOODS_INVOLVED,c1.identify_type,c1.anfa_time,
+		    c1.ids_no,c1.XIANYIREN_NAME,c1.COMPANY_NAME
+		    from 
+		    ( SELECT
+		    c.CASE_ID,c.CASE_NO,c.CASE_NAME,c.INPUTER,c.INPUT_TIME,c.CHUFA_TIME,C.ANFA_ADDRESS,
+		    c.AMOUNT_INVOLVED,c.platform_id,c.inputer_org_code,C.PROC_DEF_ID,
+		    c.CASE_STATE,c.PROC_KEY,c.GOODS_INVOLVED,c.identify_type,c.anfa_time,
+		    CX.ids_no,CX."NAME"AS XIANYIREN_NAME,
+		    CC."NAME" AS COMPANY_NAME
+		    FROM lf_case c,lf_CASE_XIANYIREN CX,lf_CASE_COMPANY CC,lf_platform_organise o
+		    WHERE
+		    c.PROC_KEY = 'chufaProc'
+		    AND c.CASE_ID = CX.CASE_ID(+)
+		    AND c.platform_id = cx.platform_id(+)
+		    AND c.CASE_ID= CC.CASE_ID(+)
+		    AND c.platform_id = cc.platform_id(+)
+		    AND c.CASE_TYPE IN (1,2)
+		    AND c.inputer_org_code = o.org_code
+		    AND c.platform_id = o.platform_id		
+		     <if test="regionId != null and regionId != ''">
+		    	and o.region_id like concat(#{regionId},'%')
+		    </if> 	    
+		    ) c1 ,
+		    (SELECT
+		    c.CASE_ID,c.CASE_NO,c.CASE_NAME,c.INPUTER,c.INPUT_TIME,c.CHUFA_TIME,C.ANFA_ADDRESS,
+		    c.AMOUNT_INVOLVED,c.platform_id,c.inputer_org_code,C.PROC_DEF_ID,
+		    c.CASE_STATE,c.PROC_KEY,c.GOODS_INVOLVED,c.identify_type,c.anfa_time,
+		    CX.ids_no,CX."NAME"AS XIANYIREN_NAME,
+		    CC."NAME" AS COMPANY_NAME
+		    FROM lf_case c,lf_CASE_XIANYIREN CX,lf_CASE_COMPANY CC,lf_platform_organise o
+		    WHERE
+		    c.PROC_KEY = 'chufaProc'
+		    AND c.CASE_ID = CX.CASE_ID(+)
+		    AND c.platform_id = cx.platform_id(+)
+		    AND c.CASE_ID= CC.CASE_ID(+)
+		    AND c.platform_id = cc.platform_id(+)
+		    AND c.CASE_TYPE IN (1,2)
+		    AND c.inputer_org_code = o.org_code
+		    AND c.platform_id = o.platform_id
+		     <if test="regionId != null and regionId != ''">
+		    	and o.region_id like concat(#{regionId},'%')
+		    </if> 	 	    
+		    ) c2,lf_platform_organise o
+		    WHERE c1.CASE_ID != c2.CASE_ID
+		    AND c1.INPUTER = c2.INPUTER
+		    AND c1.platform_id = c2.platform_id
+		    AND c1.inputer_org_code = o.org_code
+		    <include refid="yisiFaCaseField" />
+		    AND c1.platform_id = o.platform_id)CC
+		     where 1=1
+		    <if test="caseNo != null and caseNo != ''">
+		    	AND cc.case_no like concat('%',concat(#{caseNo},'%'))
+		    </if>
+		    <if test="caseName != null and caseName != ''">
+		    	AND cc.case_name like concat('%',concat(#{caseName},'%'))
+		    </if>
+	</select>
+	<select id="getYisiFaCaseList" parameterType="java.util.Map" resultMap="yisifaMap" >
+		SELECT CC.CASE_ID,CC.CASE_NO,CC.CASE_NAME,CC.INPUTER,CC.INPUT_TIME,CC.CHUFA_TIME,CC.ANFA_ADDRESS,
+		    CC.AMOUNT_INVOLVED,CC.platform_id,CC.inputer_org_code,CC.anfa_time,CC.identify_type,CC.REGION_ID,
+		    CC.CASE_STATE,CC.CASE_STATE_NAME,CC.GOODS_INVOLVED,CC.XIANYIREN_NAME,CC.COMPANY_NAME,CC.org_name
+		FROM 
+		(SELECT DISTINCT
+		    c1.CASE_ID,c1.CASE_NO,c1.CASE_NAME,c1.INPUTER,c1.INPUT_TIME,C1.CHUFA_TIME,C1.ANFA_ADDRESS,C1.REGION_ID,
+		    c1.AMOUNT_INVOLVED,c1.platform_id,C1.inputer_org_code,c1.anfa_time,c1.identify_type,
+		    c1.CASE_STATE,
+		    (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = c1.CASE_STATE
+           AND S.PLATFORM_ID = c1.PLATFORM_ID
+           AND S.PROC_DEF_ID = c1.PROC_DEF_ID) AS CASE_STATE_NAME,
+		   c1.GOODS_INVOLVED,
+		   c1.XIANYIREN_NAME,
+		   c1.COMPANY_NAME,
+		   c1.org_name
+		    FROM
+		    ( SELECT
+		    c.CASE_ID,c.CASE_NO,c.CASE_NAME,c.INPUTER,c.INPUT_TIME,c.CHUFA_TIME,C.ANFA_ADDRESS,C.REGION_ID,
+		    c.AMOUNT_INVOLVED,c.platform_id,c.inputer_org_code,C.PROC_DEF_ID,
+		    c.CASE_STATE,c.PROC_KEY,c.GOODS_INVOLVED,c.identify_type,c.anfa_time,
+		    CX.ids_no,CX."NAME"AS XIANYIREN_NAME,
+		    CC."NAME" AS COMPANY_NAME,
+		     O.ORG_NAME
+		    FROM lf_case c,lf_CASE_XIANYIREN CX,lf_CASE_COMPANY CC,lf_platform_organise o
+		    WHERE
+		    c.PROC_KEY = 'chufaProc'
+		    AND c.CASE_ID = CX.CASE_ID(+)
+		    AND c.platform_id = cx.platform_id(+)
+		    AND c.CASE_ID= CC.CASE_ID(+)
+		    AND c.platform_id = cc.platform_id(+)
+		    AND c.CASE_TYPE IN (1,2)
+		    AND c.inputer_org_code = o.org_code
+		    AND c.platform_id = o.platform_id
+			 <if test="regionId != null and regionId != ''">
+		    	and o.region_id like concat(#{regionId},'%')
+		    </if> 
+		    ) c1 ,
+		    (SELECT
+		    c.CASE_ID,c.CASE_NO,c.CASE_NAME,c.INPUTER,c.INPUT_TIME,c.CHUFA_TIME,C.ANFA_ADDRESS,C.REGION_ID,
+		    c.AMOUNT_INVOLVED,c.platform_id,c.inputer_org_code,C.PROC_DEF_ID,
+		    c.CASE_STATE,c.PROC_KEY,c.GOODS_INVOLVED,c.identify_type,c.anfa_time,
+		    CX.ids_no,CX."NAME"AS XIANYIREN_NAME,
+		    CC."NAME" AS COMPANY_NAME,
+		    O.ORG_NAME
+		    FROM lf_case c,lf_CASE_XIANYIREN CX,lf_CASE_COMPANY CC,lf_platform_organise o
+		    WHERE c.PROC_KEY = 'chufaProc'
+		    AND c.CASE_ID = CX.CASE_ID(+)
+		    AND c.platform_id = cx.platform_id(+)
+		    AND c.CASE_ID= CC.CASE_ID(+)
+		    AND c.platform_id = cc.platform_id(+)
+		    AND c.CASE_TYPE IN (1,2)
+		    AND c.inputer_org_code = o.org_code
+		    AND c.platform_id = o.platform_id
+			 <if test="regionId != null and regionId != ''">
+		    	and o.region_id like concat(#{regionId},'%')
+		    </if> 
+		    ) c2
+		    WHERE c1.CASE_ID != c2.CASE_ID
+		    AND c1.INPUTER = c2.INPUTER
+		    AND c1.platform_id = c2.platform_id
+		    <include refid="yisiFaCaseField" />
+		    order by C1.INPUTER,c1.chufa_time desc)cc
+		    where 1=1
+		    <if test="caseNo != null and caseNo != ''">
+		    	AND cc.case_no like concat('%',concat(#{caseNo},'%'))
+		    </if>
+		    <if test="caseName != null and caseName != ''">
+		    	AND cc.case_name like concat('%',concat(#{caseName},'%'))
+		    </if>
+	</select>	
+	
+	
+	<!--根据指标钻取案件信息 (案件罪名统计报表使用)   -->
+    <select id="getAccuseCaseListStat" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+      SELECT C.CASE_ID,
+       C.CASE_NO,
+       C.CASE_NAME,
+       C.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = C.CASE_STATE
+           AND S.PLATFORM_ID = C.PLATFORM_ID
+           AND S.PROC_DEF_ID = C.PROC_DEF_ID) AS CASE_STATE_NAME,
+       C.INPUT_TIME,
+       C.LIAN_TIME,
+       C.LATEST_POCESS_TIME,
+       C.PROC_KEY,
+       C.PLATFORM_ID
+  	FROM 
+  		<choose>
+			<when test="policeType==2">
+				(select cc.case_id,cc.case_no,cc.platform_id,cc.region_id,cc. proc_key,cc.inputer_org_code,cc.input_time,cc.lian_state,cc.MONTH_CODE,cc.LATEST_POCESS_TIME,cc.LIAN_TIME,cc.CASE_STATE,cc.CASE_NAME,cc.PROC_DEF_ID
+				from lf_case cc,(
+				SELECT S.CASE_ID,S.PLATFORM_ID
+				FROM LF_CASE_STEP S, LF_PLATFORM_ORGANISE O
+				WHERE
+				S.TARGET_ORG_ID = O.ORG_CODE
+					AND S.PLATFORM_ID = O.PLATFORM_ID
+						           AND S.TARGET_ORG_TYPE = '3'
+						           and o.police_type=2
+						           GROUP BY CASE_ID,S.PLATFORM_ID
+				) sp
+				where cc.CASE_ID = sp.CASE_ID
+				AND cc.PLATFORM_ID = sp.PLATFORM_ID) c
+			</when>
+			<otherwise>
+				lf_case c 
+			</otherwise>
+		</choose> 
+  	,
+       (SELECT A.CASE_ID, A.ACCUSE_ID,A.PLATFORM_ID
+          FROM LF_CASE_ACCUSE A
+        UNION
+        SELECT B.CASE_ID, B.ACCUSE_ID,B.PLATFORM_ID
+          FROM LF_XIANYIREN_ACCUSE B
+         GROUP BY CASE_ID, ACCUSE_ID,PLATFORM_ID) CA,
+       LF_PLATFORM_ORGANISE O
+ 	WHERE C.CASE_ID = CA.CASE_ID
+ 		AND C.PLATFORM_ID=CA.PLATFORM_ID
+   		AND C.REGION_ID = O.REGION_ID
+   		AND C.INPUTER_ORG_CODE = O.ORG_CODE
+   		AND C.PLATFORM_ID=O.PLATFORM_ID
+		<if test="regionId!= null and regionId != ''" >
+           and O.REGION_ID LIKE  #{regionId} || '%'
+        </if>
+		<if test="accuseId!= null and accuseId != ''" >
+           and CA.ACCUSE_ID = #{accuseId}
+        </if>
+        <if test="caseNo!= null and caseNo != ''" >
+           and C.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!= null and caseName != ''" >
+           and C.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        <if test="monthCode!= null and monthCode != ''" >
+           and c.MONTH_CODE =#{monthCode}
+        </if>
+        <if test="yearCode!= null and yearCode != ''" >
+           and c.MONTH_CODE like #{yearCode}||'%'
+        </if>
+		 <if test="inputStartTime!=null" >
+           and C.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           and C.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+        
+		ORDER BY C.LATEST_POCESS_TIME DESC, C.CASE_ID
+    </select>
+	<select id="getAccuseCaseCountStat" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+      SELECT COUNT(C.CASE_ID)
+  	FROM 
+  	<choose>
+			<when test="policeType==2">
+				(select cc.case_id,cc.case_no,cc.platform_id,cc.region_id,cc. proc_key,cc.inputer_org_code,cc.input_time,cc.lian_state,cc.MONTH_CODE,cc.LATEST_POCESS_TIME,cc.LIAN_TIME,cc.CASE_STATE,cc.CASE_NAME,cc.PROC_DEF_ID
+				from lf_case cc,(
+				SELECT S.CASE_ID,S.PLATFORM_ID
+				FROM LF_CASE_STEP S, LF_PLATFORM_ORGANISE O
+				WHERE
+				S.TARGET_ORG_ID = O.ORG_CODE
+					AND S.PLATFORM_ID = O.PLATFORM_ID
+						           AND S.TARGET_ORG_TYPE = '3'
+						           and o.police_type=2
+						           GROUP BY CASE_ID,S.PLATFORM_ID
+				) sp
+				where cc.CASE_ID = sp.CASE_ID
+				AND cc.PLATFORM_ID = sp.PLATFORM_ID) c
+			</when>
+			<otherwise>
+				lf_case c 
+			</otherwise>
+		</choose> 
+  	,
+       (SELECT A.CASE_ID, A.ACCUSE_ID,A.PLATFORM_ID
+          FROM LF_CASE_ACCUSE A
+        UNION
+        SELECT B.CASE_ID, B.ACCUSE_ID,B.PLATFORM_ID
+          FROM LF_XIANYIREN_ACCUSE B
+         GROUP BY CASE_ID, ACCUSE_ID,PLATFORM_ID) CA,
+       LF_PLATFORM_ORGANISE O
+ 	WHERE C.CASE_ID = CA.CASE_ID
+ 		AND C.PLATFORM_ID=CA.PLATFORM_ID
+   		AND C.REGION_ID = O.REGION_ID
+   		AND C.INPUTER_ORG_CODE = O.ORG_CODE
+   		AND C.PLATFORM_ID=O.PLATFORM_ID
+		<if test="regionId!= null and regionId != ''" >
+           and O.REGION_ID LIKE  #{regionId} || '%'
+        </if>
+		<if test="accuseId!= null and accuseId != ''" >
+           and CA.ACCUSE_ID = #{accuseId}
+        </if>
+        <if test="caseNo!= null and caseNo != ''" >
+           and C.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!= null and caseName != ''" >
+           and C.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        <if test="monthCode!= null and monthCode != ''" >
+           and c.MONTH_CODE =#{monthCode}
+        </if>
+        <if test="yearCode!= null and yearCode != ''" >
+           and c.MONTH_CODE like #{yearCode}||'%'
+        </if>
+		 <if test="inputStartTime!=null" >
+           and C.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           and C.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY C.LATEST_POCESS_TIME DESC, C.CASE_ID
+    </select>
+    
+    
+    <!-- 案件及流程作废功能 案件查询 -->
+    <select id="caseAndWorkflowQueryCount" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM mv_get_case A, LF_PLATFORM_ORGANISE O
+		 WHERE A.INPUTER_ORG_CODE = O.ORG_CODE
+		   AND A.PLATFORM_ID = O.PLATFORM_ID
+		 <choose>
+			<when test="queryScope==2">
+				<if test="regionId!=null">
+					AND O.REGION_ID = #{regionId} 
+				</if>
+			</when>
+			<otherwise>
+				<if test="shortRegionId!=null">
+					AND O.REGION_ID LIKE #{shortRegionId} ||'%'
+				</if>
+			</otherwise>
+		</choose>
+        <if test="caseNo!= null and caseNo != ''" >
+            and	A.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!= null and caseName != ''" >
+            and	A.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+    </select>
+    <select id="caseAndWorkflowQueryList" parameterType="com.ksource.liangfa.model.SCase" resultMap="listMap">
+		SELECT A.PLATFORM_ID,
+		       A.CASE_ID,
+		       A.CASE_NO,
+		       A.CASE_NAME,
+		       A.CASE_STATE,
+		       A.REGION_ID,
+		       A.INPUTER_ORG_CODE,
+		       A.AMOUNT_INVOLVED,
+		       A.LIAN_TIME,
+		       A.LATEST_POCESS_TIME,
+		       O.ORG_NAME AS INPUTER_ORG_NAME,
+		       (SELECT STATE_NAME
+		          FROM LF_CASE_STATE S
+		         WHERE S.PLATFORM_ID = A.PLATFORM_ID
+		           AND A.CASE_STATE = S.STATE_CODE
+		           AND A.PROC_DEF_ID = S.PROC_DEF_ID) AS CASE_STATE_NAME,
+		       (SELECT R.NAME FROM LF_REGION R WHERE R.REGION_ID = A.REGION_ID) AS REGION_NAME
+		  FROM mv_get_case A, LF_PLATFORM_ORGANISE O
+		 WHERE A.INPUTER_ORG_CODE = O.ORG_CODE
+		   AND A.PLATFORM_ID = O.PLATFORM_ID
+		<choose>
+			<when test="queryScope==2">
+				<if test="regionId!=null">
+					AND O.REGION_ID = #{regionId} 
+				</if>
+			</when>
+			<otherwise>
+				<if test="shortRegionId!=null">
+					AND O.REGION_ID LIKE #{shortRegionId} ||'%'
+				</if>
+			</otherwise>
+		</choose>
+        <if test="caseNo!= null and caseNo != ''" >
+            and	A.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!= null and caseName != ''" >
+            and	A.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        ORDER BY A.REGION_ID ASC,A.LATEST_POCESS_TIME DESC
+    </select>
+    
+    <!-- 删除案件 -->
+    <delete id="deleteCases" parameterType="map">
+		DELETE FROM LF_CASE
+		WHERE CASE_ID = #{caseId}
+		AND PLATFORM_ID=#{platformId}
+	</delete>
+	
+	
+	
+	<!--打侵打假案件信息查询 (打侵打假统计报表使用)   -->
+    <select id="getDqdjCaseListStat" parameterType="java.util.Map" resultMap="caseDetailMap">
+      SELECT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID
+     FROM LF_CASE T,LF_DQDJ_CASE_CATEGORY D
+     WHERE T.CASE_ID=D.CASE_ID AND T.PLATFORM_ID=D.PLATFORM_ID
+		<if test="regionId!= null and regionId != ''" >
+           and T.REGION_ID LIKE  #{regionId} || '%'
+        </if>
+		<if test="categoryId!= null and categoryId != ''" >
+			<if test="categoryId==2"><!-- 侵犯知识产权大类别 -->
+				AND (D.CATEGORY_ID &gt;=3 AND D.CATEGORY_ID &lt;=9) 
+			</if>
+			<if test="categoryId!=2">
+				AND D.CATEGORY_ID =#{categoryId}
+			</if>
+        </if>
+        <if test="caseNo!= null and caseNo != ''" >
+           and T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!= null and caseName != ''" >
+           and T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           AND 	T.INPUT_TIME &lt;= to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC, T.CASE_ID
+    </select>
+	<select id="getDqdjCaseCountStat" parameterType="java.util.Map" resultType="java.lang.Integer">
+      SELECT COUNT(T.CASE_ID)
+     FROM LF_CASE T,LF_DQDJ_CASE_CATEGORY D
+     WHERE T.CASE_ID=D.CASE_ID AND T.PLATFORM_ID=D.PLATFORM_ID
+		<if test="regionId!= null and regionId != ''" >
+           and T.REGION_ID LIKE  #{regionId} || '%'
+        </if>
+		<if test="categoryId!= null and categoryId != ''" >
+			<if test="categoryId==2"><!-- 侵犯知识产权大类别 -->
+				AND (D.CATEGORY_ID &gt;=3 AND D.CATEGORY_ID &lt;=9) 
+			</if>
+			<if test="categoryId!=2">
+				AND D.CATEGORY_ID =#{categoryId}
+			</if>
+        </if>
+        <if test="caseNo!= null and caseNo != ''" >
+           and T.CASE_NO LIKE '%'||#{caseNo}||'%'
+        </if>
+        <if test="caseName!= null and caseName != ''" >
+           and T.CASE_NAME LIKE '%'||#{caseName}||'%'
+        </if>
+        <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           AND 	T.INPUT_TIME &lt;= to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC, T.CASE_ID
+    </select>
+    
+    
+    <select id="getLevelStateListByOrg" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap" >
+ 	  SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID,
+       O.INDUSTRY_ID
+       FROM mv_get_case T,LF_PLATFORM_ORGANISE O
+        WHERE T.REGION_ID = O.REGION_ID
+     	AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     	AND T.PLATFORM_ID=O.PLATFORM_ID
+     	AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        
+		<include refid="CaseStateQuery"/>
+		<!-- 自定义统计查询条件 -->
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+    </select>
+	<select id="getLevelStateCountByOrg" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+ 		SELECT COUNT(AA.CASE_ID)
+ 	  FROM 
+ 		(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID,O.INDUSTRY_ID
+       FROM mv_get_case T,LF_PLATFORM_ORGANISE O
+        WHERE T.REGION_ID = O.REGION_ID
+     	AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     	AND T.PLATFORM_ID=O.PLATFORM_ID
+     	AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        
+		<include refid="CaseStateQuery"/>
+		<!-- 自定义统计查询条件 -->
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA
+    </select>  
+    
+    <select id="getLevelYisongListByOrg" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+        SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID,O.INDUSTRY_ID
+     FROM mv_get_case T, LF_PLATFORM_ORGANISE O
+     WHERE T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID=O.PLATFORM_ID
+      AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+        <if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="yisongState != null">
+     		and  T.YISONG_STATE in (2,3)
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if> 
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>	
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>        	
+        ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID
+    </select>
+    
+	<select id="getLevelYisongCountByOrg" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+ 	 SELECT COUNT(AA.CASE_ID)
+ 	 FROM 
+ 	(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID,O.INDUSTRY_ID
+     FROM mv_get_case T, LF_PLATFORM_ORGANISE O
+     WHERE T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID=O.PLATFORM_ID
+      AND O.IS_DEPT=0 AND O.ORG_TYPE=1
+      	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+     	<if test="yisongState != null">
+     		and  T.YISONG_STATE in (2,3)
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+ 		<if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+        <if test="upOrgCode != null ">
+            and (O.UP_ORG_CODE =#{upOrgCode} or O.ORG_CODE =#{upOrgCode})
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if> 
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+		 <if test="inputStartTime!=null" >
+           	AND T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime!=null" >
+           	AND T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		<if test="chufaTimes!=null" >
+			AND T.CHUFA_TIMES &gt;#{chufaTimes}
+		</if>
+		<if test="isBeyondEighty!=null" >
+			AND T.IS_BEYOND_EIGHTY=#{isBeyondEighty}
+		</if>
+		<if test="identifyType!=null" >
+			AND T.IDENTIFY_TYPE &gt;0 and T.IDENTIFY_TYPE !=#{identifyType}
+		</if>
+		<if test="isLowerLimitMoney!=null" >
+			AND T.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+		</if>
+		<if test="isDescuss!=null" >
+			AND T.IS_DESCUSS=#{isDescuss}
+		</if>
+		<if test="isSeriousCase!=null" >
+			AND T.IS_SERIOUS_CASE=#{isSeriousCase}
+		</if>
+		<if test="isSuspectedCriminal!=null" >
+			AND T.IS_SUSPECTED_CRIMINAL=#{isSuspectedCriminal}
+		</if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA
+    </select>	
+    
+     <!--根据行政区划查询提请逮捕案件信息 (按层级统计报表用)  -->
+    <select id="getLevelDaibuAndQisuCaseListByOrg" parameterType="com.ksource.liangfa.model.SCase" resultMap="caseDetailMap">
+		SELECT AA.CASE_ID, AA.CASE_NO,AA.CASE_NAME,AA.CASE_STATE,AA.CASE_STATE_NAME,AA.INPUT_TIME,AA.LIAN_TIME,
+        AA.LATEST_POCESS_TIME,AA.PROC_KEY,AA.PLATFORM_ID
+ 	  FROM 
+ 		(SELECT DISTINCT T.CASE_ID,
+       T.CASE_NO,
+       T.CASE_NAME,
+       T.CASE_STATE,
+       (SELECT S.STATE_NAME
+          FROM LF_CASE_STATE S
+         WHERE S.STATE_CODE = T.CASE_STATE
+           AND S.PLATFORM_ID = T.PLATFORM_ID
+           AND S.PROC_DEF_ID = T.PROC_DEF_ID) AS CASE_STATE_NAME,
+       T.INPUT_TIME,
+       T.LIAN_TIME,
+       T.LATEST_POCESS_TIME,
+       T.PROC_KEY,
+       T.PLATFORM_ID,O.INDUSTRY_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K,LF_PLATFORM_ORGANISE O
+    WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID = O.PLATFORM_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+     	<if test="tiqingDaibuState != null ">
+           AND (K.DAIBU_STATE=2 or K.DAIBU_STATE=3) 
+        </if>
+        <if test="yisongQisuState != null ">
+           and K.TIQINGQISU_STATE = 2
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        <if test="daibuState != null">
+          and T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+		 <if test="inputStartTime != null ">
+           	 and T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+           	 and T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>
+		ORDER BY T.LATEST_POCESS_TIME DESC,T.CASE_ID)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if>) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+		ORDER BY AA.LATEST_POCESS_TIME DESC,AA.CASE_ID
+	</select>
+    <select id="getLevelDaibuAndQisuCaseCountByOrg" parameterType="com.ksource.liangfa.model.SCase" resultType="java.lang.Integer">
+	SELECT COUNT(AA.CASE_ID)
+ 	  FROM 
+ 	(SELECT DISTINCT T.CASE_ID,T.PLATFORM_ID,O.INDUSTRY_ID
+    FROM mv_get_case T,LF_CASE_XIANYIREN K,LF_PLATFORM_ORGANISE O
+    WHERE T.CASE_ID=K.CASE_ID
+     AND T.PLATFORM_ID=K.PLATFORM_ID
+     AND T.REGION_ID = O.REGION_ID
+     AND T.INPUTER_ORG_CODE = O.ORG_CODE
+     AND T.PLATFORM_ID = O.PLATFORM_ID
+     	<if test="policeType==2">
+     		and T.police_type=2
+     	</if>
+		<if test="regionId!=null" >
+            AND T.REGION_ID LIKE #{regionId} ||'%'
+        </if>
+     	<if test="tiqingDaibuState != null ">
+           AND (K.DAIBU_STATE=2 or K.DAIBU_STATE=3) 
+        </if>
+        <if test="yisongQisuState != null ">
+           and K.TIQINGQISU_STATE = 2
+        </if>
+        <!-- 此条件仅供按行业统计报表使用 -->
+        <if test="industryId != null ">
+           and  O.INDUSTRY_ID = #{industryId}
+        </if>
+        <if test="shortRegionId != null ">
+           and  O.REGION_ID like #{shortRegionId} || '%'
+        </if>
+        <if test="isUseIndustry != null ">
+        	 and O.INDUSTRY_ID IS NOT NULL
+        </if>
+        <if test="daibuState != null">
+          and T.DAIBU_STATE = #{daibuState}
+        </if>
+        <if test="caseNo != null ">
+           and  T.CASE_NO LIKE '%'||${caseNo}||'%'
+        </if>
+        <if test="caseName != null ">
+           and  T.CASE_NAME LIKE '%'||${caseName}||'%'
+        </if>
+        <if test="orgCode != null ">
+ 			and O.ORG_CODE =#{orgCode} 
+ 		</if>        
+        <if test="platformId != null ">
+          and  O.platform_id =#{platformId} 
+        </if>
+		 <if test="inputStartTime != null ">
+           	 and T.INPUT_TIME &gt;= to_date(#{inputStartTime},'yyyy-MM-dd')
+        </if>
+        <if test="inputEndTime != null ">
+           	 and T.INPUT_TIME &lt; to_date(#{inputEndTime},'yyyy-MM-dd')  +   interval   '1'  day
+        </if>)AA,
+		(SELECT DISTINCT INDUSTRY_ID FROM LF_PLATFORM_ORGANISE WHERE IS_DEPT = 0 and INDUSTRY_ID IS NOT NULL
+		 <if test="paramRegionId!=null">
+		 	AND REGION_ID = #{paramRegionId}
+		 </if>) OO
+		WHERE AA.INDUSTRY_ID=OO.INDUSTRY_ID
+	</select>
+</mapper>

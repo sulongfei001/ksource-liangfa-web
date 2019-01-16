@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.mapper.CmsContentMapper">
+  <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.cms.CmsContent">
+    <id column="CONTENT_ID" jdbcType="DECIMAL" property="contentId" />
+    <result column="CHANNEL_ID" jdbcType="DECIMAL" property="channelId" />
+    <result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="IMAGE_PATH" jdbcType="VARCHAR" property="imagePath" />
+    <result column="IS_BOLD" jdbcType="DECIMAL" property="isBold" />
+    <result column="TITLE_COLOR" jdbcType="VARCHAR" property="titleColor" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="TOP" jdbcType="DECIMAL" property="top" />
+    <result column="OUT_ID" jdbcType="DECIMAL" property="outId" />
+  </resultMap>
+  
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ksource.liangfa.domain.cms.CmsContent">
+    <result column="TEXT" jdbcType="CLOB" property="text" />
+  </resultMap>
+  
+   <sql id="Base_Column_List" >
+    CONTENT_ID, CHANNEL_ID, CREATE_USER_ID, TITLE, CREATE_TIME, IMAGE_PATH, IS_BOLD, TITLE_COLOR, STATUS,TOP,OUT_ID
+  </sql>
+  
+  <sql id="Blob_Column_List">
+    TEXT
+  </sql>
+  
+  <insert id="insert" parameterType="com.ksource.liangfa.domain.cms.CmsContent" >
+    insert into CMS_CONTENT
+     (<include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>)
+    values 
+    (#{contentId,jdbcType=DECIMAL}, 
+    #{channelId,jdbcType=DECIMAL}, 
+    #{createUserId,jdbcType=VARCHAR}, 
+    #{title,jdbcType=VARCHAR},
+    #{createTime,jdbcType=TIMESTAMP},
+    #{imagePath,jdbcType=VARCHAR},
+    #{isBold,jdbcType=DECIMAL},
+    #{titleColor,jdbcType=VARCHAR},
+    #{status,jdbcType=DECIMAL},
+    #{top,jdbcType=DECIMAL},
+    #{outId,jdbcType=DECIMAL},
+    #{text,jdbcType=CLOB}
+    )
+  </insert>
+  
+   <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from CMS_CONTENT
+    where CONTENT_ID = #{contentId,jdbcType=DECIMAL}
+  </delete>
+  
+    <update id="updateByPrimaryKeySelective" parameterType="com.ksource.liangfa.domain.cms.CmsContent">
+    update CMS_CONTENT
+    <set>
+      <if test="channelId != null">
+        CHANNEL_ID = #{channelId,jdbcType=DECIMAL}, 
+      </if>
+      <if test="createUserId != null">
+        CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR}, 
+      </if>
+      <if test="title != null">
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="imagePath != null">
+        IMAGE_PATH = #{imagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="isBold != null">
+        IS_BOLD = #{isBold,jdbcType=DECIMAL},
+      </if>
+      <if test="titleColor != null">
+        TITLE_COLOR = #{titleColor,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="top != null">
+        TOP = #{top,jdbcType=DECIMAL},
+      </if>
+       <if test="outId != null">
+        OUT_ID = #{outId,jdbcType=DECIMAL},
+      </if>
+      <if test="text != null">
+        TEXT = #{text,jdbcType=CLOB},
+      </if>
+    </set>
+   		where CONTENT_ID = #{contentId,jdbcType=DECIMAL}
+  </update>
+  
+	 <select id="getPaginationList" parameterType="java.util.Map" resultMap="BaseResultMap">
+	select
+	   tt.CONTENT_ID as contentId, tt.CHANNEL_ID as channelId, tt.TITLE as title, tt.CREATE_TIME as createTime,
+       tt.IMAGE_PATH as imagePath, tt.IS_BOLD as isBold, tt.TITLE_COLOR as titleColor, tt.STATUS as status, tt.TOP as top,
+       u.USER_NAME as crateUserName , c.NAME  as channelName,c.CHANNEL_FROM as channelFrom,
+	  (select o.org_name from organise o where o.org_code = u.org_id and u.user_id = tt.CREATE_USER_ID) as orgName,
+	  (select o.district_code from organise o where o.org_code = u.org_id and u.user_id = tt.CREATE_USER_ID) as userDistriceCode
+	 from CMS_CONTENT tt,CMS_CHANNEL c, USER_ u
+		<where>
+			 tt.CREATE_USER_ID = u.USER_ID 
+	 		and tt.CHANNEL_ID = c.CHANNEL_ID
+	 		 and tt.status= #{status,jdbcType=DECIMAL}
+			<if test="title!= null">
+				and tt.TITLE like
+				concat(concat('%',#{title}),'%')
+			</if>
+			<if test="channelId!= null">
+				and  tt.CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+			</if>
+			<if test="createUserId!= null">
+				and  tt.CREATE_USER_ID = #{createUserId,jdbcType=DECIMAL}
+			</if>
+			<if test="createStartTime != null">
+				<![CDATA[
+					 and  CREATE_TIME >= #{createStartTime,jdbcType=TIMESTAMP}
+				]]>
+			</if>
+			<if test="createEndTime != null">
+				<![CDATA[
+					 and CREATE_TIME  < (#{createEndTime,jdbcType=TIMESTAMP} +   interval   '1'  day)
+				]]>
+			</if>
+		</where>
+		 order by TOP, CREATE_TIME desc
+	</select>
+	
+	<select id="getPaginationCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1)
+		 from CMS_CONTENT tt,CMS_CHANNEL c, USER_ u
+		<where>
+			 tt.CREATE_USER_ID = u.USER_ID 
+	 		and tt.CHANNEL_ID = c.CHANNEL_ID
+	 		 and tt.status = #{status,jdbcType=DECIMAL}
+			<if test="title!= null">
+				and tt.TITLE like
+				concat(concat('%',#{title}),'%')
+			</if>
+			<if test="channelId!= null">
+				and tt.CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+			</if>
+			<if test="createUserId!= null">
+				and  tt.CREATE_USER_ID = #{createUserId,jdbcType=DECIMAL}
+			</if>
+			<if test="createStartTime != null">
+				<![CDATA[
+					 and  CREATE_TIME >= #{createStartTime,jdbcType=TIMESTAMP}
+				]]>
+			</if>
+			<if test="createEndTime != null">
+				<![CDATA[
+					 and CREATE_TIME  < (#{createEndTime,jdbcType=TIMESTAMP} +   interval   '1'  day)
+				]]>
+			</if>
+			<!-- <if test="orgCode!=null">and u.ORG_ID=#{orgCode}</if>
+			<if test="userOrgCode!=null">and tt.CREATE_USER_ID IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+			IN
+			(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{userOrgCode} OR UP_ORG_CODE = #{userOrgCode} ))</if>-->
+		</where>
+	</select>
+		
+	 <select id="getAllWithBlob"  resultMap="ResultMapWithBLOBs">
+	select
+	   tt.CONTENT_ID as contentId, tt.CHANNEL_ID as channelId,tt.TITLE as title, tt.CREATE_TIME as createTime,
+       concat(tt.text, tt.title) as text
+	 from CMS_CONTENT tt,CMS_CHANNEL c, USER_ u
+		<where>
+			 tt.CREATE_USER_ID = u.USER_ID 
+	 		and tt.CHANNEL_ID = c.CHANNEL_ID
+	 		and tt.status = 0
+		</where>
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="int" resultMap="ResultMapWithBLOBs">
+    select
+	   tt.CONTENT_ID as contentId, tt.CHANNEL_ID as channelId, tt.TITLE as title, tt.CREATE_TIME as createTime,
+       tt.IMAGE_PATH as imagePath, tt.IS_BOLD as isBold, tt.TITLE_COLOR as titleColor, tt.STATUS as status, tt.TEXT as text,
+       u.USER_NAME as crateUserName , c.NAME  as channelName,
+	  (select o.org_name from organise o where o.org_code = u.org_id and u.user_id = tt.CREATE_USER_ID) as orgName
+	 from CMS_CONTENT tt,CMS_CHANNEL c, USER_ u
+    where 
+    CONTENT_ID = #{contentId,jdbcType=DECIMAL}
+    and  tt.CREATE_USER_ID = u.USER_ID 
+	and tt.CHANNEL_ID = c.CHANNEL_ID
+   </select>
+   
+    <select id="selectContentIndex" parameterType="map" resultMap="BaseResultMap">
+  	select *
+	  from (select  CONTENT_ID,CHANNEL_ID,TITLE,CREATE_TIME,IMAGE_PATH,TITLE_COLOR,top from CMS_CONTENT  where CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+      and status = 0 order by top ,create_time desc ) 
+	 where rownum &lt;= #{homePageNumber}
+  </select>
+  
+   <select id="getContentSizeByChannelId" parameterType="int" resultType="java.lang.Integer">
+  	select  count(1)
+	  from CMS_CONTENT 
+	 where CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+  </select>
+  
+   <select id="getRealId" parameterType="map" resultType="java.lang.Integer">
+  	SELECT  CONTENT_ID
+	  FROM CMS_CONTENT 
+	 WHERE CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+	  AND OUT_ID = #{outId,jdbcType=DECIMAL}
+  </select>
+  
+  
+  <!-- 平台网站信息发布统计 业务版 -->
+	<select id="queryCmsContentTotalCountForBiz" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT COUNT(1) AS TOTAL_NUM,
+		NVL(SUM(CASE WHEN CHANNEL_ID = 5 THEN 1 ELSE 0 END),0) AS XXGK,
+		 NVL(SUM( CASE WHEN CHANNEL_ID = 1 THEN 1 ELSE 0 END),0) AS YFXZ,
+		    NVL(SUM(CASE WHEN CHANNEL_ID = 2 THEN 1 ELSE 0 END),0) AS ZFDT,
+		      NVL(SUM(CASE WHEN CHANNEL_ID = 7 THEN 1 ELSE 0 END),0) AS FLFG,
+		        NVL(SUM(CASE WHEN CHANNEL_ID = 6 THEN 1 ELSE 0 END),0) AS YWYT,
+		        NVL(SUM( CASE WHEN CHANNEL_ID = 8 THEN 1 ELSE 0 END),0) AS DXAL 
+		  FROM CMS_CONTENT  T,USER_ U,ORGANISE O
+	      WHERE T.CREATE_USER_ID = U.USER_ID 
+	      AND U.ORG_ID = O.ORG_CODE
+			<if test="industryType!=null and industryType!=''">	      
+			AND O.INDUSTRY_TYPE=#{industryType}
+			</if>
+			<if test="yearStr!=null and yearStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'YYYY')=${yearStr}
+			</if>
+			<if test="quarterStr!=null and quarterStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'Q')=${quarterStr} 
+			</if>
+			<if test="monthStr!=null and monthStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'MM')=${monthStr}
+			</if>
+	</select>
+	
+	<!-- 平台网站信息发布统计 业务版-->
+  <select id="cmsContentStatisByIndustryForBiz" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT TB_ALL.INDUSTRY_TYPE,TB_ALL.INDUSTRY_NAME,NVL(TB_CNT.TOTAL_NUM,0) TOTAL_NUM,NVL(TB_CNT.XXGK,0) XXGK,NVL(TB_CNT.YFXZ,0) YFXZ,NVL(TB_CNT.ZFDT,0) ZFDT,NVL(TB_CNT.FLFG,0) FLFG,NVL(TB_CNT.YWYT,0) YWYT,NVL(TB_CNT.DXAL,0) DXAL FROM
+		(SELECT DISTINCT O.INDUSTRY_TYPE,O.INDUSTRY_NAME FROM ORGANISE O WHERE O.DISTRICT_CODE LIKE regexp_replace(${regionId},'(00)+$')||'%') TB_ALL,
+		(
+		SELECT  O.INDUSTRY_TYPE,O.INDUSTRY_NAME,COUNT(1) AS TOTAL_NUM,
+				NVL(SUM(CASE WHEN CHANNEL_ID = 5 THEN 1 ELSE 0 END),0) AS XXGK,
+		     NVL(SUM( CASE WHEN CHANNEL_ID = 1 THEN 1 ELSE 0 END),0) AS YFXZ,
+		        NVL(SUM(CASE WHEN CHANNEL_ID = 2 THEN 1 ELSE 0 END),0) AS ZFDT,
+		          NVL(SUM(CASE WHEN CHANNEL_ID = 7 THEN 1 ELSE 0 END),0) AS FLFG,
+		            NVL(SUM(CASE WHEN CHANNEL_ID = 6 THEN 1 ELSE 0 END),0) AS YWYT,
+		            NVL(SUM( CASE WHEN CHANNEL_ID = 8 THEN 1 ELSE 0 END),0) AS DXAL 
+		      FROM CMS_CONTENT T,USER_ U,ORGANISE O
+		      WHERE T.CREATE_USER_ID = U.USER_ID 
+		      AND U.ORG_ID = O.ORG_CODE
+		    <if test="industryType!=null and industryType!=''">	      
+			AND O.INDUSTRY_TYPE=#{industryType}
+			</if>
+			<if test="yearStr!=null and yearStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'YYYY')=${yearStr}
+			</if>
+			<if test="quarterStr!=null and quarterStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'Q')=${quarterStr} 
+			</if>
+			<if test="monthStr!=null and monthStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'MM')=${monthStr}
+			</if>
+			<if test="regionId!=null and regionId!=''">
+			AND O.DISTRICT_CODE LIKE regexp_replace(${regionId},'(00)+$')||'%'
+			</if>
+		      GROUP BY O.INDUSTRY_TYPE,O.INDUSTRY_NAME
+		      ) TB_CNT
+		WHERE TB_ALL.INDUSTRY_TYPE=TB_CNT.INDUSTRY_TYPE(+) AND TB_ALL.INDUSTRY_NAME=TB_CNT.INDUSTRY_NAME(+) AND TB_ALL.INDUSTRY_TYPE IS NOT NULL AND TB_ALL.INDUSTRY_NAME IS NOT NULL
+		ORDER BY TB_ALL.INDUSTRY_TYPE
+ 	</select>
+  
+  
+	<!-- 平台网站信息发布统计 -->
+	<select id="queryCmsContentTotalCount" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT COUNT(1) AS TOTAL_NUM,
+		NVL(SUM(CASE WHEN CHANNEL_ID = 5 THEN 1 ELSE 0 END),0) AS XXGK,
+		 NVL(SUM( CASE WHEN CHANNEL_ID = 1 THEN 1 ELSE 0 END),0) AS YFXZ,
+		    NVL(SUM(CASE WHEN CHANNEL_ID = 2 THEN 1 ELSE 0 END),0) AS ZFDT,
+		      NVL(SUM(CASE WHEN CHANNEL_ID = 7 THEN 1 ELSE 0 END),0) AS FLFG,
+		        NVL(SUM(CASE WHEN CHANNEL_ID = 6 THEN 1 ELSE 0 END),0) AS YWYT,
+		        NVL(SUM( CASE WHEN CHANNEL_ID = 8 THEN 1 ELSE 0 END),0) AS DXAL 
+		  FROM LF_CMS_CONTENT  T,LF_PLATFORM_USER U,LF_PLATFORM_ORGANISE O
+	      WHERE T.CREATE_USER_ID = U.ASSIGN_PERSON  AND T.PLATFORM_ID=U.PLATFORM_ID
+	      AND U.ORG_ID = O.ORG_CODE AND U.PLATFORM_ID=O.PLATFORM_ID
+			<if test="industryType!=null and industryType!=''">	      
+			AND O.INDUSTRY_ID=#{industryType}
+			</if>
+			<if test="yearStr!=null and yearStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'YYYY')=${yearStr}
+			</if>
+			<if test="quarterStr!=null and quarterStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'Q')=${quarterStr} 
+			</if>
+			<if test="monthStr!=null and monthStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'MM')=${monthStr}
+			</if>
+			<if test="regionId!=null and regionId!=''">
+			AND O.REGION_ID LIKE regexp_replace(${regionId},'(00)+$')||'%'
+			</if>
+	</select>
+	
+	<!-- 平台网站信息发布统计按行业 -->
+	<select id="cmsContentStatisByIndustry" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT TB_ALL.INDUSTRY_ID,TB_ALL.INDUSTRY_NAME,NVL(TB_CNT.TOTAL_NUM,0) TOTAL_NUM,NVL(TB_CNT.XXGK,0) XXGK,NVL(TB_CNT.YFXZ,0) YFXZ,NVL(TB_CNT.ZFDT,0) ZFDT,NVL(TB_CNT.FLFG,0) FLFG,NVL(TB_CNT.YWYT,0) YWYT,NVL(TB_CNT.DXAL,0) DXAL FROM
+    (SELECT DISTINCT O.INDUSTRY_ID,O.INDUSTRY_NAME FROM LF_PLATFORM_ORGANISE O  
+    <if test="regionId!=null and regionId!=''">
+     WHERE O.REGION_ID LIKE regexp_replace(${regionId},'(00)+$')||'%'
+     </if>
+     ) TB_ALL,
+    (
+    SELECT  O.INDUSTRY_ID,O.INDUSTRY_NAME,COUNT(1) AS TOTAL_NUM,
+        NVL(SUM(CASE WHEN CHANNEL_ID = 5 THEN 1 ELSE 0 END),0) AS XXGK,
+         NVL(SUM( CASE WHEN CHANNEL_ID = 1 THEN 1 ELSE 0 END),0) AS YFXZ,
+            NVL(SUM(CASE WHEN CHANNEL_ID = 2 THEN 1 ELSE 0 END),0) AS ZFDT,
+              NVL(SUM(CASE WHEN CHANNEL_ID = 7 THEN 1 ELSE 0 END),0) AS FLFG,
+                NVL(SUM(CASE WHEN CHANNEL_ID = 6 THEN 1 ELSE 0 END),0) AS YWYT,
+                NVL(SUM( CASE WHEN CHANNEL_ID = 8 THEN 1 ELSE 0 END),0) AS DXAL 
+          FROM LF_CMS_CONTENT T,LF_PLATFORM_USER U,LF_PLATFORM_ORGANISE O
+          WHERE T.CREATE_USER_ID = U.ASSIGN_PERSON AND T.PLATFORM_ID=U.PLATFORM_ID
+          AND U.ORG_ID = O.ORG_CODE AND U.PLATFORM_ID=O.PLATFORM_ID
+      <if test="industryType!=null and industryType!=''">
+            AND O.INDUSTRY_TYPE=#{industryType}
+      </if>
+      <if test="yearStr!=null and yearStr!=''">
+            AND TO_CHAR(T.CREATE_TIME,'YYYY')=${yearStr}
+      </if>
+      <if test="quarterStr!=null and quarterStr!=''">
+            AND TO_CHAR(T.CREATE_TIME,'Q')=${quarterStr} 
+      </if>
+      <if test="monthStr!=null and monthStr!=''">
+            AND TO_CHAR(T.CREATE_TIME,'MM')=${monthStr}
+      </if>
+      <if test="regionId!=null and regionId!=''">
+            AND O.REGION_ID LIKE regexp_replace(${regionId},'(00)+$')||'%'
+      </if>
+          GROUP BY O.INDUSTRY_ID,O.INDUSTRY_NAME
+          ) TB_CNT
+    WHERE TB_ALL.INDUSTRY_ID=TB_CNT.INDUSTRY_ID(+) AND TB_ALL.INDUSTRY_NAME=TB_CNT.INDUSTRY_NAME(+) AND TB_ALL.INDUSTRY_ID IS NOT NULL AND TB_ALL.INDUSTRY_NAME IS NOT NULL
+    ORDER BY TB_ALL.INDUSTRY_ID
+	</select>
+ 	
+ 	<!-- 平台网站信息发布统计按单位 -->
+ 	<select id="cmsContentStatisByOrg" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT TB_ALL.ORG_CODE,TB_ALL.ORG_NAME,NVL(TB_CNT.TOTAL_NUM,0) TOTAL_NUM,NVL(TB_CNT.XXGK,0) XXGK,NVL(TB_CNT.YFXZ,0) YFXZ,NVL(TB_CNT.ZFDT,0) ZFDT,NVL(TB_CNT.FLFG,0) FLFG,NVL(TB_CNT.YWYT,0) YWYT,NVL(TB_CNT.DXAL,0) DXAL FROM
+		(SELECT O.ORG_CODE,O.ORG_NAME FROM ORGANISE O WHERE O.DISTRICT_CODE=${regionId} AND O.IS_DEPT=0) TB_ALL,
+		(
+		SELECT  O.ORG_CODE,O.ORG_NAME,COUNT(1) AS TOTAL_NUM,
+				NVL(SUM(CASE WHEN CHANNEL_ID = 5 THEN 1 ELSE 0 END),0) AS XXGK,
+		     NVL(SUM( CASE WHEN CHANNEL_ID = 1 THEN 1 ELSE 0 END),0) AS YFXZ,
+		        NVL(SUM(CASE WHEN CHANNEL_ID = 2 THEN 1 ELSE 0 END),0) AS ZFDT,
+		          NVL(SUM(CASE WHEN CHANNEL_ID = 7 THEN 1 ELSE 0 END),0) AS FLFG,
+		            NVL(SUM(CASE WHEN CHANNEL_ID = 6 THEN 1 ELSE 0 END),0) AS YWYT,
+		            NVL(SUM( CASE WHEN CHANNEL_ID = 8 THEN 1 ELSE 0 END),0) AS DXAL 
+		      FROM CMS_CONTENT T,USER_ U,ORGANISE O
+		      WHERE T.CREATE_USER_ID = U.USER_ID 
+		      AND U.ORG_ID = O.ORG_CODE
+		    <if test="industryType!=null and industryType!=''">	      
+			AND O.INDUSTRY_TYPE=#{industryType}
+			</if>
+			<if test="yearStr!=null and yearStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'YYYY')=${yearStr}
+			</if>
+			<if test="quarterStr!=null and quarterStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'Q')=${quarterStr} 
+			</if>
+			<if test="monthStr!=null and monthStr!=''">
+			AND TO_CHAR(T.CREATE_TIME,'MM')=${monthStr}
+			</if>
+		      GROUP BY O.ORG_CODE,O.ORG_NAME
+		      ) TB_CNT
+		WHERE TB_ALL.ORG_CODE=TB_CNT.ORG_CODE(+) AND TB_ALL.ORG_NAME=TB_CNT.ORG_NAME(+)
+		ORDER BY TB_ALL.ORG_CODE
+ 	</select>
+ 	
+ 	<!-- 平台网站信息发布统计按下级区划 -->
+ 	<select id="cmsContentStatisBySubDistrict" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT TB_ALL.DISTRICT_CODE,TB_ALL.DISTRICT_NAME,NVL(TB_CNT.TOTAL_NUM,0) TOTAL_NUM,NVL(TB_CNT.XXGK,0) XXGK,NVL(TB_CNT.YFXZ,0) YFXZ,NVL(TB_CNT.ZFDT,0) ZFDT,NVL(TB_CNT.FLFG,0) FLFG,NVL(TB_CNT.YWYT,0) YWYT,NVL(TB_CNT.DXAL,0) DXAL FROM
+    (SELECT D.DISTRICT_CODE,D.DISTRICT_NAME FROM DISTRICT D WHERE D.UP_DISTRICT_CODE=${regionId}) TB_ALL,
+    (
+    SELECT RPAD(SUBSTR(O.DISTRICT_CODE,1,RDUAL.REGION_LEN+2),6,'0') DISTRICT_CODE,COUNT(1) AS TOTAL_NUM,
+        NVL(SUM(CASE WHEN CHANNEL_ID = 5 THEN 1 ELSE 0 END),0) AS XXGK,
+         NVL(SUM( CASE WHEN CHANNEL_ID = 1 THEN 1 ELSE 0 END),0) AS YFXZ,
+            NVL(SUM(CASE WHEN CHANNEL_ID = 2 THEN 1 ELSE 0 END),0) AS ZFDT,
+              NVL(SUM(CASE WHEN CHANNEL_ID = 7 THEN 1 ELSE 0 END),0) AS FLFG,
+                NVL(SUM(CASE WHEN CHANNEL_ID = 6 THEN 1 ELSE 0 END),0) AS YWYT,
+                NVL(SUM( CASE WHEN CHANNEL_ID = 8 THEN 1 ELSE 0 END),0) AS DXAL 
+          FROM CMS_CONTENT T,USER_ U,ORGANISE O,
+          (SELECT ${regionId} REGION_ID,regexp_replace(${regionId},'(00)+$') SHORT_REGION,LENGTH(regexp_replace(${regionId},'(00)+$')) REGION_LEN FROM DUAL) RDUAL
+          WHERE T.CREATE_USER_ID = U.USER_ID 
+          AND U.ORG_ID = O.ORG_CODE
+          AND O.DISTRICT_CODE LIKE RDUAL.SHORT_REGION||'%'
+      <if test="industryType!=null and industryType!=''">
+            AND O.INDUSTRY_TYPE=#{industryType}
+      </if>
+      <if test="yearStr!=null and yearStr!=''">
+            AND TO_CHAR(T.CREATE_TIME,'YYYY')=${yearStr}
+      </if>
+      <if test="quarterStr!=null and quarterStr!=''">
+            AND TO_CHAR(T.CREATE_TIME,'Q')=${quarterStr} 
+      </if>
+      <if test="monthStr!=null and monthStr!=''">
+            AND TO_CHAR(T.CREATE_TIME,'MM')=${monthStr}
+      </if>
+          GROUP BY SUBSTR(O.DISTRICT_CODE,1,RDUAL.REGION_LEN+2) 
+          ) TB_CNT
+    WHERE TB_ALL.DISTRICT_CODE=TB_CNT.DISTRICT_CODE(+)
+    ORDER BY TB_ALL.DISTRICT_CODE
+ 	</select>
+ 	
+ 	<!-- 分析版 平台网站信息发布统计按下级区划 -->
+ 	<select id="cmsContentStatisBySubDistrictOfStatis" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT TB_ALL.DISTRICT_CODE,TB_ALL.DISTRICT_NAME,NVL(TB_CNT.TOTAL_NUM,0) TOTAL_NUM,NVL(TB_CNT.XXGK,0) XXGK,NVL(TB_CNT.YFXZ,0) YFXZ,NVL(TB_CNT.ZFDT,0) ZFDT,NVL(TB_CNT.FLFG,0) FLFG,NVL(TB_CNT.YWYT,0) YWYT,NVL(TB_CNT.DXAL,0) DXAL FROM
+    (SELECT D.REGION_ID DISTRICT_CODE,D.NAME DISTRICT_NAME FROM LF_REGION D WHERE D.PARENT_ID=${regionId}) TB_ALL,
+    (
+    SELECT RPAD(SUBSTR(O.REGION_ID,1,RDUAL.REGION_LEN+2),6,'0') DISTRICT_CODE,COUNT(1) AS TOTAL_NUM,
+        NVL(SUM(CASE WHEN CHANNEL_ID = 5 THEN 1 ELSE 0 END),0) AS XXGK,
+         NVL(SUM( CASE WHEN CHANNEL_ID = 1 THEN 1 ELSE 0 END),0) AS YFXZ,
+            NVL(SUM(CASE WHEN CHANNEL_ID = 2 THEN 1 ELSE 0 END),0) AS ZFDT,
+              NVL(SUM(CASE WHEN CHANNEL_ID = 7 THEN 1 ELSE 0 END),0) AS FLFG,
+                NVL(SUM(CASE WHEN CHANNEL_ID = 6 THEN 1 ELSE 0 END),0) AS YWYT,
+                NVL(SUM( CASE WHEN CHANNEL_ID = 8 THEN 1 ELSE 0 END),0) AS DXAL 
+          FROM  LF_CMS_CONTENT T,LF_PLATFORM_USER U,LF_PLATFORM_ORGANISE O,
+          (SELECT ${regionId} REGION_ID,regexp_replace(${regionId},'(00)+$') SHORT_REGION,LENGTH(regexp_replace(${regionId},'(00)+$')) REGION_LEN FROM DUAL) RDUAL
+          WHERE T.CREATE_USER_ID = U.ASSIGN_PERSON AND T.PLATFORM_ID=U.PLATFORM_ID  
+          AND U.ORG_ID = O.ORG_CODE AND U.PLATFORM_ID=O.PLATFORM_ID
+          AND O.REGION_ID LIKE RDUAL.SHORT_REGION||'%' 
+            <if test="industryType!=null and industryType!=''">
+                        AND O.INDUSTRY_ID=#{industryType}
+            </if>
+            <if test="yearStr!=null and yearStr!=''">
+                        AND TO_CHAR(T.CREATE_TIME,'YYYY')=${yearStr}
+            </if>
+            <if test="quarterStr!=null and quarterStr!=''">
+                        AND TO_CHAR(T.CREATE_TIME,'Q')=${quarterStr} 
+            </if>
+            <if test="monthStr!=null and monthStr!=''">
+                        AND TO_CHAR(T.CREATE_TIME,'MM')=${monthStr}
+            </if>
+          GROUP BY SUBSTR(O.REGION_ID,1,RDUAL.REGION_LEN+2) 
+          ) TB_CNT
+    WHERE TB_ALL.DISTRICT_CODE=TB_CNT.DISTRICT_CODE(+)
+    ORDER BY TB_ALL.DISTRICT_CODE
+ 	</select> 
+ 
+</mapper>

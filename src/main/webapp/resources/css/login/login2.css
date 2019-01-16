@@ -1,0 +1,134 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+body {
+	margin:0 auto;
+	font-family:"Microsoft YaHei", "微软雅黑", "宋体";
+	font-size: 12px;
+	margin:0;
+	padding:0;
+	background:url(../../images/xinxloginbj.png) top center;
+}
+* {
+	padding:0;
+	margin:0;
+}
+ul li {
+	list-style:none;
+}
+a:link, a:visited {
+	text-decoration:none;
+	color:#333;
+}
+a:hover {
+	text-decoration:underline;
+	color:#333
+}
+.clear {
+	clear:both;
+	font-size:0px;
+	height:0px;
+	line-height:0px;
+}
+img {
+	border:none;
+}
+.xinxlftop {
+	background:url(../../images/xinxlogintopbj.png) no-repeat top center;
+	width:100%;
+	height:125px;
+}
+.tlogoimg {
+	width:840px;
+	margin:0 auto;
+	padding-top:15px;
+}
+.xinxlfcen {
+	width:100%;
+	margin:7% auto 0;
+}
+.xxlfcLogin {
+	width:570px;
+	margin:0 auto;
+	background:url(../../images/xinxlogincontbj.png) no-repeat;
+	height:380px;
+	position:relative;
+}
+/*loginul*/
+.loginul {
+	width:470px;
+	position:absolute;
+	top:85px;
+	left:46px;
+}
+.loginul ul li {
+	line-height:36px;
+	margin-left:20px;
+	line-height:60px;
+}
+.loginul input {
+	width:370px;
+	border:1px solid #bbbbbb;
+	color:#333;
+	background-attachment:#fff;
+	height:32px;
+	line-height:32px;
+	padding-left:5px;
+}
+.loginul input img {
+	width:63px;
+	height:21px;
+	display:block;
+}
+.fontspan {
+	font-size:14px;
+	color:#777777;
+	font-weight:bold;
+}
+#securityCode {
+	width:255px;
+}
+#securityCodeImg {
+	height:33px;
+	vertical-align:middle;
+	margin-top:-6px;
+}
+.hyzhangdiv {
+	margin-left:10px;
+}
+.buttonDiv {
+	position:absolute;
+	width:370px;
+	bottom:45px;
+	left:97px;
+}
+#loginBtn {
+	background:url(../../images/logobtnbj.png) no-repeat;
+	width:370px;
+	height:40px;
+	line-height:40px;
+	margin-left:30px;
+	border:none;
+	color:#002f69;
+}
+.buttonDiv #loginBtn:hover {
+	background:url(../../images/lbtnhover.png) no-repeat;
+	width:370px;
+	height:40px;
+}
+.loginul input:hover{ 
+	border:1px solid #1C6CC9; 
+	}
+@media only screen and (min-width: 1300px) and (max-width: 1380px) {
+	.xinxlfcen{ margin-top:5%;}
+	}
+	
+
+.forgotpassw{ position:absolute; right:90px; bottom:30px; display:block;}
+.forgotpassw:link,.forgotpassw:visited{ color:#666; }
+.forgotpassw:hover{ color:#156DDC; }
+
+
+
+	
+	

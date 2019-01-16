@@ -1,0 +1,48 @@
+@CHARSET "UTF-8";
+.div_mainbody_style {
+    background-color: #FFFFFF;
+    border-color: #89C1E0;
+    border-style: solid;
+    border-width: 1px;
+    margin: 26px 10px 10px 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+.detail_body {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    vertical-align: baseline;
+    width: 80%;
+}
+.detail_title {
+    color: #000066;
+    font-family: 黑体;
+    font-size: 26px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+}
+.detail_rec {
+    text-align: center;
+}
+.detail_nr {
+    white-space: normal;
+    width: 750px;
+    word-wrap: break-word;
+}
+.detail_bottom {
+    padding-top: 10px;
+    text-align: left;
+}
+.content{
+	text-align: left;
+     max-width: 780px;
+}
+.cont_show .text_box {
+	
+	margin: 0 auto;
+}
+.content_huifu{
+	max-width: 780px;
+	margin: 0 auto;
+}

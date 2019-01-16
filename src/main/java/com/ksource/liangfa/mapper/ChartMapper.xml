@@ -1,0 +1,1391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.mapper.ChartMapper">
+
+	<resultMap id="currTimeCaseNum" type="com.ksource.liangfa.model.ChartBean" >
+		<result property="totalNum"					column="TOTAL_NUM" jdbcType="DECIMAL"/>
+		<result property="proviceTotalNum"			column="PROVICE_TOTAL_NUM" jdbcType="DECIMAL"/>
+		<result property="cityTotalNum"				column="CITY_TOTAL_NUM" jdbcType="DECIMAL"/>
+		<result property="countyTotalNum"			column="COUNTY_TOTAL_NUM" jdbcType="DECIMAL"/>
+		<result property="currYearNum"				column="CURR_YEAR_NUM" jdbcType="DECIMAL"/>
+		<result property="proviceCurrYearNum"		column="PROVICE_CURR_YEARNUM" jdbcType="DECIMAL"/>
+		<result property="cityCurrYearNum"			column="CITY_CURR_YEARNUM" jdbcType="DECIMAL"/>
+		<result property="countyCurrYearNum"		column="COUNTY_CURR_YEARNUM" jdbcType="DECIMAL"/>
+		<result property="currMonthNum"				column="CURR_MONTHNUM" jdbcType="DECIMAL"/>
+		<result property="proviceCurrMonthNum"		column="PROVICE_CURR_MONTHNUM" jdbcType="DECIMAL"/>
+		<result property="cityCurrMonthNum"			column="CITY_CURR_MONTHNUM" jdbcType="DECIMAL"/>
+		<result property="countyCurrMonthNum"		column="COUNTY_CURR_MONTHNUM" jdbcType="DECIMAL"/>
+		<result property="currQuarterNum"			column="CURR_QUARTERNUM" jdbcType="DECIMAL"/>
+		<result property="proviceCurrQuarterNum"	column="PROVICE_CURR_QUARTERNUM" jdbcType="DECIMAL"/>		
+		<result property="cityCurrQuarterNum"		column="CITY_CURR_QUARTERNUM" jdbcType="DECIMAL"/>
+		<result property="countyCurrQuarterNum"		column="COUNTY_CURR_QUARTERNUM" jdbcType="DECIMAL"/>
+		<result property="yoy"						column="YOY" jdbcType="VARCHAR"/>
+		<result property="proviceYoy"				column="PROVICE_YOY" jdbcType="VARCHAR"/>
+		<result property="cityYoy"					column="CITY_YOY" jdbcType="VARCHAR"/>
+		<result property="countyYoy"				column="COUNTY_YOY" jdbcType="VARCHAR"/>
+		<result property="qoq"						column="QOQ" jdbcType="VARCHAR"/>
+		<result property="proviceQoq"				column="PROVICE_QOQ" jdbcType="VARCHAR"/>
+		<result property="cityQoq"					column="CITY_QOQ" jdbcType="VARCHAR"/>
+		<result property="countyQoq"				column="COUNTY_QOQ" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="caseNumSortMap" type="com.ksource.liangfa.model.MapBean" >
+		<result property="regionId"	column="REGION_ID"/>
+		<result property="regionName"	column="REGION_NAME"/>
+		<result property="chufaNum"	     column="CHUFA_NUM"/> 
+		<result property="directyisongNum"	column="DIRECTYISONG_NUM"/>
+		<result property="suggestyisongNum"	     column="SUGGESTYISONG_NUM"/> 
+		<result property="lianNum"	column="LIAN_NUM"/>
+		<result property="daibuNum"	     column="DAIBU_NUM"/> 
+		<result property="qisuNum"	column="QISU_NUM"/>
+		<result property="panjueNum"	column="PANJUE_NUM"/>
+		<result property="chufaTimesNum"	column="CHUFA_TIMES_NUM"/>
+		<result property="beyondEightyNum"	column="BEYOND_EIGHTY_NUM"/>
+		<result property="identifyTypeNum"	     column="IDENTIFY_TYPE_NUM"/> 
+		<result property="lowerLimitMoneyNum"	column="LOWER_LIMIT_MONEY_NUM"/>
+		<result property="descussNum"	column="DESCUSS_NUM"/>
+		<result property="seriousCaseNum"	     column="SERIOUS_CASE_NUM"/> 
+		<result property="suspectedCriminalNum"	column="SUSPECTED_CRIMINAL_NUM"/>
+		<result property="gonganshouliNum"	column="gonganshouli_Num"/>
+		<result property="tiqingdaibuNum"	column="TIQINGDAIBU_CASE_NUM"/>
+		<result property="yisongqisuNum"	column="YISONGQISU_CASE_NUM"/>
+		<result property="xingzhengshouliNum"	column="XINGZHENGSHOULI_NUM"/>
+		<result property="xingzhenglianNum"	column="XINGZHENGLIAN_NUM"/>
+	</resultMap>	
+	
+	<resultMap id="mapChartMap" type="com.ksource.liangfa.model.MapBean" >
+		<result property="regionId"	column="REGION_ID"/>
+		<result property="regionName"	column="REGION_NAME"/>
+		<result property="amountInvolved"	     column="AMOUNT_INVOLVED"/> 
+		<result property="totalNum"	column="TOTAL_NUM"/>
+		<result property="daishenheNum"	column="DAISHENHE_NUM"/>
+		<result property="chufaNum"	     column="CHUFA_NUM"/> 
+		<result property="buchufaNum"	column="BUCHUFA_NUM"/>
+		<result property="directyisongNum"	column="DIRECTYISONG_NUM"/>
+		<result property="suggestyisongNum"	     column="SUGGESTYISONG_NUM"/> 
+		<result property="lianNum"	column="LIAN_NUM"/>
+		<result property="bulianNum"	column="BULIAN_NUM"/>
+		<result property="daibuNum"	     column="DAIBU_NUM"/> 
+		<result property="qisuNum"	column="QISU_NUM"/>
+		<result property="panjueNum"	column="PANJUE_NUM"/>
+		<result property="jieanNum"	     column="JIEAN_NUM"/> 
+		<result property="chufaTimesNum"	column="CHUFA_TIMES_NUM"/>
+		<result property="beyondEightyNum"	column="BEYOND_EIGHTY_NUM"/>
+		<result property="identifyTypeNum"	     column="IDENTIFY_TYPE_NUM"/> 
+		<result property="lowerLimitMoneyNum"	column="LOWER_LIMIT_MONEY_NUM"/>
+		<result property="descussNum"	column="DESCUSS_NUM"/>
+		<result property="seriousCaseNum"	     column="SERIOUS_CASE_NUM"/> 
+		<result property="suspectedCriminalNum"	column="SUSPECTED_CRIMINAL_NUM"/>
+		<result property="gonganshouliNum"	column="gonganshouli_Num"/>
+		<result property="tiqingdaibuNum"	column="TIQINGDAIBU_CASE_NUM"/>
+		<result property="yisongqisuNum"	column="YISONGQISU_CASE_NUM"/>
+		<result property="xingzhengshouliNum"	column="XINGZHENGSHOULI_NUM"/>
+		<result property="xingzhenglianNum"	column="XINGZHENGLIAN_NUM"/>
+	</resultMap>
+	
+	<resultMap id="monthCaseNumMap" type="com.ksource.liangfa.model.ChartBean"  >
+		<result property="monthCode"		column="MONTH_CODE"/>
+		<result property="monthName"		column="MONTH_NAME"/>
+		<result property="totalNum" 		column="TOTAL_NUM"/>
+	</resultMap>
+	
+	<resultMap id="industryTrendCaseNumMap" type="com.ksource.liangfa.model.ChartBean"  >
+		<result property="monthCode"		column="MONTH_CODE"/>
+		<result property="monthName"		column="MONTH_NAME"/>
+		<result property="totalNum" 		column="TOTAL_NUM"/>
+	</resultMap>
+	
+	<resultMap id="industryCaseNumMap" type="com.ksource.liangfa.model.ChartBean"  >
+		<result property="monthCode"		column="MONTH_CODE" jdbcType="INTEGER"/>
+		<result property="monthName"		column="MONTH_NAME" jdbcType="VARCHAR"/>
+		<result property="totalNum" 		column="TOTAL_NUM" jdbcType="INTEGER"/>
+		<result property="industryName" 	column="INDUSTRY_NAME" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap id="accuseMap" type="com.ksource.liangfa.model.AccuseBean" >
+		<result property="accuseNum"	column="ACCUSE_NUM"/>
+		<result property="accuseID"		column="ACCUSE_ID"/>
+		<result property="accuseName"	column="ACCUSE_NAME"/>
+		<result property="regionId"		column="REGION_ID"/>
+		<result property="regionName"	column="REGION_NAME"/>
+	</resultMap>	
+		
+	
+	<resultMap type="com.ksource.liangfa.model.ChartBean" id="statSuspectCrimeCaseByRegionResult">
+		<result property="totalNum"		column="TOTAL_NUM"/>
+		<result property="regionId"		column="REGION_ID"/>
+		<result property="regionName"	column="REGION_NAME"/>
+	</resultMap>
+	
+	<resultMap type="com.ksource.liangfa.model.ChartBean" id="statSuspectCrimeCaseByOrgResult">
+		<result property="totalNum"		column="TOTAL_NUM"/>
+		<result property="industryId"	column="INDUSTRY_ID"/>
+		<result property="industryName"	column="INDUSTRY_NAME"/>
+	</resultMap>	
+
+	
+	<select id="querySuspectCrimeCaseByRegion" parameterType="java.util.Map" resultMap="statSuspectCrimeCaseByRegionResult">
+		SELECT T.DISTRICT_CODE AS REGION_ID,NVL(T.TOTAL_NUM,0) AS TOTAL_NUM,R.DISTRICT_NAME AS REGION_NAME FROM (
+        SELECT  CASE WHEN LENGTH(A.DISTRICT_CODE) &lt; 6 THEN RPAD(A.DISTRICT_CODE, 6, '0') ELSE A.DISTRICT_CODE END AS DISTRICT_CODE,
+        A.TOTAL_NUM
+         FROM (
+        SELECT SUBSTR(R.DISTRICT_CODE,1,C.LEN+2)AS DISTRICT_CODE,SUM(TOTAL_NUM) AS TOTAL_NUM FROM DISTRICT R,(
+        SELECT O.DISTRICT_CODE,SUM(CASE WHEN IS_SUSPECTED_CRIMINAL = 1 THEN 1 ELSE 0 END) AS TOTAL_NUM FROM CASE_BASIC CB,USER_ U,ORGANISE O
+        WHERE CB.INPUTER = U.USER_ID AND U.ORG_ID = O.ORG_CODE
+          <if test="startTime != null and startTime != '' ">
+            AND INPUT_TIME >=#{startTime}
+          </if>
+          <if test="endTime != null and endTime != '' ">
+             AND INPUT_TIME &lt;=#{endTime} +   interval   '1'  day
+           </if>
+        GROUP BY DISTRICT_CODE
+        ) T,(SELECT LENGTH(#{regionId}) AS LEN FROM DUAL) C
+        WHERE R.DISTRICT_CODE = T.DISTRICT_CODE(+)       
+           AND R.DISTRICT_CODE LIKE #{regionId}||'%'
+         GROUP BY SUBSTR(R.DISTRICT_CODE,1,C.LEN+2)) A) T,DISTRICT R WHERE T.DISTRICT_CODE=R.DISTRICT_CODE
+         ORDER BY R.DISTRICT_CODE		
+	</select>
+	
+	<select id="querySuspectCrimeCaseBySort" parameterType="java.util.Map" resultMap="statSuspectCrimeCaseByRegionResult">
+		SELECT T.DISTRICT_CODE AS REGION_ID,NVL(T.TOTAL_NUM,0) AS TOTAL_NUM,R.DISTRICT_NAME AS REGION_NAME FROM (
+        SELECT  CASE WHEN LENGTH(A.DISTRICT_CODE) &lt; 6 THEN RPAD(A.DISTRICT_CODE, 6, '0') ELSE A.DISTRICT_CODE END AS DISTRICT_CODE,
+        A.TOTAL_NUM
+         FROM (
+        SELECT SUBSTR(R.DISTRICT_CODE,1,C.LEN+2)AS DISTRICT_CODE,SUM(TOTAL_NUM) AS TOTAL_NUM FROM DISTRICT R,(
+        SELECT O.DISTRICT_CODE,SUM(CASE WHEN IS_SUSPECTED_CRIMINAL = 1 THEN 1 ELSE 0 END) AS TOTAL_NUM FROM CASE_BASIC CB,USER_ U,ORGANISE O
+        WHERE CB.INPUTER = U.USER_ID AND U.ORG_ID = O.ORG_CODE
+          <if test="startTime != null and startTime != '' ">
+            AND INPUT_TIME >=#{startTime}
+          </if>
+          <if test="endTime != null and endTime != '' ">
+             AND INPUT_TIME &lt;=#{endTime} +   interval   '1'  day
+           </if>
+        GROUP BY DISTRICT_CODE
+        ) T,(SELECT LENGTH(#{regionId}) AS LEN FROM DUAL) C
+        WHERE R.DISTRICT_CODE = T.DISTRICT_CODE(+)       
+           AND R.DISTRICT_CODE LIKE #{regionId}||'%'
+         GROUP BY SUBSTR(R.DISTRICT_CODE,1,C.LEN+2)) A) T,DISTRICT R WHERE T.DISTRICT_CODE=R.DISTRICT_CODE
+         ORDER BY R.DISTRICT_CODE			
+	</select>
+	<select id="querySuspectCrimeCaseByOrg" parameterType="java.util.Map" resultMap="statSuspectCrimeCaseByOrgResult">
+		SELECT NVL(T.TOTAL_NUM,0) AS TOTAL_NUM,I.INDUSTRY_TYPE,I.INDUSTRY_NAME FROM (
+		SELECT COUNT(1) AS TOTAL_NUM,O.INDUSTRY_TYPE
+		  FROM CASE_BASIC C, ORGANISE O
+		 WHERE  C.INPUT_UNIT = O.ORG_CODE
+		   AND C.IS_SUSPECTED_CRIMINAL = 1
+       	   AND O.IS_DEPT = 0
+		   AND O.ORG_TYPE = 1
+		   AND O.DISTRICT_CODE LIKE #{shortRegionId}||'%'
+		   <if test="startTime != null and startTime != '' ">
+	      	AND INPUT_TIME >=#{startTime}
+	      </if>
+	      <if test="endTime != null and endTime != '' ">
+	      	 AND INPUT_TIME &lt;=#{endTime}+   interval   '1'  day
+	       </if>
+		GROUP BY O.INDUSTRY_TYPE
+		) T RIGHT JOIN INDUSTRY_INFO I 
+		ON T.INDUSTRY_TYPE = I.INDUSTRY_TYPE
+	</select>	
+	
+ <select id="queryCurrTimeCaseNumForbus" parameterType="java.util.Map" resultMap="currTimeCaseNum">
+SELECT NVL(COUNT(1),0) AS TOTAL_NUM,
+     NVL(SUM(CITY_TOTAL_NUM),0) AS CITY_TOTAL_NUM,NVL(SUM(COUNTY_TOTAL_NUM),0) AS COUNTY_TOTAL_NUM,
+     NVL(SUM(CURRYEARNUM),0) AS CURR_YEAR_NUM,
+     
+     NVL(SUM(CITY_CURR_YEARNUM),0) AS CITY_CURR_YEARNUM, 
+     NVL(SUM(COUNTY_CURR_YEARNUM),0) AS COUNTY_CURR_YEARNUM,
+     NVL(SUM(CURR_MONTHNUM),0) AS CURR_MONTHNUM,
+    
+     NVL(SUM(CITY_CURR_MONTHNUM),0) AS CITY_CURR_MONTHNUM,NVL(SUM(COUNTY_CURR_MONTHNUM),0) AS COUNTY_CURR_MONTHNUM,
+     NVL(SUM(CURR_QUARTERNUM),0) AS CURR_QUARTERNUM,
+     NVL(SUM(CITY_CURR_QUARTERNUM),0) AS CITY_CURR_QUARTERNUM,NVL(SUM(COUNTY_CURR_QUARTERNUM),0) AS COUNTY_CURR_QUARTERNUM,
+     TRUNC((CASE WHEN SUM(PRE_MONTHNUM) = 0 THEN 0 ELSE (SUM(CURR_MONTHNUM)/SUM(PRE_MONTHNUM) -1)*100 END),2)  AS YOY,
+     
+     TRUNC((CASE WHEN SUM(CITY_PRE_MONTHNUM) = 0 THEN 0 ELSE (SUM(CITY_CURR_MONTHNUM)/SUM(CITY_PRE_MONTHNUM) -1)*100 END),2)  AS CITY_YOY,
+     TRUNC((CASE WHEN SUM(COUNTY_PRE_MONTHNUM) = 0 THEN 0 ELSE (SUM(COUNTY_CURR_MONTHNUM)/SUM(COUNTY_PRE_MONTHNUM) -1)*100 END),2)  AS COUNTY_YOY,
+     TRUNC((CASE WHEN SUM(LAST_MONTHNUM) = 0 THEN 0 ELSE (SUM(CURR_MONTHNUM)/SUM(LAST_MONTHNUM) -1)*100 END),2)  AS QOQ,
+     
+     TRUNC((CASE WHEN SUM(CITY_LAST_MONTHNUM) = 0 THEN 0 ELSE (SUM(CITY_CURR_MONTHNUM)/SUM(CITY_LAST_MONTHNUM) -1)*100 END),2)  AS CITY_QOQ,
+     TRUNC((CASE WHEN SUM(COUNTY_LAST_MONTHNUM) = 0 THEN 0 ELSE (SUM(COUNTY_CURR_MONTHNUM)/SUM(COUNTY_LAST_MONTHNUM) -1)*100 END),2)  AS COUNTY_QOQ
+  FROM 
+  (SELECT 
+    CASE WHEN R.jb = 2 THEN 1 ELSE 0 END AS CITY_TOTAL_NUM,
+    CASE WHEN R.jb = 3 THEN 1 ELSE 0 END AS COUNTY_TOTAL_NUM,
+    CASE WHEN TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY') THEN 1 ELSE 0 END AS CURRYEARNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY') AND R.jb = 2) THEN 1 ELSE 0 END AS CITY_CURR_YEARNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY') AND R.jb = 3) THEN 1 ELSE 0 END AS COUNTY_CURR_YEARNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'MM') = TO_CHAR(SYSDATE,'MM') AND TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY')) THEN 1 ELSE 0 END AS CURR_MONTHNUM,
+    CASE WHEN TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM') THEN 1 ELSE 0 END AS PRE_MONTHNUM,
+    CASE WHEN TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYYMM') THEN 1 ELSE 0 END AS LAST_MONTHNUM,
+      
+
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM') AND R.jb = 1) THEN 1 ELSE 0 END AS PROVICE_PRE_MONTHNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYYMM') AND R.jb = 1) THEN 1 ELSE 0 END AS PROVICE_LAST_MONTHNUM,
+        
+    CASE WHEN (TO_CHAR(INPUT_TIME,'MM') = TO_CHAR(SYSDATE,'MM') AND TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY') AND R.jb = 2) THEN 1 ELSE 0 END AS CITY_CURR_MONTHNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM') AND R.jb = 2) THEN 1 ELSE 0 END AS CITY_PRE_MONTHNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYYMM') AND R.jb = 2) THEN 1 ELSE 0 END AS CITY_LAST_MONTHNUM,
+      
+    CASE WHEN (TO_CHAR(INPUT_TIME,'MM') = TO_CHAR(SYSDATE,'MM') AND TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY') AND R.jb = 3) THEN 1 ELSE 0 END AS COUNTY_CURR_MONTHNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM') AND R.jb = 3) THEN 1 ELSE 0 END AS COUNTY_PRE_MONTHNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'YYYYMM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYYMM') AND R.jb = 3) THEN 1 ELSE 0 END AS COUNTY_LAST_MONTHNUM,
+     
+    CASE WHEN (TO_CHAR(INPUT_TIME,'Q') = TO_CHAR(SYSDATE,'Q') AND TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY')) THEN 1 ELSE 0 END AS CURR_QUARTERNUM,  
+    CASE WHEN (TO_CHAR(INPUT_TIME,'Q') = TO_CHAR(SYSDATE,'Q') AND TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY')  AND R.jb = 2) THEN 1 ELSE 0 END AS CITY_CURR_QUARTERNUM,
+    CASE WHEN (TO_CHAR(INPUT_TIME,'Q') = TO_CHAR(SYSDATE,'Q') AND TO_CHAR(INPUT_TIME,'YYYY') = TO_CHAR(SYSDATE,'YYYY')  AND R.jb = 3) THEN 1 ELSE 0 END AS COUNTY_CURR_QUARTERNUM
+    
+  FROM CASE_BASIC C,CASE_STATE S,ORGANISE O,DISTRICT R,PENALTY_CASE_EXT P
+  WHERE  C.INPUT_UNIT = O.ORG_CODE 
+  AND O.DISTRICT_CODE = R.DISTRICT_CODE
+  AND C.CASE_ID = S.CASE_ID
+  AND C.CASE_ID = P.CASE_ID(+)
+  <if test="districtCode != null and districtCode != '' ">
+  	 AND R.DISTRICT_CODE LIKE  #{districtCode}||'%'
+  </if>
+	<if test="index != null and index !='' ">
+		<choose>
+			<when test="index ==&quot;A&quot; ">AND CHUFA_STATE = 2</when>
+			
+			<when test="index ==&quot;B&quot; ">AND YISONG_STATE = 2</when>
+			
+			<when test="index ==&quot;C&quot; ">AND YISONG_STATE = 3</when>
+			
+			<when test="index ==&quot;D&quot; ">AND (YISONG_STATE = 2 OR YISONG_STATE = 3)</when>
+			
+			<when test="index ==&quot;E&quot; ">AND LIAN_STATE = 3  </when> 
+			
+			<when test="index ==&quot;F&quot; ">AND EXISTS (SELECT 1 FROM CASE_XIANYIREN X WHERE  X.CASE_ID = C.CASE_ID AND (X.DAIBU_STATE = 2 or X.DAIBU_STATE = 3)  ) </when>
+			
+			<when test="index ==&quot;G&quot; ">AND EXISTS (SELECT 1 FROM CASE_XIANYIREN X WHERE  X.CASE_ID = C.CASE_ID AND X.TIQINGQISU_STATE = 2) </when>
+			
+			<when test="index ==&quot;H&quot; ">AND DAIBU_STATE = 2 </when>
+			
+			<when test="index ==&quot;I&quot; ">AND QISU_STATE = 3 </when>
+			
+			<when test="index ==&quot;J&quot; ">AND PANJUE_STATE = 2 </when>
+			
+			<when test="index ==&quot;L&quot; ">AND CHUFA_TIMES > 1 </when>
+			
+			<when test="index ==&quot;M&quot; ">AND IS_BEYOND_EIGHTY  = 1</when>
+			
+			<when test="index ==&quot;N&quot; ">AND IDENTIFY_TYPE IS NOT NULL AND IDENTIFY_TYPE != 6</when>
+			
+			<when test="index == &quot;O&quot; ">AND IS_LOWER_LIMIT_MONEY = 1</when>
+			
+			<when test="index == &quot;P&quot; ">AND IS_DESCUSS = 1</when>
+			
+			<when test="index == &quot;Q&quot; ">AND IS_SERIOUS_CASE = 1</when>
+			
+			<when test="index == &quot;R&quot; ">AND IS_SUSPECTED_CRIMINAL = 1</when>
+		</choose>
+	</if>
+	)
+  </select>	
+  
+	<select id="queryMonthCaseNumForBus" parameterType="java.util.Map" resultMap="monthCaseNumMap">
+		SELECT A.MONTH_CODE,A.MONTH_NAME, 
+		<choose>
+			<when test="index == &quot;A&quot; ">NVL(CHUFA_NUM,0) AS TOTAL_NUM</when>
+	
+			<when test="index ==&quot;B&quot; ">NVL(DIRECTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;C&quot; ">NVL(SUGGESTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;D&quot; ">(NVL(DIRECTYISONG_NUM,0)+NVL(SUGGESTYISONG_NUM,0)) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;E&quot; ">NVL(LIAN_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;F&quot; ">NVL(TIQINGDAIBU_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;G&quot; ">NVL(YISONGQISU_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;H&quot; ">NVL(DAIBU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;I&quot; ">NVL(QISU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;J&quot; ">NVL(PANJUE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;M&quot; ">NVL(BEYOND_EIGHTY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;N&quot; ">NVL(IDENTIFY_TYPE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;O&quot; ">NVL(LOWER_LIMIT_MONEY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;P&quot; ">NVL(DESCUSS_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;Q&quot; ">NVL(SERIOUS_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;R&quot; ">NVL(SUSPECTED_CRIMINAL_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;S&quot; ">NVL(XINGZHENGSHOULI_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;T&quot; ">NVL(XINGZHENGLIAN_NUM,0) AS TOTAL_NUM</when>
+		</choose>
+		FROM(
+		(SELECT D.MONTH_CODE,D.MONTH AS MONTH_NAME FROM DIM_TIME D WHERE D.YEAR_CODE = #{yearCode} ORDER BY D.MONTH_CODE) A
+		LEFT JOIN 
+		(SELECT MONTH_CODE,
+                   SUM(C.penalty_num) AS CHUFA_NUM,
+                   SUM(C.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                   SUM(C.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                   SUM(C.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                   SUM(C.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                   SUM(C.LIAN_NUM) AS LIAN_NUM,
+                   SUM(C.tiqingdaibu_num) AS TIQINGDAIBU_CASE_NUM,
+                   SUM(C.yisongqisu_num) AS YISONGQISU_CASE_NUM,
+                   SUM(c.DAIBU_NUM) AS DAIBU_NUM,
+                   SUM(c.QISU_NUM) AS QISU_NUM,
+                   SUM(C.PANJUE_NUM) AS PANJUE_NUM,
+                   SUM(C.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                   SUM(C.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                   SUM(C.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                   SUM(C.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                   SUM(C.DESCUSS_NUM) AS DESCUSS_NUM,
+                   SUM(C.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                   SUM(C.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+		    FROM V_FACT_DISTRICT c
+		    <where>
+		    	<if test="districtCode != null ">
+		    		AND DISTRICT_CODE LIKE #{districtCode}||'%'
+		    	</if>
+              <if test="orgPath != null and orgPath != '' ">
+                 AND ORG_PATH LIKE #{orgPath}||'%'
+               </if>		    	
+		    </where>
+		    GROUP BY C.MONTH_CODE 
+		) B
+		ON A.MONTH_CODE = B.MONTH_CODE)
+	</select>	
+	
+	<!-- 大屏案件趋势分析信息查询 -->
+	<select id="queryMonthCaseNumForBusShow" parameterType="java.util.Map" resultMap="monthCaseNumMap">
+		SELECT A.MONTH_CODE,A.MONTH_NAME, 
+		<choose>
+			<when test="index == &quot;A&quot; ">NVL(CHUFA_NUM,0) AS TOTAL_NUM</when>
+	
+			<when test="index ==&quot;B&quot; ">NVL(DIRECTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;C&quot; ">NVL(SUGGESTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;D&quot; ">(NVL(DIRECTYISONG_NUM,0)+NVL(SUGGESTYISONG_NUM,0)) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;E&quot; ">NVL(LIAN_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;U&quot; ">NVL(GONGANFENPAI_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;F&quot; ">NVL(TIQINGDAIBU_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;G&quot; ">NVL(YISONGQISU_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;H&quot; ">NVL(DAIBU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;I&quot; ">NVL(QISU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;J&quot; ">NVL(PANJUE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;M&quot; ">NVL(BEYOND_EIGHTY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;N&quot; ">NVL(IDENTIFY_TYPE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;O&quot; ">NVL(LOWER_LIMIT_MONEY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;P&quot; ">NVL(DESCUSS_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;Q&quot; ">NVL(SERIOUS_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;R&quot; ">NVL(SUSPECTED_CRIMINAL_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;S&quot; ">NVL(XINGZHENGSHOULI_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;T&quot; ">NVL(XINGZHENGLIAN_NUM,0) AS TOTAL_NUM</when>
+		</choose>
+		FROM(
+		(SELECT D.MONTH_CODE,D.MONTH AS MONTH_NAME FROM DIM_TIME D
+		 WHERE 1=1
+		 <if test="startTime == '' and endTime == '' ">
+            AND D.YEAR_CODE = #{yearCode}
+         </if>
+         <if test="startTime != '' and startTime != null ">
+         	<![CDATA[AND D.MONTH_CODE >= #{startTime}]]>
+         </if>
+         <if test="endTime != '' and endTime != null ">
+         	<![CDATA[AND D.MONTH_CODE <= #{endTime}]]>
+         </if>
+		 ORDER BY D.MONTH_CODE) A
+		LEFT JOIN 
+		(SELECT MONTH_CODE,
+                   SUM(C.penalty_num) AS CHUFA_NUM,
+                   SUM(C.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                   SUM(C.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                   SUM(C.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                   SUM(C.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                   SUM(C.LIAN_NUM) AS LIAN_NUM,
+                   SUM(C.GONGANFENPAI_NUM) AS GONGANFENPAI_NUM,
+                   SUM(C.tiqingdaibu_num) AS TIQINGDAIBU_CASE_NUM,
+                   SUM(C.yisongqisu_num) AS YISONGQISU_CASE_NUM,
+                   SUM(c.DAIBU_NUM) AS DAIBU_NUM,
+                   SUM(c.QISU_NUM) AS QISU_NUM,
+                   SUM(C.PANJUE_NUM) AS PANJUE_NUM,
+                   SUM(C.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                   SUM(C.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                   SUM(C.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                   SUM(C.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                   SUM(C.DESCUSS_NUM) AS DESCUSS_NUM,
+                   SUM(C.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                   SUM(C.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+		    FROM V_FACT_DISTRICT C
+		    <where>
+		    	<if test="districtCode != null ">
+		    		AND DISTRICT_CODE LIKE #{districtCode}||'%'
+		    	</if>
+              <if test="orgPath != null and orgPath != '' ">
+                 AND ORG_PATH LIKE #{orgPath}||'%'
+               </if>		    	
+		    </where>
+		    GROUP BY C.MONTH_CODE 
+		) B
+		ON A.MONTH_CODE = B.MONTH_CODE)
+	</select>	
+	
+	<select id="queryIndustryCaseNumForBus" parameterType="java.util.Map" resultMap="industryCaseNumMap">
+	SELECT * FROM (
+		SELECT INDUSTRY_NAME,SUM(TOTAL_NUM) AS TOTAL_NUM from (
+		SELECT vd.INDUSTRY_NAME, 
+		<choose>
+			<when test="index == &quot;A&quot; ">NVL(mc.CHUFA_NUM,0) AS TOTAL_NUM</when>
+	
+			<when test="index ==&quot;B&quot; ">NVL(mc.DIRECTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;C&quot; ">NVL(mc.SUGGESTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;D&quot; ">(NVL(mc.DIRECTYISONG_NUM,0)+NVL(mc.SUGGESTYISONG_NUM,0)) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;E&quot; ">NVL(mc.LIAN_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;F&quot; ">NVL(mc.TIQINGDAIBU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;G&quot; ">NVL(mc.YISONGQISU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;H&quot; ">NVL(mc.DAIBU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;I&quot; ">NVL(mc.QISU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;J&quot; ">NVL(mc.PANJUE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;L&quot; ">NVL(mc.CHUFA_TIMES_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;M&quot; ">NVL(mc.BEYOND_EIGHTY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;N&quot; ">NVL(mc.IDENTIFY_TYPE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;O&quot; ">NVL(mc.LOWER_LIMIT_MONEY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;P&quot; ">NVL(mc.DESCUSS_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;Q&quot; ">NVL(mc.SERIOUS_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;R&quot; ">NVL(mc.SUSPECTED_CRIMINAL_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;S&quot; ">NVL(mc.XINGZHENGSHOULI_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;T&quot; ">NVL(mc.XINGZHENGLIAN_NUM,0) AS TOTAL_NUM</when>
+		</choose>
+		FROM(
+		(SELECT D.MONTH_CODE,D.MONTH AS MONTH_NAME FROM DIM_TIME D WHERE 1 = 1
+         <if test="yearCode != null and yearCode != '' ">
+            AND D.YEAR_CODE = #{yearCode}
+         </if>
+         <if test="startTime != null and startTime != '' ">
+            <![CDATA[AND D.MONTH_CODE >= #{startTime}]]>
+         </if>
+         <if test="endTime != null and endTime != '' ">
+            <![CDATA[AND D.MONTH_CODE <= #{endTime}]]>
+         </if>
+		 ORDER BY D.MONTH_CODE) A
+		LEFT JOIN
+		(SELECT v.month_code,v.INDUSTRY_TYPE,
+				NVL(SUM(V.CHUFA_NUM), 0) CHUFA_NUM ,
+				NVL(SUM(V.XINGZHENGSHOULI_NUM), 0) XINGZHENGSHOULI_NUM ,
+				NVL(SUM(V.XINGZHENGLIAN_NUM), 0) XINGZHENGLIAN_NUM ,
+				NVL(SUM(V.DIRECTYISONG_NUM),0) DIRECTYISONG_NUM,
+				NVL(SUM(V.SUGGESTYISONG_NUM),0) SUGGESTYISONG_NUM,
+				NVL(SUM(V.LIAN_NUM),0) LIAN_NUM,
+				NVL(SUM(V.TIQINGDAIBU_NUM),0) TIQINGDAIBU_NUM,
+				NVL(SUM(V.YISONGQISU_NUM),0) YISONGQISU_NUM,
+				NVL(SUM(V.DAIBU_NUM),0) DAIBU_NUM,
+				NVL(SUM(V.QISU_NUM),0) QISU_NUM,
+				NVL(SUM(V.PANJUE_NUM), 0) PANJUE_NUM,
+				NVL(SUM(V.CHUFA_TIMES_NUM), 0) CHUFA_TIMES_NUM,
+				NVL(SUM(V.BEYOND_EIGHTY_NUM),0) BEYOND_EIGHTY_NUM,
+				NVL(SUM(V.IDENTIFY_TYPE_NUM),0) IDENTIFY_TYPE_NUM,
+				NVL(SUM(V.LOWER_LIMIT_MONEY_NUM),0) LOWER_LIMIT_MONEY_NUM,
+				NVL(SUM(V.DESCUSS_NUM),0) DESCUSS_NUM,
+				NVL(SUM(V.SERIOUS_CASE_NUM),0) SERIOUS_CASE_NUM,
+				NVL(SUM(V.SUSPECTED_CRIMINAL_NUM),0) SUSPECTED_CRIMINAL_NUM
+		FROM ( 
+		SELECT v1.MONTH_CODE,v1.INDUSTRY_TYPE,
+			   v1.CHUFA_NUM,
+			   v1.XINGZHENGSHOULI_NUM,
+			   v1.XINGZHENGLIAN_NUM,
+			   v1.DIRECTYISONG_NUM,
+			   v1.SUGGESTYISONG_NUM, 
+			   v1.LIAN_NUM,
+			   v1.TIQINGDAIBU_NUM, 
+			   v1.YISONGQISU_NUM,
+			   v1.DAIBU_NUM, 
+			   v1.QISU_NUM, 
+			   v1.PANJUE_NUM, 
+			   v1.CHUFA_TIMES_NUM,
+			   v1.BEYOND_EIGHTY_NUM,
+			   v1.IDENTIFY_TYPE_NUM, 
+			   v1.LOWER_LIMIT_MONEY_NUM,
+			   v1.DESCUSS_NUM,
+			   v1.SERIOUS_CASE_NUM,
+			   v1.SUSPECTED_CRIMINAL_NUM
+			FROM V_FACT_DISTRICT v1 where 1=1
+				 AND v1.DISTRICT_CODE LIKE  #{regionId} ||'%')v 
+				 GROUP BY v.INDUSTRY_TYPE,v.MONTH_CODE) mc
+				 ON A.MONTH_CODE = mc.MONTH_CODE)
+			 RIGHT JOIN (SELECT DISTINCT INDUSTRY_TYPE,INDUSTRY_NAME,ORDER_NO FROM
+					V_ORGANISE_DISTRICT WHERE INDUSTRY_TYPE IS NOT NULL ) vd
+					on vd.INDUSTRY_TYPE=mc.INDUSTRY_TYPE 
+					ORDER BY TOTAL_NUM desc)
+					GROUP BY INDUSTRY_NAME ORDER BY TOTAL_NUM DESC)WHERE ROWNUM &lt; 11
+	</select>	
+	
+	<!-- 大屏数据展示行业分布数据查询 -->
+	<select id="queryIndustryCaseNumForBusShow" parameterType="java.util.Map" resultMap="industryCaseNumMap">
+	SELECT * FROM (
+		SELECT INDUSTRY_NAME,sum(TOTAL_NUM) as TOTAL_NUM FROM (
+		SELECT vd.INDUSTRY_NAME, 
+		<choose>
+			<when test="index == &quot;A&quot; ">NVL(mc.CHUFA_NUM,0) AS TOTAL_NUM</when>
+	
+			<when test="index ==&quot;B&quot; ">NVL(mc.DIRECTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;C&quot; ">NVL(mc.SUGGESTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;D&quot; ">(NVL(mc.DIRECTYISONG_NUM,0)+NVL(mc.SUGGESTYISONG_NUM,0)) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;E&quot; ">NVL(mc.LIAN_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;U&quot; ">NVL(mc.GONGANFENPAI_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;F&quot; ">NVL(mc.TIQINGDAIBU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;G&quot; ">NVL(mc.YISONGQISU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;H&quot; ">NVL(mc.DAIBU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;I&quot; ">NVL(mc.QISU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;J&quot; ">NVL(mc.PANJUE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;L&quot; ">NVL(mc.CHUFA_TIMES_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;M&quot; ">NVL(mc.BEYOND_EIGHTY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;N&quot; ">NVL(mc.IDENTIFY_TYPE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;O&quot; ">NVL(mc.LOWER_LIMIT_MONEY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;P&quot; ">NVL(mc.DESCUSS_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;Q&quot; ">NVL(mc.SERIOUS_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;R&quot; ">NVL(mc.SUSPECTED_CRIMINAL_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;S&quot; ">NVL(mc.XINGZHENGSHOULI_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;T&quot; ">NVL(mc.XINGZHENGLIAN_NUM,0) AS TOTAL_NUM</when>
+		</choose>
+		FROM(
+		(SELECT D.MONTH_CODE,D.MONTH AS MONTH_NAME FROM DIM_TIME D WHERE 1 = 1
+         <if test="yearCode != '' and yearCode != '' ">
+            AND D.YEAR_CODE = #{yearCode}
+         </if>
+         <if test="startTime != '' and startTime != null ">
+         	<![CDATA[AND D.MONTH_CODE >= #{startTime}]]>
+         </if>
+         <if test="endTime != '' and endTime != null ">
+         	<![CDATA[AND D.MONTH_CODE <= #{endTime}]]>
+         </if>
+		 ORDER BY D.MONTH_CODE) A
+		LEFT JOIN
+		(SELECT v.MONTH_CODE,v.INDUSTRY_TYPE,
+				NVL(SUM(V.CHUFA_NUM), 0) CHUFA_NUM ,
+				NVL(SUM(V.XINGZHENGSHOULI_NUM), 0) XINGZHENGSHOULI_NUM ,
+				NVL(SUM(V.XINGZHENGLIAN_NUM), 0) XINGZHENGLIAN_NUM ,
+				NVL(SUM(V.DIRECTYISONG_NUM),0) DIRECTYISONG_NUM,
+				NVL(SUM(V.SUGGESTYISONG_NUM),0) SUGGESTYISONG_NUM,
+				NVL(SUM(V.LIAN_NUM),0) LIAN_NUM,
+				NVL(SUM(V.GONGANFENPAI_NUM),0) GONGANFENPAI_NUM,
+				NVL(SUM(V.TIQINGDAIBU_NUM),0) TIQINGDAIBU_NUM,
+				NVL(SUM(V.YISONGQISU_NUM),0) YISONGQISU_NUM,
+				NVL(SUM(V.DAIBU_NUM),0) DAIBU_NUM,
+				NVL(SUM(V.QISU_NUM),0) QISU_NUM,
+				NVL(SUM(V.PANJUE_NUM), 0) PANJUE_NUM,
+				NVL(SUM(V.CHUFA_TIMES_NUM), 0) CHUFA_TIMES_NUM,
+				NVL(SUM(V.BEYOND_EIGHTY_NUM),0) BEYOND_EIGHTY_NUM,
+				NVL(SUM(V.IDENTIFY_TYPE_NUM),0) IDENTIFY_TYPE_NUM,
+				NVL(SUM(V.LOWER_LIMIT_MONEY_NUM),0) LOWER_LIMIT_MONEY_NUM,
+				NVL(SUM(V.DESCUSS_NUM),0) DESCUSS_NUM,
+				NVL(SUM(V.SERIOUS_CASE_NUM),0) SERIOUS_CASE_NUM,
+				NVL(SUM(V.SUSPECTED_CRIMINAL_NUM),0) SUSPECTED_CRIMINAL_NUM
+		FROM ( 
+		SELECT v1.MONTH_CODE,v1.INDUSTRY_TYPE,
+			   v1.CHUFA_NUM,
+			   v1.XINGZHENGSHOULI_NUM,
+			   v1.XINGZHENGLIAN_NUM,
+			   v1.DIRECTYISONG_NUM,
+			   v1.SUGGESTYISONG_NUM, 
+			   v1.LIAN_NUM,
+			   v1.GONGANFENPAI_NUM,
+			   v1.TIQINGDAIBU_NUM, 
+			   v1.YISONGQISU_NUM,
+			   v1.DAIBU_NUM, 
+			   v1.QISU_NUM, 
+			   v1.PANJUE_NUM, 
+			   v1.CHUFA_TIMES_NUM,
+			   v1.BEYOND_EIGHTY_NUM,
+			   v1.IDENTIFY_TYPE_NUM, 
+			   v1.LOWER_LIMIT_MONEY_NUM,
+			   v1.DESCUSS_NUM,
+			   v1.SERIOUS_CASE_NUM,
+			   v1.SUSPECTED_CRIMINAL_NUM
+			FROM V_FACT_DISTRICT v1 WHERE 1=1
+				 AND v1.DISTRICT_CODE LIKE  #{districtCode} ||'%')v 
+				 GROUP BY v.INDUSTRY_TYPE,v.month_code) mc
+				 ON A.MONTH_CODE = mc.MONTH_CODE)
+			 RIGHT JOIN (SELECT DISTINCT INDUSTRY_TYPE,INDUSTRY_NAME,ORDER_NO FROM
+					V_ORGANISE_DISTRICT WHERE INDUSTRY_TYPE IS NOT NULL ) vd
+					ON vd.INDUSTRY_TYPE=mc.INDUSTRY_TYPE 
+					ORDER BY TOTAL_NUM DESC)
+					GROUP BY INDUSTRY_NAME ORDER BY TOTAL_NUM DESC)WHERE ROWNUM &lt; 11
+	</select>	
+	
+	<select id="queryIndustryTrendCaseNumForBus" parameterType="java.util.Map" resultMap="industryTrendCaseNumMap">
+		SELECT A.MONTH_CODE,A.MONTH_NAME, 
+		<choose>
+			<when test="index == &quot;A&quot; ">NVL(CHUFA_NUM,0) AS TOTAL_NUM</when>
+	
+			<when test="index ==&quot;B&quot; ">NVL(DIRECTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;C&quot; ">NVL(SUGGESTYISONG_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;D&quot; ">(NVL(DIRECTYISONG_NUM,0)+NVL(SUGGESTYISONG_NUM,0)) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;E&quot; ">NVL(LIAN_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;F&quot; ">NVL(TIQINGDAIBU_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;G&quot; ">NVL(YISONGQISU_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;H&quot; ">NVL(DAIBU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;I&quot; ">NVL(QISU_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;J&quot; ">NVL(PANJUE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;M&quot; ">NVL(BEYOND_EIGHTY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index ==&quot;N&quot; ">NVL(IDENTIFY_TYPE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;O&quot; ">NVL(LOWER_LIMIT_MONEY_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;P&quot; ">NVL(DESCUSS_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;Q&quot; ">NVL(SERIOUS_CASE_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;R&quot; ">NVL(SUSPECTED_CRIMINAL_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;S&quot; ">NVL(XINGZHENGSHOULI_NUM,0) AS TOTAL_NUM</when>
+			
+			<when test="index == &quot;T&quot; ">NVL(XINGZHENGLIAN_NUM,0) AS TOTAL_NUM</when>
+		</choose>
+		FROM(
+		(SELECT D.MONTH_CODE,D.MONTH AS MONTH_NAME FROM DIM_TIME D WHERE D.YEAR_CODE = #{yearCode} ORDER BY D.MONTH_CODE) A
+		LEFT JOIN 
+		(SELECT MONTH_CODE,O.INDUSTRY_TYPE,SUM(TOTAL_NUM) AS TOTAL_NUM, 
+                   SUM(C.penalty_num) AS CHUFA_NUM,
+                   SUM(C.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                   SUM(C.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                   SUM(C.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                   SUM(C.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                   SUM(C.LIAN_NUM) AS LIAN_NUM,
+                   SUM(C.tiqingdaibu_num) AS TIQINGDAIBU_CASE_NUM,
+                   SUM(C.yisongqisu_num) AS YISONGQISU_CASE_NUM,
+                   SUM(c.DAIBU_NUM) AS DAIBU_NUM,
+                   SUM(c.QISU_NUM) AS QISU_NUM,
+                   SUM(C.PANJUE_NUM) AS PANJUE_NUM,
+                   SUM(C.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                   SUM(C.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                   SUM(C.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                   SUM(C.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                   SUM(C.DESCUSS_NUM) AS DESCUSS_NUM,
+                   SUM(C.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                   SUM(C.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+		    FROM V_FACT C,ORGANISE O
+		    WHERE C.ORG_CODE = O.ORG_CODE
+			AND O.INDUSTRY_TYPE IS NOT NULL
+			AND O.INDUSTRY_TYPE = #{industryIndex}
+			<if test="districtCode != null">
+				 AND O.DISTRICT_CODE LIKE  #{districtCode} ||'%'
+			</if>
+		    GROUP BY C.MONTH_CODE,o.INDUSTRY_TYPE
+		) B
+		ON A.MONTH_CODE = B.MONTH_CODE)
+	</select>	
+	
+	<select id="queryAccuseIndexNumForBus" parameterType="java.util.Map" resultMap="accuseMap">
+	SELECT ACCUSE_NUM,ACCUSE_ID,ACCUSE_NAME  FROM(
+    SELECT COUNT(AI.NAME) ACCUSE_NUM,
+                      AI.ID ACCUSE_ID,
+                      AI.NAME ACCUSE_NAME
+                 FROM CASE_BASIC C,ORGANISE O,
+                      (SELECT CASE_ID, ACCUSE_ID
+                         FROM CASE_ACCUSE A
+                       UNION
+                       SELECT B.CASE_ID, ACCUSE_ID
+                         FROM XIANYIREN_ACCUSE B
+                        GROUP BY ACCUSE_ID, CASE_ID) CA,
+                      ACCUSE_INFO AI
+                WHERE C.CASE_ID = CA.CASE_ID
+                  AND AI.ID = CA.ACCUSE_ID
+                  AND ACCUSE_ID != 190
+                  AND C.INPUT_UNIT = O.ORG_CODE
+                  AND O.DISTRICT_CODE LIKE #{districtCode} || '%'
+		        <if test="yearCode != null and yearCode != ''">
+		            AND TO_CHAR(C.INPUT_TIME,'YYYY') LIKE #{yearCode}||'%'
+		          </if>
+                <if test="orgPath != null and orgPath != ''">
+                    AND O.ORG_PATH LIKE #{orgPath}||'%'
+                  </if>		          
+                GROUP BY AI.ID,AI.NAME
+                ORDER BY ACCUSE_NUM DESC) WHERE ROWNUM &lt; 11
+	</select>
+	
+	<!-- 大屏展示罪名排序信息查询 -->
+	<select id="queryAccuseIndexNumForBusShow" parameterType="java.util.Map" resultMap="accuseMap">
+	SELECT ACCUSE_NUM,ACCUSE_ID,ACCUSE_NAME  FROM(
+    SELECT COUNT(AI.NAME) ACCUSE_NUM,
+                      AI.ID ACCUSE_ID,
+                      AI.NAME ACCUSE_NAME
+                 FROM CASE_BASIC C,ORGANISE O,
+                      (SELECT CASE_ID, ACCUSE_ID
+                         FROM CASE_ACCUSE A
+                       UNION
+                       SELECT B.CASE_ID, ACCUSE_ID
+                         FROM XIANYIREN_ACCUSE B
+                        GROUP BY ACCUSE_ID, CASE_ID) CA,
+                      ACCUSE_INFO AI
+                WHERE C.CASE_ID = CA.CASE_ID
+                  AND AI.ID = CA.ACCUSE_ID
+                  AND ACCUSE_ID != 190
+                  AND C.INPUT_UNIT = O.ORG_CODE
+                  AND O.DISTRICT_CODE LIKE #{districtCode} || '%'
+				  <if test="startTime != '' and startTime != null ">
+         				<![CDATA[AND C.INPUT_TIME >= #{startTime}]]>
+				  </if>
+				  <if test="endTime != '' and endTime != null ">
+         				<![CDATA[AND C.INPUT_TIME <= #{endTime} +  interval   '1'  month]]>
+				  </if>
+                GROUP BY AI.ID,AI.NAME
+                ORDER BY ACCUSE_NUM DESC ) WHERE ROWNUM &lt; 11
+	</select>
+	
+<select id="queryMapCaseNumForBus" parameterType="java.util.Map" resultMap="mapChartMap">
+  SELECT  A.REGION_ID,
+           D.DISTRICT_NAME AS REGION_NAME,
+           A.CHUFA_NUM,
+           A.XINGZHENGSHOULI_NUM,
+           A.XINGZHENGLIAN_NUM,
+           A.DIRECTYISONG_NUM,
+           A.SUGGESTYISONG_NUM,
+           (A.DIRECTYISONG_NUM+ A.SUGGESTYISONG_NUM) AS GONGANSHOULI_NUM,
+           A.LIAN_NUM,
+           A.TIQINGDAIBU_CASE_NUM,
+           A.YISONGQISU_CASE_NUM,           
+           A.DAIBU_NUM,
+           A.QISU_NUM,
+           A.PANJUE_NUM,
+           A.CHUFA_TIMES_NUM,
+           A.BEYOND_EIGHTY_NUM,
+           A.IDENTIFY_TYPE_NUM,
+           A.LOWER_LIMIT_MONEY_NUM,
+           A.DESCUSS_NUM,
+           A.SERIOUS_CASE_NUM,
+           A.SUSPECTED_CRIMINAL_NUM
+     FROM 
+     (SELECT CASE
+                 WHEN LENGTH(RC.REGION_ID) &lt; 6 THEN
+                  RPAD(RC.REGION_ID, 6, '0')
+                 ELSE
+                  RC.REGION_ID
+               END AS REGION_ID,
+            NVL(RC.CHUFA_NUM,0)  AS CHUFA_NUM,
+            NVL(RC.XINGZHENGSHOULI_NUM,0)  AS XINGZHENGSHOULI_NUM,
+            NVL(RC.XINGZHENGLIAN_NUM,0)  AS XINGZHENGLIAN_NUM,
+            NVL(RC.DIRECTYISONG_NUM,0)  AS DIRECTYISONG_NUM,
+            NVL(RC.SUGGESTYISONG_NUM,0)  AS SUGGESTYISONG_NUM,
+            NVL(RC.LIAN_NUM,0)  as LIAN_NUM,
+            NVL(RC.TIQINGDAIBU_CASE_NUM,0)  AS TIQINGDAIBU_CASE_NUM, 
+            NVL(RC.YISONGQISU_CASE_NUM,0)  AS YISONGQISU_CASE_NUM,
+            NVL(RC.DAIBU_NUM,0)  AS DAIBU_NUM,
+            NVL(RC.QISU_NUM,0)  AS QISU_NUM, 
+            NVL(RC.PANJUE_NUM,0)  AS PANJUE_NUM,
+            NVL(RC.CHUFA_TIMES_NUM,0)  AS CHUFA_TIMES_NUM,
+            NVL(RC.BEYOND_EIGHTY_NUM,0)  AS BEYOND_EIGHTY_NUM,
+            NVL(RC.IDENTIFY_TYPE_NUM,0)  AS IDENTIFY_TYPE_NUM,
+            NVL(RC.LOWER_LIMIT_MONEY_NUM,0)  AS LOWER_LIMIT_MONEY_NUM,
+            NVL(RC.DESCUSS_NUM,0)  AS DESCUSS_NUM,
+            NVL(RC.SERIOUS_CASE_NUM,0)  AS SERIOUS_CASE_NUM,
+            NVL(RC.SUSPECTED_CRIMINAL_NUM,0)  AS SUSPECTED_CRIMINAL_NUM
+     FROM 
+     (SELECT SUBSTR(R.DISTRICT_CODE,1,C.LEN+2)AS REGION_ID,
+           SUM(S.CHUFA_NUM) AS CHUFA_NUM,
+           SUM(S.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+           SUM(S.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+           SUM(S.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+           SUM(S.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+           SUM(S.LIAN_NUM) AS LIAN_NUM,
+           SUM(S.TIQINGDAIBU_CASE_NUM) AS TIQINGDAIBU_CASE_NUM,
+           SUM(S.YISONGQISU_CASE_NUM) AS YISONGQISU_CASE_NUM,
+           SUM(S.DAIBU_NUM) AS DAIBU_NUM,
+           SUM(S.QISU_NUM) AS QISU_NUM,
+           SUM(S.PANJUE_NUM)AS PANJUE_NUM,
+           SUM(S.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+           SUM(S.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+           SUM(S.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+           SUM(S.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+           SUM(S.DESCUSS_NUM) AS DESCUSS_NUM,
+           SUM(S.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+           SUM(S.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+    FROM DISTRICT R,
+     (SELECT C.DISTRICT_CODE AS REGION_ID,
+                   SUM(C.penalty_num) AS CHUFA_NUM,
+                   SUM(C.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                   SUM(C.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                   SUM(C.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                   SUM(C.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                   SUM(C.LIAN_NUM) AS LIAN_NUM,
+                   SUM(C.TIQINGDAIBU_NUM) AS TIQINGDAIBU_CASE_NUM,
+                   SUM(C.YISONGQISU_NUM) AS YISONGQISU_CASE_NUM,
+                   SUM(C.DAIBU_NUM) AS DAIBU_NUM,
+                   SUM(C.QISU_NUM) AS QISU_NUM,
+                   SUM(C.PANJUE_NUM) AS PANJUE_NUM,
+                   SUM(C.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                   SUM(C.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                   SUM(C.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                   SUM(C.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                   SUM(C.DESCUSS_NUM) AS DESCUSS_NUM,
+                   SUM(C.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                   SUM(C.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+              FROM V_SORT_NUM C WHERE 1 = 1
+              <if test="startTime != null and startTime != '' ">
+            and C.INPUT_TIME >=TO_DATE(#{startTime},'yyyyMMdd') 
+	          </if>
+	          <if test="endTime != null and endTime != '' ">
+	             AND C.INPUT_TIME &lt;=TO_DATE(#{endTime},'yyyyMMdd')+   interval   '1'  day
+	           </if>
+              <if test="orgPath != null and orgPath != '' ">
+                 AND C.ORG_PATH LIKE #{orgPath}||'%'
+               </if>	           
+             GROUP BY C.DISTRICT_CODE) S,
+             (SELECT LENGTH(#{shortRegionId}) AS LEN FROM DUAL) C
+             WHERE R.DISTRICT_CODE=S.REGION_ID(+)
+             AND R.DISTRICT_CODE LIKE #{shortRegionId}||'%'
+             GROUP BY SUBSTR(R.DISTRICT_CODE,1,C.LEN+2))RC
+             )A,DISTRICT D
+             WHERE A.REGION_ID = D.DISTRICT_CODE
+	</select>	
+	
+<!-- 大屏展示地图数据 查询-->
+<select id="queryMapCaseNumForBusShow" parameterType="java.util.Map" resultMap="mapChartMap">
+  SELECT  A.REGION_ID,
+           D.DISTRICT_NAME AS REGION_NAME,
+           A.CHUFA_NUM,
+           A.XINGZHENGSHOULI_NUM,
+           A.XINGZHENGLIAN_NUM,
+           A.DIRECTYISONG_NUM,
+           A.SUGGESTYISONG_NUM,
+           (A.DIRECTYISONG_NUM+ A.SUGGESTYISONG_NUM) AS gonganshouli_Num,
+           A.LIAN_NUM,
+           A.GONGANFENPAI_NUM,
+           A.TIQINGDAIBU_CASE_NUM,
+           A.YISONGQISU_CASE_NUM,           
+           A.DAIBU_NUM,
+           A.QISU_NUM,
+           A.PANJUE_NUM,
+           A.CHUFA_TIMES_NUM,
+           A.BEYOND_EIGHTY_NUM,
+           A.IDENTIFY_TYPE_NUM,
+           A.LOWER_LIMIT_MONEY_NUM,
+           A.DESCUSS_NUM,
+           A.SERIOUS_CASE_NUM,
+           A.SUSPECTED_CRIMINAL_NUM
+     FROM 
+     (SELECT CASE
+                 WHEN LENGTH(RC.REGION_ID) &lt; 6 THEN
+                  RPAD(RC.REGION_ID, 6, '0')
+                 ELSE
+                  RC.REGION_ID
+               END AS REGION_ID,
+            NVL(RC.CHUFA_NUM,0)  as CHUFA_NUM,
+            NVL(RC.XINGZHENGSHOULI_NUM,0)  as XINGZHENGSHOULI_NUM,
+            NVL(RC.XINGZHENGLIAN_NUM,0)  as XINGZHENGLIAN_NUM,
+            NVL(RC.DIRECTYISONG_NUM,0)  as DIRECTYISONG_NUM,
+            NVL(RC.SUGGESTYISONG_NUM,0)  as SUGGESTYISONG_NUM,
+            NVL(RC.LIAN_NUM,0)  as LIAN_NUM,
+            NVL(RC.GONGANFENPAI_NUM,0)  as GONGANFENPAI_NUM,
+            NVL(RC.TIQINGDAIBU_CASE_NUM,0)  as TIQINGDAIBU_CASE_NUM, 
+            NVL(RC.YISONGQISU_CASE_NUM,0)  as YISONGQISU_CASE_NUM,
+            NVL(RC.DAIBU_NUM,0)  as DAIBU_NUM,
+            NVL(RC.QISU_NUM,0)  as QISU_NUM, 
+            NVL(RC.PANJUE_NUM,0)  as PANJUE_NUM,
+            NVL(RC.CHUFA_TIMES_NUM,0)  as CHUFA_TIMES_NUM,
+            NVL(RC.BEYOND_EIGHTY_NUM,0)  as BEYOND_EIGHTY_NUM,
+            NVL(RC.IDENTIFY_TYPE_NUM,0)  as IDENTIFY_TYPE_NUM,
+            NVL(RC.LOWER_LIMIT_MONEY_NUM,0)  as LOWER_LIMIT_MONEY_NUM,
+            NVL(RC.DESCUSS_NUM,0)  as DESCUSS_NUM,
+            NVL(RC.SERIOUS_CASE_NUM,0)  as SERIOUS_CASE_NUM,
+            NVL(RC.SUSPECTED_CRIMINAL_NUM,0)  as SUSPECTED_CRIMINAL_NUM
+     FROM 
+     (SELECT SUBSTR(R.district_code,1,C.LEN+2)AS REGION_ID,
+           SUM(S.CHUFA_NUM) AS CHUFA_NUM,
+           SUM(S.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+           SUM(S.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+           SUM(S.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+           SUM(S.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+           SUM(S.LIAN_NUM) AS LIAN_NUM,
+           SUM(S.GONGANFENPAI_NUM) AS GONGANFENPAI_NUM,
+           SUM(S.TIQINGDAIBU_CASE_NUM) AS TIQINGDAIBU_CASE_NUM,
+           SUM(S.YISONGQISU_CASE_NUM) AS YISONGQISU_CASE_NUM,
+           SUM(S.DAIBU_NUM) AS DAIBU_NUM,
+           SUM(S.QISU_NUM) AS QISU_NUM,
+           SUM(S.PANJUE_NUM)AS PANJUE_NUM,
+           SUM(S.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+           SUM(S.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+           SUM(S.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+           SUM(S.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+           SUM(S.DESCUSS_NUM) AS DESCUSS_NUM,
+           SUM(S.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+           SUM(S.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+    FROM DISTRICT R,
+     (SELECT C.DISTRICT_CODE AS REGION_ID,
+                   SUM(C.penalty_num) AS CHUFA_NUM,
+                   SUM(C.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                   SUM(C.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                   SUM(C.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                   SUM(C.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                   SUM(C.LIAN_NUM) AS LIAN_NUM,
+                   SUM(C.GONGANFENPAI_NUM) AS GONGANFENPAI_NUM,
+                   SUM(C.TIQINGDAIBU_NUM) AS TIQINGDAIBU_CASE_NUM,
+                   SUM(C.YISONGQISU_NUM) AS YISONGQISU_CASE_NUM,
+                   SUM(C.DAIBU_NUM) AS DAIBU_NUM,
+                   SUM(C.QISU_NUM) AS QISU_NUM,
+                   SUM(C.PANJUE_NUM) AS PANJUE_NUM,
+                   SUM(C.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                   SUM(C.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                   SUM(C.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                   SUM(C.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                   SUM(C.DESCUSS_NUM) AS DESCUSS_NUM,
+                   SUM(C.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                   SUM(C.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+              FROM V_SORT_NUM C WHERE 1 = 1
+              <if test="startTime != null and startTime != '' ">
+            		AND c.INPUT_TIME >=to_date(#{startTime},'yyyyMM') 
+	          </if>
+	          <if test="endTime != null and endTime != '' ">
+	             AND  TO_DATE(to_char(c.INPUT_TIME, 'YYYYMM'), 'YYYYMM' ) &lt;=to_date(#{endTime},'yyyyMM')
+	          </if>
+              <if test="orgPath != null and orgPath != '' ">
+                 AND C.ORG_PATH LIKE #{orgPath}||'%'
+               </if>	           
+             GROUP BY C.DISTRICT_CODE) S,
+             (SELECT LENGTH(#{shortRegionId}) AS LEN FROM DUAL) C
+             WHERE R.district_code=S.REGION_ID(+)
+             AND R.DISTRICT_CODE LIKE #{shortRegionId}||'%'
+             GROUP BY SUBSTR(R.DISTRICT_CODE,1,C.LEN+2))RC
+             )A,DISTRICT D
+             WHERE A.REGION_ID = D.DISTRICT_CODE
+	</select>	
+	
+<select id="caseNumSortForBus" parameterType="java.util.Map" resultMap="caseNumSortMap">
+	SELECT D.DISTRICT_CODE AS REGION_ID,D.DISTRICT_NAME AS REGION_NAME,
+	  NVL(T.CHUFA_NUM,0) AS CHUFA_NUM,
+	  NVL(T.XINGZHENGSHOULI_NUM,0) AS XINGZHENGSHOULI_NUM,
+	  NVL(T.XINGZHENGLIAN_NUM,0) AS XINGZHENGLIAN_NUM,
+	  NVL(T.DIRECTYISONG_NUM,0) AS  DIRECTYISONG_NUM,
+	  NVL(T.SUGGESTYISONG_NUM,0) AS  SUGGESTYISONG_NUM,
+	  NVL(T.GONGANSHOULI_NUM,0) AS  GONGANSHOULI_NUM,
+	  NVL(T.LIAN_NUM,0) AS  LIAN_NUM,
+	  NVL(T.TIQINGDAIBU_CASE_NUM,0) AS  TIQINGDAIBU_CASE_NUM,
+	  NVL(T.YISONGQISU_CASE_NUM, 0) AS  YISONGQISU_CASE_NUM,
+	  NVL(T.DAIBU_NUM,0) AS  DAIBU_NUM,
+	  NVL(T.QISU_NUM,0) AS  QISU_NUM,
+	  NVL(T.PANJUE_NUM,0) AS  PANJUE_NUM,
+	  NVL(T.CHUFA_TIMES_NUM,0) AS  CHUFA_TIMES_NUM,
+	  NVL(T.BEYOND_EIGHTY_NUM,0) AS  BEYOND_EIGHTY_NUM,
+	  NVL(T.IDENTIFY_TYPE_NUM,0) AS  IDENTIFY_TYPE_NUM,
+	  NVL(T.LOWER_LIMIT_MONEY_NUM,0) AS  LOWER_LIMIT_MONEY_NUM,
+	  NVL(T.DESCUSS_NUM,0) AS  DESCUSS_NUM,
+	  NVL(T.SERIOUS_CASE_NUM,0) AS  SERIOUS_CASE_NUM,
+	  NVL(T.SUSPECTED_CRIMINAL_NUM ,0) AS  SUSPECTED_CRIMINAL_NUM from (
+    SELECT A.DISTRICT_CODE AS REGION_ID,
+           A.DISTRICT_NAME,
+           CHUFA_NUM,
+           XINGZHENGSHOULI_NUM,
+           XINGZHENGLIAN_NUM,
+           DIRECTYISONG_NUM,
+           SUGGESTYISONG_NUM,
+           (DIRECTYISONG_NUM+ SUGGESTYISONG_NUM) AS GONGANSHOULI_NUM,
+           LIAN_NUM,
+           TIQINGDAIBU_CASE_NUM,
+           YISONGQISU_CASE_NUM,           
+           DAIBU_NUM,
+           QISU_NUM,
+           PANJUE_NUM,
+           CHUFA_TIMES_NUM,
+           BEYOND_EIGHTY_NUM,
+           IDENTIFY_TYPE_NUM,
+           LOWER_LIMIT_MONEY_NUM,
+           DESCUSS_NUM,
+           SERIOUS_CASE_NUM,
+           SUSPECTED_CRIMINAL_NUM
+      FROM (SELECT D.DISTRICT_NAME, D.DISTRICT_CODE
+              FROM DISTRICT D
+             WHERE DISTRICT_CODE = #{districtCode}
+                OR UP_DISTRICT_CODE = #{districtCode}) A
+      JOIN (SELECT CASE
+                           WHEN LENGTH(B.DISTRICT_CODE)  &lt; 6 THEN
+                            RPAD(B.DISTRICT_CODE, 6, '0')
+                           ELSE
+                            B.DISTRICT_CODE
+                         END AS DISTRICT_CODE,
+                    NVL(CHUFA_NUM,0)  AS CHUFA_NUM,
+                    NVL(XINGZHENGSHOULI_NUM,0)  AS XINGZHENGSHOULI_NUM,
+                    NVL(XINGZHENGLIAN_NUM,0)  AS XINGZHENGLIAN_NUM,
+                    NVL(DIRECTYISONG_NUM,0)  AS DIRECTYISONG_NUM,
+                    NVL(SUGGESTYISONG_NUM,0)  AS SUGGESTYISONG_NUM,
+                    NVL(LIAN_NUM,0)  AS LIAN_NUM,
+                    NVL(TIQINGDAIBU_CASE_NUM,0)  AS TIQINGDAIBU_CASE_NUM, 
+                    NVL(YISONGQISU_CASE_NUM,0)  AS YISONGQISU_CASE_NUM,
+                    NVL(DAIBU_NUM,0)  AS DAIBU_NUM,
+                    NVL(QISU_NUM,0)  AS QISU_NUM, 
+                    NVL(PANJUE_NUM,0)  AS PANJUE_NUM,
+                    NVL(CHUFA_TIMES_NUM,0)  AS CHUFA_TIMES_NUM,
+                    NVL(BEYOND_EIGHTY_NUM,0)  AS BEYOND_EIGHTY_NUM,
+                    NVL(IDENTIFY_TYPE_NUM,0)  AS IDENTIFY_TYPE_NUM,
+                    NVL(LOWER_LIMIT_MONEY_NUM,0)  AS LOWER_LIMIT_MONEY_NUM,
+                    NVL(DESCUSS_NUM,0)  AS DESCUSS_NUM,
+                    NVL(SERIOUS_CASE_NUM,0)  AS SERIOUS_CASE_NUM,
+                    NVL(SUSPECTED_CRIMINAL_NUM,0)  AS SUSPECTED_CRIMINAL_NUM                         
+                    FROM (SELECT SUBSTR(A.district_code, 0, C.LEN + 2) AS district_code,
+                         SUM(S.CHUFA_NUM) AS CHUFA_NUM,
+                         SUM(S.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                         SUM(S.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                         SUM(S.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                         SUM(S.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                         SUM(S.LIAN_NUM) AS LIAN_NUM,
+                         SUM(S.TIQINGDAIBU_CASE_NUM) AS TIQINGDAIBU_CASE_NUM,
+                         SUM(S.YISONGQISU_CASE_NUM) AS YISONGQISU_CASE_NUM,
+                         SUM(S.DAIBU_NUM) AS DAIBU_NUM,
+                         SUM(S.QISU_NUM) AS QISU_NUM,
+                         SUM(S.PANJUE_NUM) AS PANJUE_NUM,
+                         SUM(S.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                         SUM(S.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                         SUM(S.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                         SUM(S.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                         SUM(S.DESCUSS_NUM) AS DESCUSS_NUM,
+                         SUM(S.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                         SUM(S.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+                            FROM DISTRICT A,
+                          (SELECT DISTRICT_CODE, 
+                             SUM(penalty_num) AS CHUFA_NUM,
+                             SUM(XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                             SUM(XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                             SUM(DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                             SUM(SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                             SUM(LIAN_NUM) AS LIAN_NUM,
+                             SUM(TIQINGDAIBU_NUM) AS TIQINGDAIBU_CASE_NUM,
+                             SUM(YISONGQISU_NUM) AS YISONGQISU_CASE_NUM,
+                             SUM(DAIBU_NUM) AS DAIBU_NUM,
+                             SUM(QISU_NUM) AS QISU_NUM,
+                             SUM(PANJUE_NUM) AS PANJUE_NUM,
+                             SUM(CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                             SUM(BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                             SUM(IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                             SUM(LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                             SUM(DESCUSS_NUM) AS DESCUSS_NUM,
+                             SUM(SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                             SUM(SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+                            FROM V_SORT_NUM 
+                            WHERE 1 = 1
+                     <if test="startTime != null and startTime != '' ">
+	                   AND INPUT_TIME >= TO_DATE(#{startTime},'yyyyMMdd') 
+	                  </if>
+	                  <if test="endTime != null and endTime != '' ">
+	                     AND INPUT_TIME &lt;= TO_DATE(#{endTime},'yyyyMMdd')+   interval   '1'  day
+	                   </if>
+	                   <if test="orgPath != null and orgPath != '' ">
+		                 AND ORG_PATH LIKE #{orgPath}||'%'
+		               </if>                                   
+                        GROUP BY DISTRICT_CODE) S,
+                        (SELECT LENGTH(#{shortDistrictCode}) AS LEN FROM DUAL) C
+                           WHERE A.DISTRICT_CODE = S.DISTRICT_CODE
+                             AND A.DISTRICT_CODE LIKE #{shortDistrictCode}||'%'
+                           GROUP BY SUBSTR(A.DISTRICT_CODE, 0, C.LEN + 2)) B) B
+					        ON A.DISTRICT_CODE = B.DISTRICT_CODE
+					       GROUP BY A.DISTRICT_CODE,
+					                  A.DISTRICT_NAME,
+					                  CHUFA_NUM,
+					                  XINGZHENGSHOULI_NUM,
+					                  XINGZHENGLIAN_NUM,
+					                  DIRECTYISONG_NUM,
+					                  SUGGESTYISONG_NUM,
+					                  LIAN_NUM,
+					                  TIQINGDAIBU_CASE_NUM,
+					                  YISONGQISU_CASE_NUM,
+					                  DAIBU_NUM,
+					                  QISU_NUM,
+					                  PANJUE_NUM,
+					                  CHUFA_TIMES_NUM,
+					                  BEYOND_EIGHTY_NUM,
+					                  IDENTIFY_TYPE_NUM,
+					                  LOWER_LIMIT_MONEY_NUM,
+					                  DESCUSS_NUM,
+					                  SERIOUS_CASE_NUM,
+					                  SUSPECTED_CRIMINAL_NUM 
+     <if test="sortName !=null and sortName != ''">
+       <if test="sortorder != null and sortorder != '' ">
+         ORDER BY ${sortName} ${sortorder}
+       </if>
+     </if>
+     <if test="sortName ==null or sortName == ''">
+     ORDER BY A.DISTRICT_CODE
+     </if>
+     ) T
+         RIGHT JOIN DISTRICT D 
+         ON T.REGION_ID = D.DISTRICT_CODE
+      <!-- WHERE d.district_code != #{districtCode} -->
+	</select>	
+		
+<!-- 大屏展示区域排名案件统计查询 -->
+<select id="caseNumSortForBusShow" parameterType="java.util.Map" resultMap="caseNumSortMap">
+	SELECT D.DISTRICT_CODE AS REGION_ID,D.DISTRICT_NAME AS REGION_NAME,
+	  NVL(T.CHUFA_NUM,0) AS CHUFA_NUM,
+	  NVL(T.XINGZHENGSHOULI_NUM,0) AS XINGZHENGSHOULI_NUM,
+	  NVL(T.XINGZHENGLIAN_NUM,0) AS XINGZHENGLIAN_NUM,
+	  NVL(T.DIRECTYISONG_NUM,0) AS  DIRECTYISONG_NUM,
+	  NVL(T.SUGGESTYISONG_NUM,0) AS  SUGGESTYISONG_NUM,
+	  NVL(T.GONGANSHOULI_NUM,0) AS  GONGANSHOULI_NUM,
+	  NVL(T.LIAN_NUM,0) AS  LIAN_NUM,
+	  NVL(T.GONGANFENPAI_NUM,0) AS  GONGANFENPAI_NUM,
+	  NVL(T.TIQINGDAIBU_CASE_NUM,0) AS  TIQINGDAIBU_CASE_NUM,
+	  NVL(T.YISONGQISU_CASE_NUM, 0) AS  YISONGQISU_CASE_NUM,
+	  NVL(T.DAIBU_NUM,0) AS  DAIBU_NUM,
+	  NVL(T.QISU_NUM,0) AS  QISU_NUM,
+	  NVL(T.PANJUE_NUM,0) AS  PANJUE_NUM,
+	  NVL(T.CHUFA_TIMES_NUM,0) AS  CHUFA_TIMES_NUM,
+	  NVL(T.BEYOND_EIGHTY_NUM,0) AS  BEYOND_EIGHTY_NUM,
+	  NVL(T.IDENTIFY_TYPE_NUM,0) AS  IDENTIFY_TYPE_NUM,
+	  NVL(T.LOWER_LIMIT_MONEY_NUM,0) AS  LOWER_LIMIT_MONEY_NUM,
+	  NVL(T.DESCUSS_NUM,0) AS  DESCUSS_NUM,
+	  NVL(T.SERIOUS_CASE_NUM,0) AS  SERIOUS_CASE_NUM,
+	  NVL(T.SUSPECTED_CRIMINAL_NUM ,0) AS  SUSPECTED_CRIMINAL_NUM FROM (
+    SELECT A.DISTRICT_CODE AS REGION_ID,
+           A.DISTRICT_NAME,
+           CHUFA_NUM,
+           XINGZHENGSHOULI_NUM,
+           XINGZHENGLIAN_NUM,
+           DIRECTYISONG_NUM,
+           SUGGESTYISONG_NUM,
+           (DIRECTYISONG_NUM+ SUGGESTYISONG_NUM) AS GONGANSHOULI_NUM,
+           LIAN_NUM,
+           GONGANFENPAI_NUM,
+           TIQINGDAIBU_CASE_NUM,
+           YISONGQISU_CASE_NUM,           
+           DAIBU_NUM,
+           QISU_NUM,
+           PANJUE_NUM,
+           CHUFA_TIMES_NUM,
+           BEYOND_EIGHTY_NUM,
+           IDENTIFY_TYPE_NUM,
+           LOWER_LIMIT_MONEY_NUM,
+           DESCUSS_NUM,
+           SERIOUS_CASE_NUM,
+           SUSPECTED_CRIMINAL_NUM
+      FROM (SELECT D.DISTRICT_NAME, D.DISTRICT_CODE
+              FROM DISTRICT D
+             WHERE DISTRICT_CODE = #{districtCode}
+                OR UP_DISTRICT_CODE = #{districtCode}) A
+      JOIN (SELECT CASE
+                           WHEN LENGTH(B.DISTRICT_CODE)  &lt; 6 THEN
+                            RPAD(B.DISTRICT_CODE, 6, '0')
+                           ELSE
+                            B.DISTRICT_CODE
+                         END AS DISTRICT_CODE,
+                    NVL(CHUFA_NUM,0)  AS CHUFA_NUM,
+                    NVL(XINGZHENGSHOULI_NUM,0)  AS XINGZHENGSHOULI_NUM,
+                    NVL(XINGZHENGLIAN_NUM,0)  AS XINGZHENGLIAN_NUM,
+                    NVL(DIRECTYISONG_NUM,0)  AS DIRECTYISONG_NUM,
+                    NVL(SUGGESTYISONG_NUM,0)  AS SUGGESTYISONG_NUM,
+                    NVL(LIAN_NUM,0)  AS LIAN_NUM,
+                    NVL(GONGANFENPAI_NUM,0)  AS GONGANFENPAI_NUM,
+                    NVL(TIQINGDAIBU_CASE_NUM,0)  AS TIQINGDAIBU_CASE_NUM, 
+                    NVL(YISONGQISU_CASE_NUM,0)  AS YISONGQISU_CASE_NUM,
+                    NVL(DAIBU_NUM,0)  AS DAIBU_NUM,
+                    NVL(QISU_NUM,0)  AS QISU_NUM, 
+                    NVL(PANJUE_NUM,0)  AS PANJUE_NUM,
+                    NVL(CHUFA_TIMES_NUM,0)  AS CHUFA_TIMES_NUM,
+                    NVL(BEYOND_EIGHTY_NUM,0)  AS BEYOND_EIGHTY_NUM,
+                    NVL(IDENTIFY_TYPE_NUM,0)  AS IDENTIFY_TYPE_NUM,
+                    NVL(LOWER_LIMIT_MONEY_NUM,0)  AS LOWER_LIMIT_MONEY_NUM,
+                    NVL(DESCUSS_NUM,0)  AS DESCUSS_NUM,
+                    NVL(SERIOUS_CASE_NUM,0)  AS SERIOUS_CASE_NUM,
+                    NVL(SUSPECTED_CRIMINAL_NUM,0)  AS SUSPECTED_CRIMINAL_NUM                         
+                    FROM (SELECT SUBSTR(A.DISTRICT_CODE, 0, C.LEN + 2) AS DISTRICT_CODE,
+                         SUM(S.CHUFA_NUM) AS CHUFA_NUM,
+                         SUM(S.XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                         SUM(S.XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                         SUM(S.DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                         SUM(S.SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                         SUM(S.LIAN_NUM) AS LIAN_NUM,
+                         SUM(S.GONGANFENPAI_NUM) AS GONGANFENPAI_NUM,
+                         SUM(S.TIQINGDAIBU_CASE_NUM) AS TIQINGDAIBU_CASE_NUM,
+                         SUM(S.YISONGQISU_CASE_NUM) AS YISONGQISU_CASE_NUM,
+                         SUM(S.DAIBU_NUM) AS DAIBU_NUM,
+                         SUM(S.QISU_NUM) AS QISU_NUM,
+                         SUM(S.PANJUE_NUM) AS PANJUE_NUM,
+                         SUM(S.CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                         SUM(S.BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                         SUM(S.IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                         SUM(S.LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                         SUM(S.DESCUSS_NUM) AS DESCUSS_NUM,
+                         SUM(S.SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                         SUM(S.SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+                            FROM DISTRICT A,
+                          (SELECT DISTRICT_CODE, 
+                             SUM(penalty_num) AS CHUFA_NUM,
+                             SUM(XINGZHENGSHOULI_NUM) AS XINGZHENGSHOULI_NUM,
+                             SUM(XINGZHENGLIAN_NUM) AS XINGZHENGLIAN_NUM,
+                             SUM(DIRECTYISONG_NUM) AS DIRECTYISONG_NUM,
+                             SUM(SUGGESTYISONG_NUM) AS SUGGESTYISONG_NUM,
+                             SUM(LIAN_NUM) AS LIAN_NUM,
+                             SUM(GONGANFENPAI_NUM) AS GONGANFENPAI_NUM,
+                             SUM(TIQINGDAIBU_NUM) AS TIQINGDAIBU_CASE_NUM,
+                             SUM(YISONGQISU_NUM) AS YISONGQISU_CASE_NUM,
+                             SUM(DAIBU_NUM) AS DAIBU_NUM,
+                             SUM(QISU_NUM) AS QISU_NUM,
+                             SUM(PANJUE_NUM) AS PANJUE_NUM,
+                             SUM(CHUFA_TIMES_NUM) AS CHUFA_TIMES_NUM,
+                             SUM(BEYOND_EIGHTY_NUM) AS BEYOND_EIGHTY_NUM,
+                             SUM(IDENTIFY_TYPE_NUM) AS IDENTIFY_TYPE_NUM,
+                             SUM(LOWER_LIMIT_MONEY_NUM) AS LOWER_LIMIT_MONEY_NUM,
+                             SUM(DESCUSS_NUM) AS DESCUSS_NUM,
+                             SUM(SERIOUS_CASE_NUM) AS SERIOUS_CASE_NUM,
+                             SUM(SUSPECTED_CRIMINAL_NUM) AS SUSPECTED_CRIMINAL_NUM
+                            FROM V_SORT_NUM 
+                            WHERE 1 = 1
+                     <if test="startTime != null and startTime != '' ">
+	                   AND INPUT_TIME >= TO_DATE(#{startTime},'yyyyMM') 
+	                  </if>
+	                  <if test="endTime != null and endTime != '' ">
+	                     AND INPUT_TIME &lt;= TO_DATE(#{endTime},'yyyyMM')
+	                   </if>
+	                   <if test="orgPath != null and orgPath != '' ">
+		                 AND ORG_PATH LIKE #{orgPath}||'%'
+		               </if>                                   
+                        GROUP BY DISTRICT_CODE) S,
+                        (SELECT LENGTH(#{shortDistrictCode}) AS LEN FROM DUAL) C
+                           WHERE A.DISTRICT_CODE = S.DISTRICT_CODE
+                             AND A.DISTRICT_CODE LIKE #{shortDistrictCode}||'%'
+                           GROUP BY SUBSTR(A.DISTRICT_CODE, 0, C.LEN + 2)) B) B
+					        ON A.DISTRICT_CODE = B.DISTRICT_CODE
+					       GROUP BY A.DISTRICT_CODE,
+					                  A.DISTRICT_NAME,
+					                  CHUFA_NUM,
+					                  XINGZHENGSHOULI_NUM,
+					                  XINGZHENGLIAN_NUM,
+					                  DIRECTYISONG_NUM,
+					                  SUGGESTYISONG_NUM,
+					                  LIAN_NUM,
+					                  GONGANFENPAI_NUM,
+					                  TIQINGDAIBU_CASE_NUM,
+					                  YISONGQISU_CASE_NUM,
+					                  DAIBU_NUM,
+					                  QISU_NUM,
+					                  PANJUE_NUM,
+					                  CHUFA_TIMES_NUM,
+					                  BEYOND_EIGHTY_NUM,
+					                  IDENTIFY_TYPE_NUM,
+					                  LOWER_LIMIT_MONEY_NUM,
+					                  DESCUSS_NUM,
+					                  SERIOUS_CASE_NUM,
+					                  SUSPECTED_CRIMINAL_NUM 
+     <if test="sortName !=null and sortName != ''">
+       <if test="sortorder != null and sortorder != '' ">
+         ORDER BY ${sortName} ${sortorder}
+       </if>
+     </if>
+     <if test="sortName ==null or sortName == ''">
+     ORDER BY A.DISTRICT_CODE
+     </if>
+     ) T
+         RIGHT JOIN DISTRICT D 
+         ON T.REGION_ID = D.DISTRICT_CODE
+      <!-- WHERE d.district_code != #{districtCode} -->
+	</select>
+	
+	<select id="queryRegionSortData" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT DISTRICT_NAME,
+        <choose>
+            <when test="index == &quot;A&quot; ">NVL(SUM(PENALTY_NUM),0) AS TOTAL_NUM</when>
+    
+            <when test="index ==&quot;B&quot; ">NVL(SUM(DIRECTYISONG_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;C&quot; ">NVL(SUM(SUGGESTYISONG_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;D&quot; ">(NVL(SUM(DIRECTYISONG_NUM),0)+NVL(SUM(SUGGESTYISONG_NUM),0)) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;E&quot; ">NVL(SUM(LIAN_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;F&quot; ">NVL(SUM(TIQINGDAIBU_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;G&quot; ">NVL(SUM(YISONGQISU_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;H&quot; ">NVL(SUM(DAIBU_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;I&quot; ">NVL(SUM(QISU_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;J&quot; ">NVL(SUM(PANJUE_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;M&quot; ">NVL(SUM(BEYOND_EIGHTY_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index ==&quot;N&quot; ">NVL(SUM(IDENTIFY_TYPE_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index == &quot;O&quot; ">NVL(SUM(LOWER_LIMIT_MONEY_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index == &quot;P&quot; ">NVL(SUM(DESCUSS_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index == &quot;Q&quot; ">NVL(SUM(SERIOUS_CASE_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index == &quot;R&quot; ">NVL(SUM(SUSPECTED_CRIMINAL_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index == &quot;S&quot; ">NVL(SUM(XINGZHENGSHOULI_NUM),0) AS TOTAL_NUM</when>
+            
+            <when test="index == &quot;T&quot; ">NVL(SUM(XINGZHENGLIAN_NUM),0) AS TOTAL_NUM</when>
+        </choose>
+         FROM V_SORT_NUM V
+         WHERE 1 = 1
+  <if test="startTime != null and startTime != '' ">
+    AND INPUT_TIME >= TO_DATE(#{startTime},'YYYYMM') 
+   </if>
+   <if test="endTime != null and endTime != '' ">
+      AND TO_DATE(to_char(INPUT_TIME, 'YYYYMM'), 'YYYYMM' ) &lt;= TO_DATE( #{endTime}, 'YYYYMM' )
+    </if>
+     GROUP BY DISTRICT_NAME
+     ORDER BY TOTAL_NUM DESC
+	</select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- 线程执行器配置，用于任务注册 -->
+    <bean id="executor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10"/>
+        <property name="maxPoolSize" value="100"/>
+        <property name="queueCapacity" value="500"/>
+    </bean>
+    <!-- 业务逻辑处理类，也可以在@Component来进行注解声明-->
+    <!-- <bean id="test" class="com.ksource.tobacco.jobscheduler.job.SchedulerTest"></bean> -->
+
+    <!-- 附件备份-->
+    <!-- 附件备份任务 -->
+    <bean id="backupJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="attachmentService"/>
+        <property name="targetMethod" value="autoBackup"/>
+    </bean>
+    <!-- 附件备份触发器 -->
+    <!-- 备份时间cron表达式：
+          每天晚上0点触发 一次    	0 0 0 * * ?
+          每天晚上22点触发 一次    	0 0 22 * * ?
+          每5分钟触发一次		0 0/5 * * * ?
+          每月星期5的0点触发一次  	0 0 0 ? * 6
+    -->
+    <bean id="backupTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="backupJob"/>
+        <property name="cronExpression" value="0 0 0 ? * 6"/>
+    </bean>
+
+    <!-- 设置调度 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="backupTrigger"/>
+                <ref bean="reflashOrgTrigger"/>
+            </list>
+        </property>
+        <property name="taskExecutor" ref="executor"/>
+    </bean>
+
+    <!-- 每月定时刷新V_ORG_DATE 表数据，满足统计使用
+         每月1号的0点触发一次  	0 0 0 1 * ?-->
+    <bean id="reflashOrgJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="systemDAO"/>
+        <property name="targetMethod" value="reflashOrgDate"/>
+    </bean>
+    <bean id="reflashOrgTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="reflashOrgJob"/>
+        <property name="cronExpression" value="0 0 0 1 * ?"/>
+    </bean>
+</beans>

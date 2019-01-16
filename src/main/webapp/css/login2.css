@@ -1,0 +1,14 @@
+@charset "utf-8";
+/* CSS Document */
+*{ padding:0px; margin:0px; }
+.login_body{ width:100%; background:url(../images/login_bg2.jpg) repeat-x; height:579px; display:block; position:absolute; 
+top:50%; left:50%; margin:-307px 0 0 -50%; overflow:hidden;  }
+.login{ width:1002px; height:614px; display:block; background:url(../images/login_hubei.jpg) no-repeat; margin:0 auto; }
+.login .login_table{ display:inline; float:left; width:300px; height:222px; margin-left:400px; margin-top:269px; }
+.login .login_table tr{ height:42px;}
+.login .login_table .text{ height:22px; width:193px; border:#005898 1px solid; line-height:22px; padding-left:5px;}
+.login .login_table .btn_login{ width:88px; height:27px; display:inline; border:none; background:url(../images/btn_02.jpg) no-repeat; margin-left:50px; cursor:hand; color:#000000; font-size:16px; font-weight:bold; line-height:27px; }
+.login .login_table .btn_login:hover{ width:88px; height:27px; display:inline; border:none; background:url(../images/btn_03.jpg) no-repeat; margin-left:50px; cursor:hand; color:#000000;}
+.login .login_table a{ color:#FFFFFF; font-size:12px; line-height:22px;}
+.banquan{ width:1002px; height:50px; display:block; float:left; text-align:center; color:#000000; font-size:12px; line-height:22px; }
+

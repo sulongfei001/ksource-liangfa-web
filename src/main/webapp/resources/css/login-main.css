@@ -1,0 +1,54 @@
+/* CSS Document */
+
+body{  font-family:"Microsoft YaHei", "微软雅黑", "宋体";  font-size: 12px; margin:0; padding:0;  overflow-y:hidden;}
+*{ padding:0; margin:0;}
+ul li{ list-style:none;}
+a:link,a:visited{ text-decoration:none; color:#666;}
+a:hover{ text-decoration:underline; color:#333}
+.clear{ clear:both; font-size:0px; height:0px; line-height:0px;} 
+.clearfix {
+  *zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  line-height: 0;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both;
+}
+ul li a img{border:none; }
+
+/*澶撮儴header*/
+.header{  width: 100%; height: 118px; background: url(../images/topbj.png) repeat-x center top;}
+.logo{ width:920px; margin:0 auto;}
+
+
+/*涓棿鍐呭閮ㄥ垎center*/
+.center{ background:#B6DEF2;} 
+.cencont{ background:url(../images/centrebj.png) no-repeat top center; height:600px; }
+
+.content{ height:380px; width:1000px; margin:0px auto;}
+.contleft{ float:left; width:965px; margin-top:90px; padding-left:35px;}
+.contleftUl li{ float:left; margin:5px 12px 15px 28px; }
+.contleftUl li a img{ width:144px; height:211px; }
+.contright{ float:left; margin:110px 0px 0px 0px;}
+.contleftUl li a,.contleftUl2 li a{ display: block; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

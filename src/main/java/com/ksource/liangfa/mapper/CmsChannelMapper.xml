@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ksource.liangfa.mapper.CmsChannelMapper" >
+  <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.cms.CmsChannel" >
+    <id column="CHANNEL_ID" property="channelId" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="DECIMAL" />
+    <result column="PARENT_ID" property="parentId" jdbcType="DECIMAL" />
+    <result column="IS_LEAF" property="isLeaf" jdbcType="DECIMAL" />
+    <result column="PATH" property="path" jdbcType="VARCHAR" />
+    <result column="IS_SHOW" property="isShow" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CHANNEL_FROM" property="channelFrom" jdbcType="DECIMAL" />
+  </resultMap>
+  
+   <sql id="Base_Column_List" >
+    CHANNEL_ID, NAME, SORT, PARENT_ID, IS_LEAF, PATH, IS_SHOW, REMARK,CHANNEL_FROM
+  </sql>
+  
+  <insert id="insert" parameterType="com.ksource.liangfa.domain.cms.CmsChannel" >
+    insert into CMS_CHANNEL
+     (<include refid="Base_Column_List"/>)
+    values 
+    (#{channelId,jdbcType=DECIMAL}, 
+    #{name,jdbcType=VARCHAR}, 
+    #{sort,jdbcType=DECIMAL}, 
+    #{parentId,jdbcType=DECIMAL},
+    #{isLeaf,jdbcType=DECIMAL},
+    #{path,jdbcType=VARCHAR},
+    #{isShow,jdbcType=DECIMAL},
+    #{remark,jdbcType=VARCHAR},
+    #{channelFrom,jdbcType=DECIMAL}
+    )
+  </insert>
+  
+   <delete id="deleteById" parameterType="int" >
+    delete from CMS_CHANNEL
+    where CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+  </delete>
+  
+    <update id="updateByPrimaryKeySelective" parameterType="com.ksource.liangfa.domain.cms.CmsChannel">
+    update CMS_CHANNEL
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        SORT = #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="parentId != null">
+        PARENT_ID = #{parentId,jdbcType=DECIMAL},
+      </if>
+      <if test="isLeaf != null">
+        IS_LEAF = #{isLeaf,jdbcType=DECIMAL},
+      </if>
+      <if test="path != null">
+        PATH = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        IS_SHOW = #{isShow,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+       <if test="channelFrom != null">
+        CHANNEL_FROM = #{channelFrom,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+  </update>
+  
+   <select id="selectByParentId" resultMap="BaseResultMap" parameterType="int">
+	select
+	  <include refid="Base_Column_List"/>
+	 from CMS_CHANNEL 
+	 where  PARENT_ID = #{parentId,jdbcType=DECIMAL}
+	 order by SORT
+	</select>
+
+ <select id="childrenCounts" parameterType="int" resultType="int">
+    select 
+    count(1)
+    from CMS_CHANNEL
+    where PARENT_ID = #{parentId,jdbcType=DECIMAL}
+  </select>
+	
+	
+   <select id="selectByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from CMS_CHANNEL
+    where CHANNEL_ID = #{channelId,jdbcType=DECIMAL}
+   </select>
+   
+   <select id="pageChannel" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from CMS_CHANNEL
+    where PARENT_ID = #{parentId,jdbcType=DECIMAL}
+    and IS_SHOW = #{isShow,jdbcType=DECIMAL}
+    order by SORT
+   </select>
+   
+    <select id="getChannelId" parameterType="int" resultType="Integer">
+    select 
+    CHANNEL_ID
+    from CMS_CHANNEL
+    where CHANNEL_FROM = #{channelFrom,jdbcType=DECIMAL}
+   </select>
+   
+    <select id="fromIsExist" parameterType="map" resultType="Integer">
+    select 
+    count(1)
+    from CMS_CHANNEL
+    where CHANNEL_FROM = #{channelFrom,jdbcType=DECIMAL}
+          AND CHANNEL_ID != #{channelId,jdbcType=DECIMAL}
+   </select>
+
+  
+</mapper>

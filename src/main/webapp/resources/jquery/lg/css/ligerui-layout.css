@@ -1,0 +1,330 @@
+.l-layout {
+	position: relative;
+	margin-top: 5px; 
+}
+
+.l-layout-left,.l-layout-right,.l-layout-center,.l-layout-top,.l-layout-bottom
+	{
+	position: absolute;
+	border: 1px solid #CCCCCC;
+	background: white;
+	z-index: 10;
+	overflow: hidden
+}
+
+.l-layout-top {
+	width: 100%
+}
+
+.l-layout-bottom {
+	width: 100%
+}
+
+.l-layout-left .l-layout-header-toggle {
+	position: absolute;
+	top: 3px;
+	right: 3px;
+	height: 20px;
+	width: 20px;
+	overflow: hidden;
+	background: url('../images/layout/togglebar.gif');
+	background-position: -20px 0;
+	cursor: pointer
+}
+
+.l-layout-left .l-layout-header-toggle-over {
+	background-position: -20px -20px
+}
+
+.l-layout-right .l-layout-header-toggle {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	height: 20px;
+	width: 20px;
+	overflow: hidden;
+	background: url('../images/layout/togglebar.gif');
+	background-position: -20px -40px;
+	cursor: pointer
+}
+
+.l-layout-right .l-layout-header-toggle-over {
+	background-position: -20px -60px
+}
+
+/*�޸�������ɫ*/
+.l-layout-center .l-layout-header {
+	cursor: default;
+	color: #000000
+}
+
+.l-layout-header {
+	position: relative;
+	padding-left: 10px;
+	font-weight: bold;
+	height: 28px;
+	line-height: 28px;
+	background: #e5effe ;
+	overflow: hidden;
+	cursor: pointer
+}
+
+.l-layout-header-inner {
+	padding-right: 22px;
+	color: 000000
+}
+
+.l-layout-right .l-layout-header-inner {
+	padding-left: 22px;
+	padding-right: auto
+}
+
+.l-layout-header-over {
+	background: #eff4fe
+}
+
+.l-layout-collapse-left,.l-layout-collapse-right {
+	width: 24px;
+	background: #eaf2fe;
+	border: 1px solid #b8d0d6;
+	position: absolute;
+	top: 0;
+	display: none;
+	height: 100%;
+	z-index: 10
+}
+
+.l-layout-collapse-left-over,.l-layout-collapse-right-over {
+	background: #f5f9fa
+}
+
+.l-layout-collapse-left-toggle,.l-layout-collapse-right-toggle {
+	position: absolute;
+	height: 20px;
+	width: 20px;
+	overflow: hidden;
+	background: url('../images/layout/togglebar.gif');
+	cursor: pointer
+}
+
+.l-layout-collapse-left {
+	left: 2px
+}
+
+.l-layout-collapse-left-toggle {
+	top: 0;
+	right: 2px;
+	background-position: -20px -40px
+}
+
+.l-layout-collapse-left-toggle-over {
+	background-position: -20px -60px
+}
+
+.l-layout-collapse-right {
+	right: 2px
+}
+
+.l-layout-collapse-right-toggle {
+	top: 0;
+	left: 2px;
+	background-position: -20px 0
+}
+
+.l-layout-collapse-right-toggle-over {
+	background-position: -20px -20px
+}
+
+.l-layout-drophandle-left {
+	position: absolute;
+	width: 5px;
+	cursor: col-resize;
+	z-index: 10;
+	display: none
+}
+
+.l-layout-drophandle-right {
+	position: absolute;
+	width: 5px;
+	cursor: col-resize;
+	z-index: 10;
+	display: none
+}
+
+.l-layout-drophandle-top {
+	position: absolute;
+	height: 5px;
+	cursor: row-resize;
+	z-index: 10;
+	display: none;
+	line-height: 1px;
+	overflow: hidden
+}
+
+.l-layout-drophandle-bottom {
+	position: absolute;
+	height: 5px;
+	cursor: row-resize;
+	z-index: 10;
+	display: none;
+	line-height: 1px;
+	overflow: hidden
+}
+
+.l-layout-dragging-xline {
+	background: #e0e4e2;
+	height: 4px;
+	position: absolute;
+	display: none;
+	z-index: 9999;
+	padding: 0;
+	margin: 0;
+	line-height: 1px;
+	overflow: hidden
+}
+
+.l-layout-dragging-yline {
+	background: #e0e4e2;
+	width: 4px;
+	position: absolute;
+	display: none;
+	z-index: 9999;
+	padding: 0;
+	margin: 0
+}
+
+.l-layout-lock {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: none;
+	z-index: 9990;
+	margin: 0;
+	padding: 0
+}
+
+.l-layout-content {
+	position: relative;
+	background: white;
+	overflow: hidden
+}
+
+.l-layout-drophandle {
+	position: absolute;
+	top: 0;
+	left: -5px;
+	width: 5px;
+	cursor: col-resize;
+	z-index: 10;
+	height: 100%;
+	display: none
+}
+
+.l-layout-collapse {
+	width: 24px;
+	background: #eaf2fe;
+	border: 1px solid #b8d0d6;
+	position: absolute;
+	top: 0;
+	left: 4px;
+	display: none;
+	height: 100%;
+	z-index: 10
+}
+
+.l-layout-collapse-over {
+	background: #f5f9fa
+}
+
+.l-layout-collapse-toggle {
+	position: absolute;
+	top: 0;
+	right: 2px;
+	height: 20px;
+	width: 20px;
+	overflow: hidden;
+	background: url('../images/layout/togglebar.gif');
+	background-position: -20px -40px;
+	cursor: pointer
+}
+
+.l-layout-collapse-toggle-over {
+	background-position: -20px -60px
+}
+
+.l-layout-dragging-line {
+	background: #e0e4e2;
+	width: 4px;
+	position: absolute;
+	top: 0;
+	display: none;
+	z-index: 9999;
+	padding: 0;
+	margin: 0;
+	height: 100%
+}
+
+.l-accordion-panel {
+	border-left: 1px solid #bed5f3;
+	border-right: 1px solid #bed5f3;
+	border-bottom: 1px solid #bed5f3
+}
+
+.l-accordion-toggle {
+	position: absolute;
+	top: 2px;
+	right: 4px;
+	height: 20px;
+	width: 20px;
+	overflow: hidden;
+	background: url('../images/layout/togglebar.gif');
+	cursor: pointer
+}
+
+.l-accordion-toggle-close {
+	background-position: 0 0
+}
+
+.l-accordion-toggle-close-over {
+	background-position: 0 -20px
+}
+
+.l-accordion-toggle-open {
+	background-position: 0 -40px
+}
+
+.l-accordion-toggle-open-over {
+	background-position: 0 -60px
+}
+
+.l-accordion-header {
+	position: relative;
+	padding-left: 10px;
+	color: #454545;
+	font-weight: bold;
+	height: 28px;
+	line-height: 28px;
+	background: #e5effe url('../images/layout/accordion-header.gif') repeat-x;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+.l-accordion-header-over {
+	background: #eff4fe url('../images/layout/accordion-header-over.gif')
+		repeat-x
+}
+
+.l-accordion-content {
+	position: relative;
+	overflow:auto;
+	background: white url('../images/layout/accordion-content.gif') repeat-x;
+}
+
+.l-layout-left .l-accordion-panel {
+	border-left: none;
+	border-right: 0
+}
+
+.l-accordion-header-inner{height:28px; line-height:28px; }/********* ���˵� Сͼ�� λ��У�� *************/
+.l-accordion-header-inner img{ margin-top:6px; margin-right:3px; display:inline; float:left; }/*********** ���˵� Сͼ�� λ��У�� ***********/
+.l-accordion-content ul{ display��block; }

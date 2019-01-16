@@ -1,0 +1,129 @@
+@CHARSET "UTF-8";
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+    margin: 0;
+    padding: 0;
+}
+	legend { padding: 0.5em 4em; font-size: 16px;}
+	#outDiv{position: relative;margin: 6px;}
+#pic {
+  position: relative;
+  border: 1px dashed;
+}
+
+#pic .outer {
+  cursor:pointer;
+  position: absolute;
+}
+.redHove{
+  background: red;
+  filter:alpha(opacity=20); /*IE*/
+  -moz-opacity:0.2; /*MOZ , FF*/
+  -ms-filter:"alpha(opacity=20)";
+  opacity:0.2;/*CSS3, FF1.5*/
+  -khtml-opacity: 0.2;
+}
+.greenHove{
+  background: green;
+  filter:alpha(opacity=20); /*IE*/
+  -moz-opacity:0.2; /*MOZ , FF*/
+  -ms-filter:"alpha(opacity=20)";
+  opacity:0.2;/*CSS3, FF1.5*/
+  -khtml-opacity: 0.2;
+}
+.whiteHove{
+  background: white;
+  filter:alpha(opacity=20); /*IE*/
+  -moz-opacity:0.1; /*MOZ , FF*/
+  -ms-filter:"alpha(opacity=10)";
+  opacity:0.1;/*CSS3, FF1.5*/
+  -khtml-opacity: 0.1;
+}
+
+
+
+#pic .note {
+  padding: 0.2em 0.5em;
+  text-align: center;
+  /* position: absolute;left: -30000px;*/
+  color: blcak;
+  background-color:#ffc;
+  color: red;
+}
+
+
+
+#i-nav-menu, #i-nav-menu a {
+    color: #333333;
+    width:175px;
+}
+#i-nav-menu .i-menu-wrap {
+    border-color: #186abe;
+    border-style: solid;
+    border-width: 0 1px 1px;
+    line-height: 28px;
+    overflow: hidden;
+    /* width: 155px; */
+}
+#i-nav-menu .i-hd {
+    background-color: #c6daef;
+    background-position: 0 -275px;
+    background-repeat: repeat-x;
+    border-top: 1px solid #186ABE;
+    color: #0156a9;
+    font-size:14px;
+    font-weight: bold;
+    height: 32px;
+    line-height: 32px;
+    position: relative;
+    text-indent: 8px;
+}
+ul, ol {
+    list-style: none outside none;
+}
+#i-nav-menu li.i-selected, #i-nav-menu li.i-selected dl dt {
+    background-position: 4px -366px;
+}
+#i-nav-menu li {
+    list-style-type: none;
+    min-height: 28px;
+    overflow: hidden;
+}
+#i-nav-menu li, #i-nav-menu li a,#i-nav-menu li.i-selected dl dt{
+    background: url("../images/T11nOjXe0CXXXXXXXX-600-391.png") no-repeat scroll 9999px 9999px transparent;
+}
+#i-nav-menu li.i-selected a, #i-nav-menu li.i-selected a:hover {
+    color: #FFFFFF;
+}
+#i-nav-menu li.i-selected a {
+    background-position: -133px -333px;
+}
+#i-nav-menu li a {
+    background-position: 10px -333px;
+    display: block;
+    height: 100%;
+    text-indent: 18px;
+    width: 100%;
+    text-decoration: none;
+}
+#i-nav-menu a:HOVER {
+	color: #FF6600;
+}
+
+#penaltyPic {
+  position: relative;
+  border: 1px dashed;
+}
+
+#penaltyPic .outer {
+  cursor:pointer;
+  position: absolute;
+}
+#penaltyPic .note {
+  padding: 0.2em 0.5em;
+  text-align: center;
+  /* position: absolute;left: -30000px;*/
+  color: blcak;
+  background-color:#ffc;
+  color: red;
+}
+

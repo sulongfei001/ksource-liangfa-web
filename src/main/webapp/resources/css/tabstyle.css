@@ -1,0 +1,137 @@
+
+ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0 0 0 15px;
+}
+ul li {
+    background: url("../Images/list_arr.gif") no-repeat scroll 0 6px transparent;
+    color: #000000;
+    font: 10pt/17pt "Trebuchet MS",Helvetica,sans-serif;
+    list-style: none outside none;
+    margin: 0 0 3px;
+    padding: 0 0 0 13px;
+}
+ul li a {
+    border-bottom: 1px dotted #777B7E;
+    color: #777B7E;
+    font-weight: normal;
+    text-decoration: none;
+}
+ul li a:hover {
+    border-bottom: 1px dotted #F89527;
+    color: #F89527;
+    text-decoration: none;
+}
+ul li ul li {
+    background: url("../Images/list_dash.gif") no-repeat scroll 0 11px transparent;
+    color: #000000;
+    font: 10pt/17pt "Trebuchet MS",Helvetica,sans-serif;
+    list-style: none outside none;
+    margin: 0 0 3px;
+    padding: 0 0 0 14px;
+}
+
+ol.tabs, ul.tabs {
+    border-bottom: 1px solid #FDDCA3;
+    border-left: 1px solid #FDDCA3;
+    float: left;
+    height: 33px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    color:#ff7618;
+}
+ol.tabs li, ul.tabs li {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #FEFCFA;
+    border-color: #FDDCA3;
+    border-style: solid solid solid none;
+    border-width: 1px 1px 1px medium;
+    float: left;
+    height: 32px;
+    line-height: 32px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+}
+ol.tabs li a, ul.tabs li a {
+    border-bottom: medium none;
+    color: #2F376F;
+    display: block;
+    font-size: 10pt;
+    outline: medium none;
+    padding: 0 20px;
+    text-decoration: none;
+}
+ol.tabs li a:hover, ul.tabs li a:hover {
+    background: none repeat scroll 0 0 #FEFCFA;
+    color: #FF7618;
+}
+html ol.tabs li.active, html ol.tabs li.active a, html ol.tabs li.active a:hover, html ul.tabs li.active, html ul.tabs li.active a, html ul.tabs li.active a:hover {
+    background: none repeat scroll 0 0 #FEFCFA !important;
+    border-bottom: 1px solid #FEFCFA;
+    color: #FF7618;
+}
+.tab_container {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #FEFCFA;
+    border-color: #FDDCA3;
+    border-right: 1px solid #FDDCA3;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+    clear: both;
+    float: left;
+    width: 100%;
+}
+.tab_content {
+    padding: 10px;
+    border-color:#FDDCA3;
+}
+.code_container {
+    background: none repeat scroll 0 0 #FEFCFA;
+    border: 1px solid #FDDCA3;
+    padding: 10px;
+}
+ol {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0 0 0 40px;
+}
+ol li {
+    background: none repeat scroll 0 0 transparent;
+    color: #000000;
+    font: 10pt/17pt "Trebuchet MS",Helvetica,sans-serif;
+    list-style: decimal outside none;
+    margin: 0 0 3px;
+    padding: 0;
+}
+ol li a {
+    border-bottom: 1px dotted #777B7E;
+    color: #777B7E;
+    font-weight: normal;
+    text-decoration: none;
+}
+ol li a:hover {
+    border-bottom: 1px dotted #F89527;
+    color: #F89527;
+    text-decoration: none;
+}
+ol li ul li {
+    background: url("../Images/list_dash.gif") no-repeat scroll 0 11px transparent;
+    color: #000000;
+    font: 10pt/17pt "Trebuchet MS",Helvetica,sans-serif;
+    list-style: none outside none;
+    margin: 0 0 3px;
+    padding: 0 0 0 14px;
+}

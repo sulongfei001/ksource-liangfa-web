@@ -1,0 +1,56 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+	margin:0 auto;
+	font-family:"Microsoft YaHei", "微软雅黑", "宋体";
+	font-size: 12px;
+	margin:0;
+	padding:0;
+	background:url(../../images/login/boxbjdfb.png) top center;
+}
+
+.top {
+	width:1000px;
+	margin:0 auto;
+}
+.loginlogo {
+	width:655px;
+	margin:20px auto 0;
+}
+
+.loginlogo img{ width:90%; height:90%; margin:2% 0 0 5%;}
+
+.cen {
+	position:relative;
+	width:100%;
+	padding-top:5.2%;
+}
+
+.cencontdl {
+	float:left;	
+	cursor:pointer;
+	transition:all 0.2s;
+	margin-right:1.35%;
+}
+/*.cencontdl img{
+	width:90%; height:90%;
+}*/
+
+.cencontdl:hover {
+	transform:scale(0.95, 0.95);
+	box-shadow:0 0 30px #20A2EE;
+}
+ @media only screen and (min-width: 1024px) and (max-width: 1280px)  {
+ .cenall {
+position:absolute;
+width:88%;
+margin:0 6.8%;
+}
+ .cencontdl {
+margin-right:1.5%;
+}
+}
+.denglu05 {
+	margin-right:0;
+}

@@ -1,0 +1,72 @@
+
+/* 本例子css */
+.txtScroll-left {
+	width: 100%;
+	position: relative;
+}
+
+.txtScroll-left .hd .prev,.txtScroll-left .hd .next {
+	display: block;
+	width: 20px;
+	height: 20px;
+	float: right;
+	overflow: hidden;
+	cursor: pointer;
+	margin-top:17px;
+	background: url("image/arrow2.png") no-repeat;
+	border-radius: 3px;
+	background-position: 4px 2px;
+}
+.txtScroll-left .hd .prev:hover,.txtScroll-left .hd .next:hover{
+	background-color: rgba(255,255,255,0.1);
+	
+}
+.txtScroll-left .hd .next {
+    position: absolute;
+	right: 0;;
+	top: 0px;
+	background-position: 6px -48px;
+}
+
+.txtScroll-left .hd .prev {
+	position: absolute;
+	left: 0;
+	top: 0px;
+}
+
+.txtScroll-left .hd .prevStop {
+	background-position: -56px 2px;
+}
+
+.txtScroll-left .hd .nextStop {
+	background-position: -58px -48px;
+}
+
+.txtScroll-left .hd ul {
+	float: right;
+	overflow: hidden;
+	zoom: 1;
+	margin-top: 10px;
+}
+
+.txtScroll-left .bd {
+	width: 96%;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+.txtScroll-left .bd ul {
+	overflow: hidden;
+	zoom: 1;
+}
+
+.txtScroll-left .bd ul li {
+	float: left;
+	width: 12.5%;
+	text-align: center;
+	_display: inline;
+}
+
+.txtScroll-left .bd ul li span {
+	color: #999;
+}

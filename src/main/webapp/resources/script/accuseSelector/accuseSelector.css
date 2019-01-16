@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+.accuseDropbox{display:none;z-index:8888;padding:5px;background:#FFFBE1;border:1px solid #999;position:absolute;height: 250px;overflow: auto;}
+.accuseDropbox a,.labelC a{display:inline-block;color:#000000;margin:4px;text-decoration:none;background:#EAEAEA;border:1px solid #DDDDDD; }
+.accuseDropbox a:hover{text-decoration:underline}
+.accuseDropbox p{line-height:24px} 
+.accuseDropbox em.close,.accuseDropbox em.clear{float:right;color:blue;background:#FFFBE1;font-style:normal;cursor:pointer;margin-right:8px;} 

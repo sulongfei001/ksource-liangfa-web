@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+*{ padding:0px; margin:0px; }
+.loginbody{ background:url(../images/login.jpg) #ffffff top center no-repeat;}
+.bodycont{ width:362px; display:block; height:100%; margin:0 auto; overflow:hidden;  padding-top:230px; padding-left:640px; padding-bottom:70px;}
+.login_table{ width:238px; height:211px; overflow:hidden; display:block; float:left; background:url(../images/login_table.jpg) no-repeat; padding-top:30px; padding-left:100px;}
+.login_btn{ width:150px; height:38px; display:block; background:url(../images/login_btn.jpg) no-repeat; border:none; cursor:pointer; }
+.login_bottom{ width:1002px; display:block; text-align:center; line-height:20px; margin:0 auto;  font-size:12px; }
+.login_btn:hover{ width:150px; height:38px; display:block; background:url(../images/login_btn2.jpg) no-repeat 1px 1px; border:none; cursor:pointer; }

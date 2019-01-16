@@ -1,0 +1,67 @@
+/* table blues----border #B5C4D2------>> */
+table.blues {
+	margin: 10px 0px 0px 0px;
+	border: #507CD1 1px solid;
+	color: black;
+	border-right: none;
+	width: 100%;
+	/*height: 100%;*/
+	empty-cells:show; 
+	border-collapse:collapse;
+	
+}
+
+table.blues td {
+	border-right: #507CD1 1px solid;
+	border-top: #507CD1 1px solid;
+	padding-left: 5px;;
+	padding-right: 5px;;
+	padding-top: 4px;;
+	padding-bottom: 2px;
+	empty-cells:show;
+}
+
+table.blues  .odd:hover,.blues  .even:hover {
+	background-color: #FBD894;
+}
+
+table.blues tr a,.blues tr a:visited {
+	color: #0000EE;
+	/*text-decoration: none;*/
+}
+
+table.blues tr a:hover {
+	text-decoration: underline;
+	color: #0000EE;
+}
+
+table.blues thead tr {
+	background-color:#C6D3EF;
+	font-weight:bold;
+	font-size:12px;
+    background-repeat: repeat-x;
+	text-align: center;
+	height: 28px;
+}
+
+/* 表头居中 */
+table.blues thead th {
+	border: #507CD1 1px solid;
+}
+
+table.blues td {
+	text-align: center;
+	empty-cells:show;
+}
+
+table.blues tr.even {
+	background-color: #EFEFF7;
+}
+
+table.blues td.tabRight {
+	text-align: right;
+	background-color: #D1DDF1;
+}
+
+/* <<----------table blues */
+

@@ -1,0 +1,130 @@
+.tabpanel .tab-header {
+    padding: 0 5px;
+    background: url('right_top_bg.png') repeat-x 0 0;
+    line-height: 34px;
+    height: 34px;
+    position: relative;
+}
+
+.tabpanel .tab-header s.l, .tabpanel .tab-header s.r {
+    position: absolute;
+    top: 0;
+    width: 3px;
+    height: 34px;
+}
+
+.tabpanel .tab-header s.l {
+    background: url('right_top_left.png') repeat-x 0 0;
+    left: 0
+}
+
+.tabpanel .tab-header s.r {
+    background: url('right_top_right.png') repeat-x 0 0;
+    right: 0
+}
+
+.tabpanel .tab-header ul {
+    overflow: hidden;
+    padding: 0 5px;
+    *zoom: 1
+}
+
+.tabpanel .tab-header li {
+    float: left;
+    background: url('right_top_tab02_2.png') repeat-x 0 0;
+    height: 24px;
+    line-height: 25px;
+    margin: 6px 6px 0;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 5px;
+    text-align: center;
+    position: relative;
+    display: inline;
+    white-space: nowrap;
+}
+
+.tabpanel .tab-header li .il, .tabpanel .tab-header li .ir {
+    position: absolute;
+    top: 0;
+    width: 5px;
+    height: 24px;
+}
+
+.tabpanel .tab-header li .il {
+    left: -5px;
+    background: url('right_top_tab02_1.png') no-repeat 0 0;
+}
+
+.tabpanel .tab-header li .ir {
+    right: -5px;
+    background: url('right_top_tab02_3.png') no-repeat 0 0;
+}
+
+/*cur item*/
+.tabpanel .tab-header li.active {
+    background: url('right_top_tab01_2.png') repeat-x 0 0;
+    color: #fff;
+    height: 25px;
+    line-height: 26px;
+    margin-top: 5px;
+}
+
+.tabpanel .tab-header li.active a {
+    color: #fff;
+    white-space: nowrap;
+}
+
+.tabpanel .tab-header li.active .il, .tab-header li.active .ir {
+    height: 25px;
+}
+
+.tabpanel .tab-header li.active .il {
+    left: -5px;
+    background: url('right_top_tab01_1.png') no-repeat 0 0;
+}
+
+.tabpanel .tab-header li.active .ir {
+    right: -5px;
+    background: url('right_top_tab01_3.png') no-repeat 0 0;
+}
+
+/*icon*/
+.tabpanel .tab-header li img {
+    margin: 3px 3px -3px 0;
+    width: 16px;
+    height: 16px;
+}
+
+/*close btn*/
+.tabpanel .tab-header li.closeCls {
+    padding-right: 18px;
+}
+
+.tabpanel .tab-header li s.close {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    background: url(close02.gif) no-repeat 4px 4px;
+    width: 14px;
+    height: 14px;
+    text-indent: -999px;
+    overflow: hidden;
+}
+
+/*body*/
+.tabpanel .tab-body {
+    border: 1px solid #B0CCFE;
+    border-width: 0 1px 1px; /*padding: 10px;*/
+    overflow: hidden;
+}
+
+.tabpanel .tab-body iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.tabpanel .tab-body .inner {
+    padding: 10px;
+}

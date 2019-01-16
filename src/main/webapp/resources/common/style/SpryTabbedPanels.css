@@ -1,0 +1,138 @@
+﻿
+/* 新切换样式定义 开始  ：：阿郭：： */
+
+.TabbedPanels {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	clear: none;
+	width: 100%; /* IE Hack to force proper layout when preceded by a paragraph. (hasLayout Bug)*/
+}
+.TabbedPanelsTabGroup {
+	margin: 0px;
+	padding-left:5px; /* 左间距 */
+	padding-top:0px;
+	padding-right:0px;
+	padding-bottom:0px;
+}
+
+.TabbedPanelsTab {
+	display:block;
+	height:26px;
+    line-height: 26px;
+	float: left;
+	position: relative;
+	top: 1px;
+	padding: 0px 0px 0px 10px;
+	margin: 0px 0px 0px 0px;
+	background:url('../images/tab-back.gif') no-repeat;
+	list-style: none;
+	cursor: pointer;
+	color:#000;
+	font: bold 12px;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+}
+
+.TabbedPanelsTab span {
+	display:block;
+	background:url('../images/tab-back.gif') right top no-repeat;
+	padding:0 10px 0 0;
+	margin:0px 0 0 0;
+}
+.TabbedPanelsTab span img{float: left;position: relative;top:4px;margin-right: 2px;}
+
+.TabbedPanelsTabHover {
+	/* background:url('../images/tab-hover.gif') no-repeat left top;  */
+	height:26px;
+	color:#000;hide-focus: expression(this.hideFocus=true);  /* for ie 5+ */        outline: none;  /* for firefox 1.5 + */
+}
+
+.TabbedPanelsTabHover span {
+display:block;
+	/* background:url('tab-hover.gif') right top no-repeat; */
+	padding:0 10px 0 0;
+}
+
+
+.TabbedPanelsTabSelected {
+	background:url('../images/tab-current.gif') no-repeat left bottom;
+	height:26px;
+	color:#333;
+}
+
+.TabbedPanelsTabSelected span {
+display:block;
+	background:url('../images/tab-current.gif') no-repeat right bottom;
+	padding:0 10px 0 0;
+	margin:0px 0 0 0;
+}
+
+
+.TabbedPanelsTab a {
+	color: black;
+	text-decoration: none;
+    outline:none
+}
+
+
+.TabbedPanelsContentGroup {
+	clear: both;
+	border-left: solid 1px #C6C6C6;
+	border-bottom: solid 1px #C6C6C6;
+	border-top: solid 1px #C6C6C6;
+	border-right: solid 1px #C6C6C6;
+	background-color: #fff;
+}
+
+
+.TabbedPanelsContent {
+	font:12px/18px;
+	padding: 4px;
+}
+
+.TabbedPanelsContentVisible {
+}
+
+.VTabbedPanels .TabbedPanelsTabGroup {
+	float: left;
+	width: 10em;
+	height: 20em;
+	background-color: #EEE;
+	position: relative;
+	border-top: solid 1px #999;
+	border-right: solid 1px #999;
+	border-left: solid 1px #CCC;
+	border-bottom: solid 1px #CCC;
+}
+
+.VTabbedPanels .TabbedPanelsTab {
+	float: none;
+	margin: 0px;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+}
+
+.VTabbedPanels .TabbedPanelsTabSelected {
+	background-color: #EEE;
+	border-bottom: solid 1px #999;
+}
+
+.VTabbedPanels .TabbedPanelsContentGroup {
+	clear: none;
+	float: left;
+	padding: 0px;
+	width: 30em;
+	height: 20em;
+}
+/* 新切换样式定义 end */
+/* 背景 */
+.main_right_bg {
+	BACKGROUND-IMAGE: url(../images/main_title05.gif); WIDTH: 100%; BACKGROUND-REPEAT: repeat-x;  BACKGROUND-POSITION: left bottom; padding: 5px 5px 5px 5px;
+}
+
+
+
+
+

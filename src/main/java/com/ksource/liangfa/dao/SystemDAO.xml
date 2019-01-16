@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="systemDAO">
+<select id="getSeqNextValByOracle" parameterType="string" resultType="int">
+	select getSeqNextVal('${value}') from dual
+</select>
+<select id="getSeqNextValByMysql" parameterType="string" resultType="int">
+	select getSeqNextVal('${value}')
+</select>
+
+<select id="testPage" resultType="map">
+	select * from user_
+</select>
+
+<select id="reflashOrgDate" statementType="CALLABLE">
+	{CALL REFLASH_ORG_DATE}
+</select>
+</mapper>

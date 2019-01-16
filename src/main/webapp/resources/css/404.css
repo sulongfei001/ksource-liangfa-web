@@ -1,0 +1,178 @@
+body {
+	background: #ffffff;
+	font-family: Verdana, "BitStream vera Sans", Helvetica, Sans-serif;
+	font-size: small;
+	color: #464646
+}
+
+.wrapper {
+	padding-top: 10%;
+}
+
+.header {
+	padding: 10px 15px 15px 15px
+}
+
+.main {
+	padding: 15px
+}
+
+hr {
+	margin: 15px 0 0 0;
+	border: none;
+	border-top: dotted 1px #b9b9b9
+}
+
+a {
+	color: #058ec4;
+	text-decoration: none
+}
+
+a:hover {
+	text-decoration: underline
+}
+
+h1 a {
+	display: block;
+	width: 200px;
+	height: 53px;
+	margin: 0 auto
+}
+
+h1 a span {
+	font-size: 30px;
+	color: #fff
+}
+
+h2 {
+	border-bottom: 1px solid #CCC;
+	margin: 0;
+	font-size: 1.9em;
+	text-align: center
+}
+
+h3 {
+	margin: 5px 0 0 0;
+	font-size: 1em;
+	color: #999
+}
+
+p {
+	margin: 20px 0 5px 0;
+	font-size: 1.1em
+}
+
+p.l {
+	text-indent: 2em
+}
+
+.box {
+	position: relative;
+	background: #fff
+}
+
+.main p {
+	text-align: center
+}
+
+.header ul li {
+	list-style-type: none
+}
+
+.picture {
+	width: 530px;
+	height: 152px;
+	margin: 0 auto;
+}
+
+.errbox {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.errleft {
+	float: left;
+	width: 30%;
+	margin-right: 8%;
+	margin-top:3%;
+}
+
+.errleft img {
+	float: right;
+}
+
+.errright {
+	float: left;
+	width: 56%;
+}
+
+.sorry-p {
+	font-size: 28px;
+}
+
+.sorrylog-p {
+	font-size: 12px;
+	color: #666;
+	line-height: 24px;
+}
+
+.errght-erneedle {
+	float: left;
+	color: #666;
+	display: inline-block;
+	color: #666;
+	margin-top: 15px;
+	height:300px;
+}
+
+.errght-erneedri {
+	float: left;
+	width: 300px;
+	display: block;
+}
+
+.errght-erneedri ul li {
+	width: 200px;
+	height: 30px;
+	display: block;
+	list-style: none;
+	line-height: 23px;
+}
+
+.clear {
+	clear: both;
+	font-size: 0px;
+	height: 0px;
+	line-height: 0px;
+}
+
+.errght-erneedri ul li span {
+	float: left;
+	width: 22px;
+	height: 22px;
+	display: block;
+	margin-right: 15px;
+}
+.errght-erneed{
+	float:left;
+	display:block;
+}
+li.errght-erndlione span {
+	background: url("../../resources/images/numshuzi.png") no-repeat 0px 0px;
+}
+
+li.errght-erndlitwo span {
+	background: url("../../resources/images/numshuzi.png") no-repeat -22px 0px;
+}
+
+li.errght-erndlithree span {
+	background: url("../../resources/images/numshuzi.png") no-repeat -44px 0px;
+}
+
+.clear {
+	clear: both;
+	font-size: 0px;
+	height: 0px;
+	line-height: 0px;
+}

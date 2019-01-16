@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.mapper.AccuseRuleRelationMapper">
+ <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.AccuseRuleRelation">
+   	<result column="RULE_ID" jdbcType="DECIMAL" property="ruleId" />
+    <result column="ACCUSE_ID" jdbcType="DECIMAL" property="accuseId" />
+  </resultMap>
+ 
+  <insert id="insert" parameterType="com.ksource.liangfa.domain.AccuseRuleRelation">
+    insert into ACCUSE_RULE_RELATION (RULE_ID, ACCUSE_ID)
+    values (#{ruleId,jdbcType=DECIMAL},#{accuseId,jdbcType=DECIMAL} )
+  </insert>
+ 
+ 
+ <delete id="delByRuleId" parameterType="java.lang.Long">
+    delete from ACCUSE_RULE_RELATION
+    where RULE_ID = #{ruleId,jdbcType=DECIMAL}
+  </delete>
+ 
+
+</mapper>

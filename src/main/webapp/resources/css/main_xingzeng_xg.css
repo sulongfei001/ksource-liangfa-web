@@ -1,0 +1,557 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	margin: 0 auto;
+	font-family: "Microsoft YaHei", "微软雅黑", "宋体";
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	background: #e4e7ea;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+ul li {
+	list-style: none;
+}
+
+a:link, a:visited {
+	text-decoration: none;
+	color: #333;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #333
+}
+
+.clear {
+	clear: both;
+	font-size: 0px;
+	height: 0px;
+	line-height: 0px;
+}
+
+img {
+	border: none;
+}
+
+.box {
+	width: 98%;
+	padding: 15px 1% 0 1%;
+	background: #e4e7ea;
+	overflow: auto;
+}
+
+.boxcont {
+	width: 100%;
+}
+.boxcont>div {
+	border-radius: 5px;
+	
+}
+.boxcontleft {
+	width: 60%;
+	float: left;
+	margin-right: 1%;
+}
+
+.boxcontright {
+	width: 38.5%;
+	float: left;
+}
+/*待办案件*/
+.daibananjian {
+	width: 100%;
+	float: left;
+	background: #fff;
+	height: 260px;
+	border-bottom: 1px solid #ccc;
+	/* border-left: 4px solid #0099ff; */
+}
+
+.daibanaj_tit {
+	height: 40px;
+	width: 100%;
+}
+
+.daibanaj_tit .yujingSpan {
+	font-size: 16px;
+	display: block;
+}
+
+.daibanaj_cont {
+	width: 94%;
+	padding-left: 2%;
+	margin-top: 10px;
+}
+
+.daibanajc_d {
+	position: relative;
+	float: left;
+	margin-left: 3%;
+	margin-top: 3.5%;
+	width: 56%;
+	height: 110px;
+	display: block;
+	transition: all 0.05s;
+}
+
+.daibanajc_d:hover {
+	cursor: pointer;
+	transform: scale(1.03, 1.03);
+}
+
+.dbajcd_left {
+	position: absolute;
+	width: 40%;
+	height: 110px;
+	left: 0;
+	background-color: #52a1fa;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.dbajcd_left img {
+	position: absolute;
+	left: 50%;
+	top: 25px;
+	margin-left: -30px;
+}
+
+.dbajcd_right {
+	position: absolute;
+	width: 60%;
+	left: 40%;
+	background-color: #f3f3f3;
+	height: 110px;
+}
+
+.redcolor {
+	color: #f00;
+}
+
+.redcolor a:link, .redcolor a:visited {
+	color: #f00;
+	text-decoration: underline;
+}
+
+.redcolor a:hover {
+	color: #f00;
+	font-size: 18px;
+}
+
+.dbajword {
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	padding-top: 30px;
+	line-height: 24px;
+	font-size: 14px;
+	float: left;
+}
+
+#sxfzbjcolor {
+	background-color: #05ce8e;
+}
+
+#jgclbjcolor {
+	background-color: #f7b924;
+}
+/*统计信息*/
+.tongjixinxi {
+	width: 100%;
+	position: relative;
+	margin-top: 15px;
+}
+/*接入单位*/
+.jierudanwei {
+	position: relative;
+	float: left;
+	width: 100%;
+	margin-right: 1%;
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	/* border-left: 4px solid #02b9c4; */
+	height:260px;
+}
+
+.jierudw_left {
+	position: absolute;
+	width: 30%;
+	height: 200px;
+}
+
+.jrdwLeftimg {
+	position: absolute;
+	top: 60px;
+	left: 50%;
+	margin-left: -45px;
+}
+
+.jierudw_p {
+	position: absolute;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	bottom: 20px;
+	left: 50%;
+	margin-left: -50px;
+}
+
+.jierudw_right {
+	position: absolute;
+	font-size: 14px;
+	line-height: 30px;
+	width: 61%;
+	left: 33%;
+	padding: 10px 2%;
+}
+.jierudw_right2{
+	top:80px;
+}
+.anjiantongji {
+	position: relative;
+	float: left;
+	left: 0%;
+	top: 15px;
+	width: 100%;
+	height: 260px;
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	/* border-left: 4px solid #0fc48f; */
+}
+/*预警案件*/
+.yujinganjian {
+	width: 39.5%;
+	float: left;
+	background: #fff;
+	margin-top: 15px;
+	float: right;
+	height: 260px;
+	
+}
+.yujingaj_cont{
+	margin-top:50px;
+	width: 80%;
+	margin-left: 10%;
+	border-radius: 5px;
+	overflow: hidden
+}
+.yujingajLeft {
+	position: relative;
+	float: left;
+	width: 30%;
+	height: 100px;
+	display: block;
+}
+
+.yujingajLeftimg {
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	margin-left: -28px;
+}
+
+.yujingajRightall {
+	position: relative;
+	float: left;
+	width: 70%;
+	background: #f4f4f4;
+	border-radius: 3px;
+	height: 100px;
+}
+
+.yujingajRight {
+	position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	line-height: 26px;
+	font-size: 14px;
+}
+/*通知公告*/
+#tongzhigonggao {
+	height: 260px;
+	border-bottom: 1px solid #ccc;
+	margin-top: 15px;
+	width: 59%;
+	float: left;
+}
+
+.tongzhigguld {
+	position: relative;
+	float: left;
+	width: 96%;
+	left: 2%;
+	border-radius: 3px;
+	height: 150px;
+	margin-top: 15px;
+}
+
+.tongzhiggul {
+	/* background:url(../images/home/icon_tzggimgbj_xz.png) no-repeat 0px 12px; */
+	list-style-type: none;
+}
+
+.tongzhiggul li {
+	line-height: 32px;
+	color: #757575;
+	width: 100%;
+	font-weight: narmal;
+}
+
+.tongzhiggul li a:link, .tongzhiggul li a:visited {
+	color: #757575;
+}
+
+.tongzhiggul li a:hover {
+	color: #2C74F8;
+}
+/*快捷操作*/
+.kuaijiecz {
+	margin-top: 15px;
+}
+
+.kuaijieczdiv {
+	position: relative;
+	float: left;
+	width: 12%;
+	display: block;
+	height: 90px;
+	margin-right: 7%;
+}
+
+.kjczdLeft {
+	position: relative;
+	float: left;
+	width: 40%;
+	height: 90px;
+	display: block;
+}
+
+.kjczdLeftimg {
+	position: absolute;
+	top: 22px;
+	left: 50%;
+	margin-left: -23px;
+}
+
+.kjczdRightall {
+	float: left;
+	width: 60%;
+	height: 90px;
+}
+
+.kjczdRight {
+	position: absolute;
+	top: 20px;
+	width: 80%;
+	text-align: center;
+	line-height: 26px;
+	font-size: 14px;
+}
+
+.kuaijieczdiv:hover {
+	cursor: pointer;
+	margin-top: 5px;
+}
+
+.tongjifxSpan {
+	margin-top: 10px;
+	display: block;
+}
+
+#kuaijieczdiv {
+	height: 110px;
+}
+
+#kuaijieczdiv_cont {
+	margin-top: 0;
+}
+
+#kuaijieczdiv_tit {
+	/* height:30px; */
+	
+}
+
+.noticecontb {
+	width: 5px;
+	height: 5px;
+	background: #ccc;
+	border: 2px solid #ccc;
+	margin: 12px 12px 0px -5px;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	overflow: hidden;
+	display: inline-block;
+	float: left;
+}
+
+.daibanaj_con {
+	position: absolute;
+	font-size: 14px;
+	line-height: 30px;
+	padding: 0px 2%;
+	margin-top: 5px;
+}
+a.ahref_daibanaj:link,a.ahref_daibanaj:visited,a.ahref_jierudw:link,a.ahref_jierudw:visited,a.ahref_tongzhigg:link,a.ahref_tongzhigg:visited,a.ahref_anjiantj:link,a.ahref_anjiantj:visited{ color: #000; }
+a.ahref_daibanaj:hover{ color: #0089E5; text-decoration: none; }
+a.ahref_jierudw:hover{ color: #02A5AF; text-decoration: none; }
+a.ahref_tongzhigg:hover{ color: #FF8D1A; text-decoration: none; }
+a.ahref_anjiantj:hover{ color: #0DAE7F; text-decoration: none; }
+
+.daibanaj_content{ 
+	width: 100%;
+	margin-top:50px; 
+	}
+.daibanc_xzla{ 
+	float: left; 
+	width: 19%; 
+	margin-right: 1%; 
+	height: 104px; 
+	position: relative; 
+	background: #f4f4f4; 
+	border-radius:5px; 
+	overflow: hidden; 
+}
+.daibanc_xzla:hover{
+	cursor: pointer;
+	background: #eee 
+}
+.daibanc_xzla:hover .daibanc_xzlaimg{
+	opacity:0.8;
+}
+.daibanc_xzlaimg{
+	height:54px;
+	background:#eee;
+}
+.daibanc_xzlaimg>img{
+	display: block;
+	margin: 0px auto;
+	padding-top:10px; 
+}
+.daibanc_xzla_p{ 
+   bottom: 10px;
+   text-align: center; 
+   width: 100%; 
+   font-size: 14px; 
+   margin-top:14px;
+   line-height: 16px 
+ }
+.redcolorr{ 
+	margin: 0 5px;
+}
+.daibanaj_tit a.ahref_more {
+	float: right;
+	color: #00a0e9;
+}
+
+.daibanaj_tit a.ahref_more:hover {
+	cursor: pointer;
+	color: #26649a;
+}
+@media only screen and (min-width: 900px) and (max-width: 1280px) {
+	.boxcontright{ width: 37%; }
+	.boxcontleft{ margin-right: 15px; }
+	.jrdwLeftimg{ margin-left: -35px; }
+	.jierudw_right{ left: 36%; }
+}
+
+
+
+/*new*/
+.boxcont_mine{
+	padding-top:0px;
+	border-radius:5px ;
+	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+	overflow: hidden;
+}
+.boxcont_mine .daibanaj_tit {
+	/* height:30px; */
+	background: #f4f4f4;
+	height: 40px;
+	line-height: 40px;
+	position: relative;
+	border-bottom: 1px solid #d9d9d9;
+}
+.mark_sign{
+	position: absolute;
+	top:0;
+	right:20px;
+}
+.boxcont_mine .daibanaj_tit span {
+	font-size: 16px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.boxcont_mine .daibanaj_tit i{
+	height: 20px;
+	width: 20px;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 8px 0 16px;
+}
+/*快捷方式*/
+.kuaijieczdiv2 {
+	position: relative;
+	float: left;
+	width: 12%;
+	display: block;
+	margin: 20px 3% 20px 0;
+	background: #f4f4f4;
+	border:2px solid #f4f4f4;
+	cursor: pointer;
+	border-radius:5px ;
+}
+.kuaijieczdiv2:hover {
+	background: #fff;
+	border:2px solid #6ca0d8; 
+}
+.kuaijieczdiv_top {
+	width: 100%;
+	height:60px;
+}
+.kuaijieczdiv_listname {
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+}
+
+.new_icon{
+	padding: 0
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

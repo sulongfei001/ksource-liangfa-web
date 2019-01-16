@@ -1,0 +1,184 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+	margin:0 auto;
+	font-family:"Microsoft YaHei", "微软雅黑", "宋体";
+	font-size: 12px;
+	margin:0;
+	padding:0;
+	background:url(../../images/login/boxbj.png) top center;
+}
+* {
+	padding:0;
+	margin:0;
+}
+ul li {
+	list-style:none;
+}
+a:link, a:visited {
+	text-decoration:none;
+	color:#333;
+}
+a:hover {
+	text-decoration:underline;
+	color:#333
+}
+.clear {
+	clear:both;
+	font-size:0px;
+	height:0px;
+	line-height:0px;
+}
+img {
+	border:none;
+}
+.top {
+	width:1000px;
+	margin:0 auto;
+}
+.loginlogo {
+	width:655px;
+	margin:70px auto 0;
+}
+.cen {
+	position:relative;
+	width:100%;
+	padding-top:5.2%;
+}
+.cenall {
+	position:absolute;
+	width:100%;
+	/* margin-left:14.7%; */
+}
+.cencontdl {
+	float:left;
+	height:230px;
+	cursor:pointer;
+	transition:all 0.2s;
+	margin-right:30px;
+}
+.cencontdl:hover {
+	transform:scale(0.95, 0.95);
+	box-shadow:0 0 30px #20A2EE;
+}
+
+@media only screen and (min-width: 1915px){
+.cen {
+	padding-top:4.2%;
+}
+}
+
+/* @media only screen and (min-width: 1280px) and (max-width: 1300px)  {
+ .cenall {
+position:absolute;
+width:70%;
+margin:0 15%;
+}
+ .cencontdl {
+margin-right:2.8%;
+}
+}
+
+@media only screen and (min-width: 1305px) and (max-width: 1390px)  {
+ .cenall {
+position:absolute;
+width:71%;
+margin-left:15%;
+}
+}
+
+@media only screen and (min-width: 1400px) and (max-width: 1500px) {
+.loginlogo {
+	margin:70px auto 0;
+}
+.cenall {
+position:absolute;
+width:73%;
+margin-left:15.68%;
+}
+.cencontdl {
+margin-right:3%;
+}
+.cen {
+	position:relative;
+	width:100%;
+	padding-top:5%;
+}
+}
+@media only screen and (min-width: 1520px) and (max-width: 1650px) {
+.loginlogo {
+	margin:70px auto 0;
+}	
+.cen {
+	position:relative;
+	width:100%;
+	padding-top:4.5%;
+}
+.cenall {
+position:absolute;
+width:60%;
+margin:0 20%;
+}
+ .cencontdl {
+margin-right:3.2%;
+}
+}
+@media only screen and (min-width: 1650px) and (max-width: 1720px) {
+.loginlogo {
+	margin:70px auto 0;
+}	
+.cen {
+	position:relative;
+	width:100%;
+	padding-top:4.2%;
+}
+.cenall {
+position:absolute;
+width:60%;
+margin:0 20%;
+}
+ .cencontdl {
+margin-right:2%;
+}
+}
+
+@media only screen and (min-width: 1721px) and (max-width: 1910px) {
+.loginlogo {
+	margin:70px auto 0;
+}	
+.cen {
+	position:relative;
+	width:100%;
+	padding-top:4.2%;
+}
+.cenall {
+position:absolute;
+width:60%;
+margin:0 24%;
+}
+ .cencontdl {
+margin-right:3.5%;
+}
+}
+
+@media only screen and (min-width: 1915px){
+ .cenall {
+position:absolute;
+width:50%;
+margin:0 25%;
+}
+.cencontdl {
+margin-right:3.5%;
+}
+.cen {
+	position:relative;
+	width:100%;
+	padding-top:4%;
+}
+}
+.denglu05 {
+	margin-right:0;
+}
+}
+ */

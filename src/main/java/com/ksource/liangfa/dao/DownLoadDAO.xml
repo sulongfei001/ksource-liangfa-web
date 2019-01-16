@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="downLoadDAO">
+<resultMap type="com.ksource.liangfa.web.bean.MyFile" id="MyFile_ResultMap">
+	<result column="file_name" property="fileName" jdbcType="VARCHAR"/>
+	<result column="file_" property="file" jdbcType="BLOB"/>
+	<result column="url" property="url" jdbcType="VARCHAR"/>
+</resultMap>
+<select id="getCaseDetail" parameterType="string" resultMap="MyFile_ResultMap">
+	select t.case_detail_file_name as file_name,
+		t.CASE_DETAIL_FILE_PATH as url
+		from case_basic t where t.case_id=${value}
+</select>
+<!-- 查找线索附件 -->
+<select id="getclueFile" parameterType="map" resultMap="MyFile_ResultMap">
+	select * from PUBLISH_INFO_FILE  where info_id = #{clueId} and file_type = #{tableClueInfo}
+</select>
+<select id="getWeijiCaseDetail" parameterType="int" resultMap="MyFile_ResultMap">
+	select t.case_detail_file_name as file_name,
+	t.case_detail_file_path as url
+	from case_weiji t where t.case_id=${value}
+</select>
+<select id="getDutyCaseDetail" parameterType="int" resultMap="MyFile_ResultMap">
+	select t.case_detail_file_name as file_name,
+		t.CASE_DETAIL_FILE_PATH as url
+		from case_duty t where t.case_id=${value}
+</select>
+<!-- <select id="getCaseChufapanjueshu" parameterType="string" resultMap="MyFile_ResultMap"> -->
+<!-- 	select t.penalty_judgment_file_name as file_name, -->
+<!-- 	t.penalty_judgment_file as file_ -->
+<!-- 	from case_ t where t.case_id=${value} -->
+<!-- </select> -->
+<select id="getFieldFile" parameterType="map" resultMap="MyFile_ResultMap">
+	select t.file_name as file_name ,t.field_path as
+		url
+		from field_instance t
+		where t.task_inst_id=${taskId} and t.field_id=${fieldId}
+</select>
+<select id="getCaseConsultationContentFile" parameterType="int" resultMap="MyFile_ResultMap">
+	select t.attachment_name as file_name ,attachment_path as url
+	from case_consultation_content t
+	where id=#{value}
+</select>
+<select id="getCaseConsultationFile" parameterType="int" resultMap="MyFile_ResultMap">
+	select t.attachment_name as file_name ,attachment_path as url
+	from case_consultation t
+	where id=#{value}
+</select>
+<select id="getResourceFile" parameterType="int" resultMap="MyFile_ResultMap">
+	select f.file_name as file_name ,file_path as url
+	from file_resource f
+	where file_id=#{value}
+</select>
+<select id="getThemeReplyFile" parameterType="int" resultMap="MyFile_ResultMap">
+	select t.attachment_name as file_name ,t.attachment_path as url
+	from theme_reply t
+	where id=#{value}
+</select>
+<select id="getForumThemeFile" parameterType="int" resultMap="MyFile_ResultMap">
+	select t.attachment_name as file_name ,t.attachment_path as url
+	from forum_theme t
+	where id=#{value}
+</select>
+<select id="getNoticeFile" parameterType="int" resultMap="MyFile_ResultMap">
+	select n.FILE_NAME as file_name ,n.FILE_PATH as url
+	from notice_file n
+	where FILE_ID=#{value}
+</select>
+<select id="getCaseReplyFile" parameterType="int" resultMap="MyFile_ResultMap">
+	select t.attachment_name as file_name ,t.attachment_path as url
+	from case_reply t
+	where id_=#{value}
+</select>
+<select id="getCaseAtta" parameterType="java.lang.String" resultMap="MyFile_ResultMap">
+	select t.attachment_name as file_name ,t.attachment_path as url
+	from case_attachment t
+	where id=#{value}
+</select>
+<select id="getMailFile" parameterType="int" resultMap="MyFile_ResultMap">
+   SELECT T.FILE_NAME AS FILE_NAME, T.FILE_PATH AS URL FROM LF_MAIL_FILE T
+    WHERE file_id = #{value}
+</select>
+<select id="getLicenseApplyForm" parameterType="int" resultMap="MyFile_ResultMap">
+	SELECT A.FILE_NAME AS file_name,A.FILE_PATH AS url FROM ADMDIV_LICENSE_INFO A WHERE A.LICENSE_ID=#{value}
+</select>
+	<select id="getPublishInfoFile" parameterType="int" resultMap="MyFile_ResultMap">
+		SELECT T.FILE_NAME AS FILE_NAME, T.FILE_PATH AS URL
+		  FROM PUBLISH_INFO_FILE T
+		 WHERE T.FILE_ID = #{fileId}
+	</select>
+<select id="getActivityFile" parameterType="int" resultMap="MyFile_ResultMap">
+	SELECT ATTACHMENT_NAME AS FILE_NAME,ATTACHMENT_PATH AS URL FROM SPECIAL_ACTIVITY 
+	where id=#{value}
+</select>	
+<select id="getContentFile" parameterType="int" resultMap="MyFile_ResultMap">
+   SELECT T.name AS FILE_NAME, T.path AS URL FROM CMS_ATTACHMENT T
+    WHERE ATTACHMENT_ID = #{value}
+</select>
+<select id="getModifiedImpFile" parameterType="int" resultMap="MyFile_ResultMap">
+   SELECT T.IMP_FILE AS URL FROM CASE_MODIFIED_IMP_LOG T
+    WHERE ID = #{value}
+</select>
+<select id="getCaseExportFile" parameterType="Long" resultMap="MyFile_ResultMap">
+	SELECT EXP_FILE AS URL, EXP_FILE AS FILE_NAME FROM CASE_MODIFIED_EXP_LOG WHERE LOG_ID = #{logId}
+</select>
+
+<select id="getNewAppFile"  parameterType="map" resultMap="MyFile_ResultMap">
+	select FILE_NAME AS FILE_NAME, FILE_PATH AS URL from PUBLISH_INFO_FILE  
+	WHERE  FILE_TYPE = 'APP_VERSION' 
+	<choose>
+	   <when test="fileId != null">
+	       AND FILE_ID = #{fileId}
+	   </when>
+       <when test="VersionNo != null">
+          AND INFO_ID = (SELECT VERSION_ID FROM APP_VERSION WHERE VERISON_NO = #{versionNo}) 
+       </when>
+       <otherwise>
+        AND INFO_ID = (SELECT MAX(INFO_ID) FROM PUBLISH_INFO_FILE  where  file_type = 'APP_VERSION')
+       </otherwise>
+	</choose>
+</select>
+</mapper>

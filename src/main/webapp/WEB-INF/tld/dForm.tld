@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+                        "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+ <!-- ============== Tag Library Description Elements ============= -->
+ <tlibversion>1.0</tlibversion>
+ <jspversion>1.1</jspversion>
+ <shortname>动态表单jsp标签</shortname>
+ <uri>http://k-soucce/dForm</uri>
+ <info>dForm taglib</info>
+ <tag>
+  <!-- 表单生成器 -->
+  <name>dFormBuilder</name>
+  <tagclass>com.ksource.common.dForm.taglib.DFormBuilder</tagclass>
+  <bodycontent>empty</bodycontent>
+  <attribute>
+   <name>taskId</name>
+   <required>true</required>
+   <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+   <name>model</name>
+   <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+   <name>inputerId</name>
+   <required>true</required>
+   <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+   <name>optType</name>
+   <required>false</required>
+   <rtexprvalue>true</rtexprvalue>
+  </attribute>
+ </tag>
+</taglib>

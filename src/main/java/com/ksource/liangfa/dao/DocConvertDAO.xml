@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DocConvertDAO">
+
+<select id="getTopNCaseAttachmentNotConvert" parameterType="int" resultType="com.ksource.liangfa.domain.CaseAttachment">
+select id,attachment_path attachmentPath
+from case_attachment t
+where t.swf_path is null
+and (
+instr(t.attachment_path,'.doc')>0
+or instr(t.attachment_path,'.DOC')>0
+or instr(t.attachment_path,'.xls')>0
+or instr(t.attachment_path,'.XLS')>0
+or instr(t.attachment_path,'.ppt')>0
+or instr(t.attachment_path,'.PPT')>0
+or instr(t.attachment_path,'.txt')>0
+or instr(t.attachment_path,'.TXT')>0
+or instr(t.attachment_path,'.pdf')>0
+or instr(t.attachment_path,'.PDF')>0
+)
+and rownum &lt;= #{rows}
+</select>
+<select id="getTopNFieldInsFileNotConvert" parameterType="int" resultType="com.ksource.liangfa.domain.FieldInstance">
+select task_inst_id taskInstId, field_id fieldId, field_path fieldPath
+  from field_instance t
+ where exists (select * from form_field f where f.input_type = 6)
+   and t.swf_path is null
+   and (instr(t.field_path, '.doc') > 0 or
+       instr(t.field_path, '.DOC') > 0 or
+       instr(t.field_path, '.xls') > 0 or
+       instr(t.field_path, '.XLS') > 0 or
+       instr(t.field_path, '.ppt') > 0 or
+       instr(t.field_path, '.PPT') > 0 or
+       instr(t.field_path, '.txt') > 0 or
+       instr(t.field_path, '.TXT') > 0)
+       or instr(t.field_path,'.pdf')>0
+		or instr(t.field_path,'.PDF')>0
+and rownum &lt;= #{rows}
+</select>
+</mapper>

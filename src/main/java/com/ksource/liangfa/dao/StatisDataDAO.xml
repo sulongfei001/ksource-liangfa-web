@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StatisData">
+	<resultMap id="AccesOrgNumResult" type="com.ksource.liangfa.domain.stat.StatisData" >
+		<result property="xingZhengNum" column="XINGZHENG_NUM" jdbcType="DECIMAL"/>
+		<result property="proviceXingZhengNum" column="PROVICEXINGZHENG_NUM" jdbcType="DECIMAL"/>
+		<result property="cityXingZhengNum" column="CITYXINGZHENG_NUM" jdbcType="DECIMAL"/>
+		<result property="countyXingZhengNum" column="COUNTYXINGZHENG_NUM" jdbcType="DECIMAL"/>
+		<result property="policeNum" column="POLICE_NUM" jdbcType="DECIMAL"/>
+		<result property="provicePoliceNum" column="PROVICEPOLICE_NUM" jdbcType="DECIMAL"/>
+		<result property="cityPoliceNum" column="CITYPOLICE_NUM" jdbcType="DECIMAL"/>
+		<result property="countyPoliceNum" column="COUNTYPOLICE_NUM" jdbcType="DECIMAL"/>
+		<result property="jianChaNum" column="JIANCHA_NUM" jdbcType="DECIMAL"/>
+		<result property="proviceJianChaNum" column="PROVICEJIANCHA_NUM" jdbcType="DECIMAL"/>
+		<result property="cityJianChaNum" column="CITYJIANCHA_NUM" jdbcType="DECIMAL"/>
+		<result property="countyJianChaNum" column="COUNTYJIANCHA_NUM" jdbcType="DECIMAL"/>
+		
+		<result property="judgeNum" column="judge_NUM" jdbcType="DECIMAL"/>
+		<result property="proviceJudgeNum" column="PROVICEjudge_NUM" jdbcType="DECIMAL"/>
+		<result property="cityJudgeNum" column="CITYjudge_NUM" jdbcType="DECIMAL"/>
+		<result property="countyJudgeNum" column="COUNTYjudge_NUM" jdbcType="DECIMAL"/>		
+		
+		<result property="fazhibanNum" column="fazhiban_NUM" jdbcType="DECIMAL"/>
+		<result property="proviceFazhibanNum" column="PROVICEFazhiban_NUM" jdbcType="DECIMAL"/>
+		<result property="cityFazhibanNum" column="CITYFazhiban_NUM" jdbcType="DECIMAL"/>
+		<result property="countyFazhibanNum" column="COUNTYFazhiban_NUM" jdbcType="DECIMAL"/>	
+		
+		<result property="jianchajuNum" column="jianchaju_NUM" jdbcType="DECIMAL"/>
+		<result property="proviceJianchajuNum" column="PROVICEJianchaju_NUM" jdbcType="DECIMAL"/>
+		<result property="cityJianchajuNum" column="CITYJianchaju_NUM" jdbcType="DECIMAL"/>
+		<result property="countyJianchajuNum" column="COUNTYJianchaju_NUM" jdbcType="DECIMAL"/>					
+	</resultMap>
+
+<select id="statisAccesOrgStatForBusiness" parameterType="java.util.Map" resultMap="AccesOrgNumResult">
+  SELECT 
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 THEN 1 ELSE 0 END),0) AS XINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 AND R_LEVEL = 1 THEN 1 ELSE 0 END),0) AS PROVICEXINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 AND R_LEVEL = 2 THEN 1 ELSE 0 END),0) AS CITYXINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 AND R_LEVEL = 3 THEN 1 ELSE 0 END),0) AS COUNTYXINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 THEN 1 ELSE 0 END),0) AS POLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 AND R_LEVEL = 1 THEN 1 ELSE 0 END),0) AS PROVICEPOLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 AND R_LEVEL = 2 THEN 1 ELSE 0 END),0) AS CITYPOLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 AND R_LEVEL = 3 THEN 1 ELSE 0 END),0) AS COUNTYPOLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 THEN 1 ELSE 0 END),0) AS JIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 AND R_LEVEL = 1 THEN 1 ELSE 0 END),0) AS PROVICEJIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 AND R_LEVEL = 2 THEN 1 ELSE 0 END),0) AS CITYJIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 AND R_LEVEL = 3 THEN 1 ELSE 0 END),0) AS COUNTYJIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 THEN 1 ELSE 0 END),0) AS JUDGE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 AND R_LEVEL = 1 THEN 1 ELSE 0 END),0) AS PROVICEJUDGE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 AND R_LEVEL = 2 THEN 1 ELSE 0 END),0) AS CITYJUDGE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 AND R_LEVEL = 3 THEN 1 ELSE 0 END),0) AS COUNTYJUDGE_NUM,
+  
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 THEN 1 ELSE 0 END),0) AS fazhiban_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 AND R_LEVEL = 1 THEN 1 ELSE 0 END),0) AS PROVICEFazhiban_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 AND R_LEVEL = 2 THEN 1 ELSE 0 END),0) AS CITYFazhiban_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 AND R_LEVEL = 3 THEN 1 ELSE 0 END),0) AS COUNTYFazhiban_NUM, 
+  
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 THEN 1 ELSE 0 END),0) AS jianchaju_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 AND R_LEVEL = 1 THEN 1 ELSE 0 END),0) AS PROVICEJianchaju_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 AND R_LEVEL = 2 THEN 1 ELSE 0 END),0) AS CITYJianchaju_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 AND R_LEVEL = 3 THEN 1 ELSE 0 END),0) AS COUNTYJianchaju_NUM       
+  FROM (
+  SELECT D.JB R_LEVEL, O.ORG_TYPE
+    FROM DISTRICT D, ORGANISE O
+   WHERE D.DISTRICT_CODE = O.DISTRICT_CODE
+     AND O.IS_DEPT = 0
+     AND O.ORG_TYPE IN (1,2,3,4,5,6)
+       <if test="orgType!=null and orgType!=''">
+              AND O.ORG_TYPE = #{orgType}
+       </if>
+       <if test="industryType!=null and industryType!=''">
+              AND O.INDUSTRY_TYPE = #{industryType}
+       </if>
+       <if test="districtJB!=null and districtJB!=''">
+              AND D.JB >= ${districtJB}
+       </if>
+	  <if test="yearStr!=null and yearStr!=''"> 
+		AND  TO_CHAR(O.CREATE_TIME,'YYYY') &lt;=${yearStr} 
+	  </if>
+	  <if test="quarterStr!=null and quarterStr!=''">
+		AND TO_CHAR(O.CREATE_TIME,'YYYYQ') &lt;=${yearStr}${quarterStr}
+	  </if>
+	  <if test="monthStr!=null and monthStr!=''"> 
+		AND TO_CHAR(O.CREATE_TIME,'YYYYMM') &lt;=${yearStr}||LPAD(${monthStr},2,'0') 
+	  </if>
+	  <if test="regionId!=null and regionId!=''">
+		AND D.DISTRICT_CODE LIKE regexp_replace(${regionId},'(00)+$')||'%'
+	  </if>       
+  )
+</select>
+
+
+<select id="statisAccesOrg" parameterType="java.util.Map" resultMap="AccesOrgNumResult">
+  SELECT 
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 THEN 1 ELSE 0 END),0) AS XINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 AND JB = 1 THEN 1 ELSE 0 END),0) AS PROVICEXINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 AND JB = 2 THEN 1 ELSE 0 END),0) AS CITYXINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 1 AND JB = 3 THEN 1 ELSE 0 END),0) AS COUNTYXINGZHENG_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 THEN 1 ELSE 0 END),0) AS POLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 AND JB = 1 THEN 1 ELSE 0 END),0) AS PROVICEPOLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 AND JB = 2 THEN 1 ELSE 0 END),0) AS CITYPOLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 3 AND JB = 3 THEN 1 ELSE 0 END),0) AS COUNTYPOLICE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 THEN 1 ELSE 0 END),0) AS JIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 AND JB = 1 THEN 1 ELSE 0 END),0) AS PROVICEJIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 AND JB = 2 THEN 1 ELSE 0 END),0) AS CITYJIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 2 AND JB = 3 THEN 1 ELSE 0 END),0) AS COUNTYJIANCHA_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 THEN 1 ELSE 0 END),0) AS JUDGE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 AND JB = 1 THEN 1 ELSE 0 END),0) AS PROVICEJUDGE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 AND JB = 2 THEN 1 ELSE 0 END),0) AS CITYJUDGE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 4 AND JB = 3 THEN 1 ELSE 0 END),0) AS COUNTYJUDGE_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 THEN 1 ELSE 0 END),0) AS fazhiban_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 AND JB = 1 THEN 1 ELSE 0 END),0) AS PROVICEFazhiban_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 AND JB = 2 THEN 1 ELSE 0 END),0) AS CITYFazhiban_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 6 AND JB = 3 THEN 1 ELSE 0 END),0) AS COUNTYFazhiban_NUM, 
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 THEN 1 ELSE 0 END),0) AS jianchaju_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 AND JB = 1 THEN 1 ELSE 0 END),0) AS PROVICEJianchaju_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 AND JB = 2 THEN 1 ELSE 0 END),0) AS CITYJianchaju_NUM,
+  NVL(SUM(CASE WHEN ORG_TYPE = 5 AND JB = 3 THEN 1 ELSE 0 END),0) AS COUNTYJianchaju_NUM     
+  FROM (
+  SELECT R.JB,O.ORG_TYPE
+    FROM DISTRICT R, ORGANISE O
+   WHERE R.DISTRICT_CODE = O.DISTRICT_CODE
+     AND O.IS_DEPT = 0
+     AND O.ORG_TYPE IN (1,2,3,4,5,6)
+     <if test="orgType != null and orgType != ''">
+     	AND O.ORG_TYPE = #{orgType}
+     </if>
+     <if test="industryType != null and industryType != ''">
+     	AND O.INDUSTRY_TYPE = #{industryType}
+     </if>
+     <if test="districtJB != null and districtJB != ''">
+     	AND R.JB >= #{districtJB}
+     </if>
+     <if test="districtCode != null and districtCode != '' ">
+     	and (r.DISTRICT_CODE = #{districtCode} or r.UP_DISTRICT_CODE = #{districtCode}) 
+     </if>
+     <if test="yearStr!=null and yearStr!=''"> 
+		AND  TO_CHAR(O.CREATE_TIME,'YYYY') &lt;=${yearStr} 
+	  </if>
+	  <if test="quarterStr!=null and quarterStr!=''">
+		AND TO_CHAR(O.CREATE_TIME,'YYYYQ') &lt;=${yearStr}${quarterStr}
+	  </if>
+	  <if test="monthStr!=null and monthStr!=''"> 
+		AND TO_CHAR(O.CREATE_TIME,'YYYYMM') &lt;= ${yearStr}||LPAD(${monthStr},2,'0')
+	  </if>
+  )
+</select>
+
+<resultMap id="caseNumResult" type="com.ksource.liangfa.domain.stat.StatisData" >
+	<result property="totalNum" column="TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="amountInvolved" column="AMOUNT_INVOLVED" jdbcType="DECIMAL"/>
+	<result property="xingzhenglianNum" column="XINGZHENGLIAN_NUM" jdbcType="DECIMAL"/>
+	<result property="penaltyNum" column="PENALTY_NUM" jdbcType="DECIMAL"/>
+	<result property="crimeNum" column="CRIME_NUM" jdbcType="DECIMAL"/>
+	<result property="directYiSongNum" column="DIRECTYISONG_NUM" jdbcType="DECIMAL"/>
+	<result property="suggestYiSongNum" column="SUGGESTYISONG_NUM" jdbcType="DECIMAL"/>
+	<result property="lianNum" column="LIAN_NUM" jdbcType="DECIMAL"/>
+	<result property="jianduLianNum" column="JIANDULIAN_NUM" jdbcType="DECIMAL"/>
+	<result property="daibuNum" column="DAIBU_NUM" jdbcType="DECIMAL"/>
+	<result property="gongsuNum" column="QISU_NUM" jdbcType="DECIMAL"/>
+	<result property="panjueNum" column="PANJUE_NUM" jdbcType="DECIMAL"/>
+	<result property="daibuPersonNum" column="DAIBUPERSON_NUM" jdbcType="DECIMAL"/>
+	<result property="gongsuPersonNum" column="GONGSUPERSON_NUM" jdbcType="DECIMAL"/>
+	<result property="panjuePersonNum" column="PANJUEPERSON_NUM" jdbcType="DECIMAL"/>
+	<result property="tiqingdaibuNum" column="TIQINGDAIBU_NUM" jdbcType="DECIMAL"/>
+	<result property="tiqingqisuNum" column="TIQINGQISU_NUM" jdbcType="DECIMAL"/>
+	<result property="tiqingdaibuPersonNum" column="TIQINGDAIBUPERSON_NUM" jdbcType="DECIMAL"/>
+	<result property="tiqingqisuPersonNum" column="TIQINGQISUPERSON_NUM" jdbcType="DECIMAL"/>	
+</resultMap>
+
+<select id="statisCaseNum" parameterType="java.util.Map" resultMap="caseNumResult">
+  SELECT 
+  NVL(COUNT(C.CASE_ID),0) TOTAL_NUM,
+  ROUND(NVL(SUM(C.AMOUNT_INVOLVED),0)/10000,2) AS AMOUNT_INVOLVED,
+  NVL(SUM(CASE WHEN C.XINGZHENGLIAN_STATE = 3  THEN 1 ELSE 0 END),0) XINGZHENGLIAN_NUM,
+  NVL(SUM(CASE WHEN C.CHUFA_STATE = 2  THEN 1 ELSE 0 END),0) PENALTY_NUM,
+  NVL(SUM(CASE WHEN C.YISONG_STATE = 2 OR C.YISONG_STATE = 3 THEN 1 ELSE 0 END),0) CRIME_NUM,
+  NVL(SUM(CASE WHEN C.YISONG_STATE = 2 THEN 1 ELSE 0 END),0) DIRECTYISONG_NUM,
+  NVL(SUM(CASE WHEN C.YISONG_STATE = 3 THEN 1 ELSE 0 END),0) SUGGESTYISONG_NUM,
+  NVL(SUM(CASE WHEN C.LIAN_STATE = 3 THEN 1 ELSE 0 END),0) LIAN_NUM,
+  NVL(SUM(CASE WHEN C.LIAN_STATE = 4 or (C.REQ_EXPLAIN_STATE = 1 AND C.LIAN_STATE = 3) THEN 1 ELSE 0 END),0) JIANDULIAN_NUM,
+  NVL(SUM(CASE WHEN C.DAIBU_STATE = 2 THEN 1 ELSE 0 END),0) DAIBU_NUM,
+  NVL(SUM(CASE WHEN C.QISU_STATE = 3 THEN 1 ELSE 0 END),0) QISU_NUM,
+  NVL(SUM(CASE WHEN C.PANJUE_STATE = 2 THEN 1 ELSE 0 END),0) PANJUE_NUM,
+  NVL(SUM(CASE WHEN X.TIQINGDAIBUPERSON_NUM > 0 THEN 1 ELSE 0 END),0) TIQINGDAIBU_NUM,
+  NVL(SUM(CASE WHEN X.TIQINGQISUPERSON_NUM > 0 THEN 1 ELSE 0 END),0) TIQINGQISU_NUM,
+  NVL(SUM(TIQINGDAIBUPERSON_NUM),0) AS TIQINGDAIBUPERSON_NUM,
+  NVL(SUM(TIQINGQISUPERSON_NUM),0) AS TIQINGQISUPERSON_NUM,
+  NVL(SUM(DAIBUPERSON_NUM),0) AS DAIBUPERSON_NUM,
+  NVL(SUM(GONGSUPERSON_NUM),0) AS GONGSUPERSON_NUM,
+  NVL(SUM(PANJUEPERSON_NUM),0) AS PANJUEPERSON_NUM
+  FROM
+  (SELECT B.CASE_ID,B.INPUT_TIME,B.INPUT_UNIT,B.AMOUNT_INVOLVED,S.CHUFA_STATE,S.XINGZHENGLIAN_STATE,
+          S.YISONG_STATE,S.LIAN_STATE,S.DAIBU_STATE,S.QISU_STATE,S.PANJUE_STATE,S.REQ_EXPLAIN_STATE
+   FROM 
+   <choose>
+			<when test="policeType==2">
+				(SELECT CC.CASE_ID,CC.INPUT_UNIT,CC.INPUT_TIME,CC.AMOUNT_INVOLVED,CC.INPUTER
+					FROM CASE_BASIC CC,
+					(SELECT S.CASE_ID
+				      FROM CASE_STEP S, ORGANISE O
+				      WHERE S.TARGET_ORG_ID = O.ORG_CODE
+				      AND S.TARGET_ORG_TYPE = '3'
+				      and o.police_type=2
+				      GROUP BY CASE_ID 
+				     ) SO
+				 WHERE CC.CASE_ID=SO.CASE_ID) B
+			</when>
+			<when test="policeType==1">
+				(SELECT CC.CASE_ID,CC.INPUT_UNIT,CC.INPUT_TIME,CC.AMOUNT_INVOLVED,CC.INPUTER
+					FROM CASE_BASIC CC,
+					(SELECT S.CASE_ID
+				      FROM CASE_STEP S, ORGANISE O
+				      WHERE S.TARGET_ORG_ID = O.ORG_CODE
+				      AND S.TARGET_ORG_TYPE = '3'
+				      and (o.police_type=1 or o.police_type is null)
+				      GROUP BY CASE_ID 
+				     ) SO
+				 WHERE CC.CASE_ID=SO.CASE_ID) B
+			</when>
+			<otherwise>
+				CASE_BASIC B 
+			</otherwise>
+		  </choose>
+    ,CASE_STATE S,USER_ U,ORGANISE O
+  WHERE B.CASE_ID = S.CASE_ID AND B.INPUTER=U.USER_ID AND U.ORG_ID=O.ORG_CODE) C
+  LEFT JOIN 
+  (SELECT CASE_ID,NVL(SUM(CASE WHEN DAIBU_STATE = 3 THEN 1 ELSE 0 END ),0) AS DAIBUPERSON_NUM,
+    NVL(SUM(CASE WHEN TIQIGONGSU_STATE = 3 THEN 1 ELSE 0 END),0) AS GONGSUPERSON_NUM,
+    NVL(SUM(CASE WHEN FAYUANPANJUE_STATE = 2 THEN 1 ELSE 0 END),0) AS PANJUEPERSON_NUM,
+    NVL(SUM(CASE WHEN (DAIBU_STATE = 2 or DAIBU_STATE = 3) THEN 1 ELSE 0 END),0) AS TIQINGDAIBUPERSON_NUM,
+    NVL(SUM(CASE WHEN TIQINGQISU_STATE = 2 THEN 1 ELSE 0 END),0) AS TIQINGQISUPERSON_NUM     
+    FROM CASE_XIANYIREN
+    GROUP BY CASE_ID) X
+    ON C.CASE_ID = X.CASE_ID
+    JOIN 
+  (SELECT  R.JB,R.DISTRICT_CODE,R.UP_DISTRICT_CODE, O.ORG_CODE,O.INDUSTRY_TYPE,O.ORG_TYPE
+    FROM DISTRICT R, ORGANISE O
+    WHERE R.DISTRICT_CODE = O.DISTRICT_CODE) T
+    ON C.INPUT_UNIT = T.ORG_CODE
+   WHERE 1 = 1
+     <if test="industryType != null and industryType != ''">
+     	AND T.INDUSTRY_TYPE = #{industryType}
+     </if>
+     <if test="districtJB != null and districtJB != ''">
+     	AND T.JB >= #{districtJB}
+     </if>
+     <if test="districtCode != null and districtCode != '' ">
+     	and (T.DISTRICT_CODE = #{districtCode} or T.UP_DISTRICT_CODE = #{districtCode}) 
+     </if>
+     <choose>
+     	<when test="queryScope == 'year'">
+     		and TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+     	</when>
+     	<when test="queryScope == 'month'">
+     		AND TO_CHAR(C.INPUT_TIME,'mm') = TO_CHAR(SYSDATE,'mm')
+     		and TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+     	</when>
+     	<when test="queryScope == 'quarter'">
+     		AND TO_CHAR(C.INPUT_TIME,'q') = TO_CHAR(SYSDATE,'q')
+     		and TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+     	</when>
+     </choose>
+     
+     
+</select>
+
+<resultMap id="caseNumResultForReport" type="com.ksource.liangfa.domain.stat.StatisData" >
+	<result property="totalNum" column="TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="penaltyNum" column="PENALTY_NUM" jdbcType="DECIMAL"/>
+	<result property="amountInvolved" column="AMOUNT_INVOLVED" jdbcType="DECIMAL"/>
+	<result property="proviceChufaNum" column="PROVICECHUFA_NUM" jdbcType="DECIMAL"/>
+	<result property="cityChufaNum" column="CITYCHUFA_NUM" jdbcType="DECIMAL"/>
+	<result property="countyChufaNum" column="COUNTYCHUFA_NUM" jdbcType="DECIMAL"/>
+	<result property="proviceRate" column="PROVICE_RATE" jdbcType="VARCHAR"/>
+	<result property="cityRate" column="CITY_RATE" jdbcType="VARCHAR"/>
+	<result property="countyRate" column="COUNTY_RATE" jdbcType="VARCHAR"/>
+</resultMap>
+
+<select id="statisCaseNumStatForReportForBusiness" parameterType="java.util.Map" resultMap="caseNumResultForReport">
+	SELECT A.TOTAL_NUM,A.CHUFA_NUM as PENALTY_NUM,
+	round(A.AMOUNT_INVOLVED/10000,4) as AMOUNT_INVOLVED,
+	A.PROVICECHUFA_NUM,A.CITYCHUFA_NUM,A.COUNTYCHUFA_NUM,
+	DECODE(A.CHUFA_NUM,0,'---',TO_CHAR((ROUND(A.PROVICECHUFA_NUM/A.CHUFA_NUM, 4)*100),'FM999990.00')) AS PROVICE_RATE,     
+	DECODE(A.CHUFA_NUM,0,'---',TO_CHAR((round(A.CITYCHUFA_NUM/A.CHUFA_NUM, 4)*100),'FM999990.00'))  AS CITY_RATE,     
+	DECODE(A.CHUFA_NUM,0,'---',TO_CHAR((round(A.COUNTYCHUFA_NUM/A.CHUFA_NUM, 4)*100),'FM999990.00'))  AS COUNTY_RATE  
+	FROM(SELECT 
+	  COUNT(0) AS TOTAL_NUM,
+	  NVL(SUM(CASE WHEN CS.CHUFA_STATE = 2 THEN 1 ELSE 0 END),0) AS CHUFA_NUM,
+	  NVL(SUM(CB.AMOUNT_INVOLVED),0) AS AMOUNT_INVOLVED,
+	  NVL(SUM(CASE WHEN CS.CHUFA_STATE = 2 AND D.JB = 1 THEN 1 ELSE 0 END),0) AS PROVICECHUFA_NUM,
+	  NVL(SUM(CASE WHEN CS.CHUFA_STATE = 2 AND D.JB = 2 THEN 1 ELSE 0 END),0) AS CITYCHUFA_NUM,
+	  NVL(SUM(CASE WHEN CS.CHUFA_STATE = 2 AND D.JB = 3 THEN 1 ELSE 0 END),0) AS COUNTYCHUFA_NUM
+	FROM CASE_BASIC CB,CASE_STATE CS,ORGANISE O,DISTRICT D
+	WHERE O.DISTRICT_CODE= D.DISTRICT_CODE AND CB.CASE_ID=CS.CASE_ID
+	AND CB.INPUT_UNIT=O.ORG_CODE AND O.ORG_TYPE IN (1,3)
+		<if test="regionId!=null and regionId!=''">
+				AND O.DISTRICT_CODE LIKE regexp_replace(${regionId},'(00)+$')||'%'
+		</if>
+		<if test="yearStr!=null and yearStr!=''">
+				AND TO_CHAR(cB.input_time,'yyyy')=${yearStr}
+		</if>
+		<if test="quarterStr!=null and quarterStr!=''">
+				AND TO_CHAR(CB.INPUT_TIME,'Q')=${quarterStr}
+		</if>
+		<if test="monthStr!=null and monthStr!=''">
+				AND TO_CHAR(CB.INPUT_TIME,'MM')=${monthStr}
+		</if>
+     	<if test="districtJB!=null and districtJB!=''">
+     	     	AND D.JB >= ${districtJB}
+     	</if>
+		<if test="industryType!=null and industryType!=''">
+				AND O.INDUSTRY_TYPE = #{industryType}
+		</if>
+    )A
+</select>
+
+<resultMap id="statisCaseTotalNumResultMap" type="com.ksource.liangfa.domain.stat.StatisData" >
+	<result property="totalNum" column="TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="cityTotalNum" column="CITY_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="countryTotalNum" column="COUNTRY_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="yearTotalNum" column="YEAR_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="yearCityTotalNum" column="YEAR_CITY_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="yearCountryTotalNum" column="YEAR_COUNTRY_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="quarterTotalNum" column="QUARTER_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="quarterCityTotalNum" column="QUARTER_CITY_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="quarterCountryTotalNum" column="QUARTER_COUNTRY_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="monthTotalNum" column="MONTH_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="monthCityTotalNum" column="MONTH_CITY_TOTAL_NUM" jdbcType="DECIMAL"/>
+	<result property="monthCountryTotalNum" column="MONTH_COUNTRY_TOTAL_NUM" jdbcType="DECIMAL"/>
+</resultMap>
+<select id="statisCaseTotalNum" parameterType="java.util.Map" resultMap="statisCaseTotalNumResultMap">
+	SELECT 
+	NVL(COUNT(C.CASE_ID),0) TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=2 THEN 1 ELSE 0 END),0) CITY_TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=3 THEN 1 ELSE 0 END),0) COUNTRY_TOTAL_NUM,
+	NVL(SUM(CASE WHEN TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') THEN 1 ELSE 0 END),0) YEAR_TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=2 AND TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') THEN 1 ELSE 0 END),0) YEAR_CITY_TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=3 AND TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') THEN 1 ELSE 0 END),0) YEAR_COUNTRY_TOTAL_NUM,
+	NVL(SUM(CASE WHEN TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') AND TO_CHAR(C.INPUT_TIME,'q') = TO_CHAR(SYSDATE,'q') THEN 1 ELSE 0 END),0) QUARTER_TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=2 AND TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') AND TO_CHAR(C.INPUT_TIME,'q') = TO_CHAR(SYSDATE,'q') THEN 1 ELSE 0 END),0) QUARTER_CITY_TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=3 AND TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') AND TO_CHAR(C.INPUT_TIME,'q') = TO_CHAR(SYSDATE,'q') THEN 1 ELSE 0 END),0) QUARTER_COUNTRY_TOTAL_NUM,
+	NVL(SUM(CASE WHEN TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') AND TO_CHAR(C.INPUT_TIME,'mm') = TO_CHAR(SYSDATE,'mm') THEN 1 ELSE 0 END),0) MONTH_TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=2 AND TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') AND TO_CHAR(C.INPUT_TIME,'mm') = TO_CHAR(SYSDATE,'mm') THEN 1 ELSE 0 END),0) MONTH_CITY_TOTAL_NUM,
+	NVL(SUM(CASE WHEN D.JB=3 AND TO_CHAR(C.INPUT_TIME,'yyyy') = TO_CHAR(SYSDATE,'yyyy') AND TO_CHAR(C.INPUT_TIME,'mm') = TO_CHAR(SYSDATE,'mm') THEN 1 ELSE 0 END),0) MONTH_COUNTRY_TOTAL_NUM
+	FROM CASE_BASIC C,CASE_STATE S,USER_ U,ORGANISE O,DISTRICT D
+	WHERE C.CASE_ID = S.CASE_ID 
+	AND C.INPUTER=U.USER_ID 
+	AND U.ORG_ID=O.ORG_CODE
+	AND O.DISTRICT_CODE=D.DISTRICT_CODE
+	<if test="districtCode!=null and districtCode!=''">
+		AND O.DISTRICT_CODE LIKE #{districtCode}||'%'
+	</if>
+</select>
+
+<resultMap type="com.ksource.liangfa.domain.stat.StatisData" id="generalStatResultMap">
+    <result property="totalNum" column="TOTAL_NUM" jdbcType="DECIMAL"/>
+    <result property="xingzhenglianNum" column="XINGZHENGLIAN_NUM" jdbcType="DECIMAL"/>
+    <result property="penaltyNum" column="PENALTY_NUM" jdbcType="DECIMAL"/>
+    <result property="crimeNum" column="CRIME_NUM" jdbcType="DECIMAL"/>
+    <result property="directYiSongNum" column="DIRECTYISONG_NUM" jdbcType="DECIMAL"/>
+    <result property="suggestYiSongNum" column="SUGGESTYISONG_NUM" jdbcType="DECIMAL"/>
+    <result property="lianNum" column="LIAN_NUM" jdbcType="DECIMAL"/>
+    <result property="jianduLianNum" column="JIANDULIAN_NUM" jdbcType="DECIMAL"/>
+    <result property="daibuNum" column="DAIBU_NUM" jdbcType="DECIMAL"/>
+    <result property="gongsuNum" column="QISU_NUM" jdbcType="DECIMAL"/>
+    <result property="panjueNum" column="PANJUE_NUM" jdbcType="DECIMAL"/>
+    <result property="tiqingdaibuNum" column="TIQINGDAIBU_NUM" jdbcType="DECIMAL"/>
+    <result property="tiqingqisuNum" column="TIQINGQISU_NUM" jdbcType="DECIMAL"/>    
+</resultMap>
+<select id="generalStat" parameterType="java.util.Map" resultMap="generalStatResultMap">
+  SELECT 
+  NVL(COUNT(C.CASE_ID),0) TOTAL_NUM,
+  NVL(SUM(CASE WHEN C.XINGZHENGLIAN_STATE = 3  THEN 1 ELSE 0 END),0) XINGZHENGLIAN_NUM,
+  NVL(SUM(CASE WHEN C.CHUFA_STATE = 2  THEN 1 ELSE 0 END),0) PENALTY_NUM,
+  NVL(SUM(CASE WHEN C.YISONG_STATE = 2 OR C.YISONG_STATE = 3 THEN 1 ELSE 0 END),0) CRIME_NUM,
+  NVL(SUM(CASE WHEN C.YISONG_STATE = 2 THEN 1 ELSE 0 END),0) DIRECTYISONG_NUM,
+  NVL(SUM(CASE WHEN C.YISONG_STATE = 3 THEN 1 ELSE 0 END),0) SUGGESTYISONG_NUM,
+  NVL(SUM(CASE WHEN C.LIAN_STATE = 3 THEN 1 ELSE 0 END),0) LIAN_NUM,
+  NVL(SUM(CASE WHEN C.LIAN_STATE = 4 or (C.REQ_EXPLAIN_STATE = 1 AND C.LIAN_STATE = 3) THEN 1 ELSE 0 END),0) JIANDULIAN_NUM,
+  NVL(SUM(CASE WHEN C.DAIBU_STATE = 2 THEN 1 ELSE 0 END),0) DAIBU_NUM,
+  NVL(SUM(CASE WHEN C.QISU_STATE = 3 THEN 1 ELSE 0 END),0) QISU_NUM,
+  NVL(SUM(CASE WHEN C.PANJUE_STATE = 2 THEN 1 ELSE 0 END),0) PANJUE_NUM,
+  NVL(SUM(CASE WHEN X.TIQINGDAIBUPERSON_NUM > 0 THEN 1 ELSE 0 END),0) TIQINGDAIBU_NUM,
+  NVL(SUM(CASE WHEN X.TIQINGQISUPERSON_NUM > 0 THEN 1 ELSE 0 END),0) TIQINGQISU_NUM
+  FROM
+  (SELECT B.CASE_ID,B.INPUT_TIME,B.INPUT_UNIT,B.AMOUNT_INVOLVED,S.CHUFA_STATE,S.XINGZHENGLIAN_STATE,
+          S.YISONG_STATE,S.LIAN_STATE,S.DAIBU_STATE,S.QISU_STATE,S.PANJUE_STATE,S.REQ_EXPLAIN_STATE,O.DISTRICT_CODE,O.INDUSTRY_TYPE
+   FROM CASE_BASIC B ,CASE_STATE S,USER_ U,ORGANISE O
+  WHERE B.CASE_ID = S.CASE_ID AND B.INPUTER=U.USER_ID AND U.ORG_ID=O.ORG_CODE) C 
+  LEFT JOIN 
+  (SELECT CASE_ID,NVL(SUM(CASE WHEN DAIBU_STATE = 3 THEN 1 ELSE 0 END ),0) AS DAIBUPERSON_NUM,
+    NVL(SUM(CASE WHEN TIQIGONGSU_STATE = 3 THEN 1 ELSE 0 END),0) AS GONGSUPERSON_NUM,
+    NVL(SUM(CASE WHEN FAYUANPANJUE_STATE = 2 THEN 1 ELSE 0 END),0) AS PANJUEPERSON_NUM,
+    NVL(SUM(CASE WHEN (DAIBU_STATE = 2 or DAIBU_STATE = 3) THEN 1 ELSE 0 END),0) AS TIQINGDAIBUPERSON_NUM,
+    NVL(SUM(CASE WHEN TIQINGQISU_STATE = 2 THEN 1 ELSE 0 END),0) AS TIQINGQISUPERSON_NUM     
+    FROM CASE_XIANYIREN
+    GROUP BY CASE_ID) X
+    ON C.CASE_ID = X.CASE_ID
+   WHERE 1 = 1
+     <if test="industryType != null and industryType != ''">
+        AND C.INDUSTRY_TYPE = #{industryType}
+     </if>
+     <if test="districtCode != null and districtCode != '' ">
+        AND C.DISTRICT_CODE LIKE CONCAT(#{districtCode},'%') 
+     </if>
+     <if test="startTime != null">
+        AND C.INPUT_TIME >= #{startTime,jdbcType=TIMESTAMP}
+     </if>
+     <if test="endTime != null">
+        AND C.INPUT_TIME &lt; #{endTime,jdbcType=TIMESTAMP} + INTERVAL '1' DAY
+     </if>     
+</select>
+
+</mapper>

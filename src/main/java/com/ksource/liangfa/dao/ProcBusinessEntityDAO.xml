@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProcBusinessEntityDAO">
+  <select id="completedTaskQueryCount" parameterType="map" resultType="int">
+		select count(*) from ${entityTableName} a
+			where exists(
+						select * from case_step b
+						where a.case_id=b.case_id
+						and b.assign_person=#{assignPerson}
+						and b.proc_def_key=#{procKey}
+			)
+			<if test="businessName != null and businessName!=''">
+			and a.CASE_NAME like concat(concat('%',#{businessName}),'%')
+			</if>
+			<if test="procBusinessEntityNO != null and procBusinessEntityNO!=''">
+			and a.CASE_NO like concat(concat('%',#{procBusinessEntityNO}),'%')
+			</if>
+			<if test="state != null and state!=''">
+		       and a.CASE_STATE = #{state}
+		    </if>
+			<if test="startTime != null and startTime!=''">
+			<![CDATA[
+			   and  a.INPUT_TIME >= #{startTime}
+			 	]]>
+			</if>
+			<if test="endTime != null and endTime!=''">
+			 <![CDATA[
+			     and a.INPUT_TIME  < (#{endTime} +   interval   '1'  day)
+			 	]]>
+			</if>
+  </select>
+  
+  <select id="completedTaskQueryResult" parameterType="map" resultType="com.ksource.liangfa.workflow.ProcBusinessEntityImpl">
+		  	select 
+		  		a.case_no procBusinessEntityNO,a.case_id businessKey,
+		  		a.case_name businessName,c.org_name publishOrgName,
+		  		b.user_name as publishUserName,
+		  		a.case_state state,a.proc_key procKey,p.proc_key_name procKeyName
+			from 
+			${entityTableName} a
+			, user_ b,organise c,proc_key p
+			where exists(
+						select * from case_step b
+						where a.case_id=b.case_id
+						and b.assign_person=#{assignPerson}
+						and b.proc_def_key=#{procKey}
+			)
+				and a.inputer=b.user_id
+				and b.org_id=c.org_code
+				and a.proc_key=p.proc_key
+				<if test="businessName != null and businessName!=''">
+				and a.CASE_NAME like concat(concat('%',#{businessName}),'%')
+				</if>
+				<if test="procBusinessEntityNO != null and procBusinessEntityNO!=''">
+				and a.CASE_NO like concat(concat('%',#{procBusinessEntityNO}),'%')
+				</if>
+				<if test="state != null and state!=''">
+			       and a.CASE_STATE = #{state}
+			     </if>
+				<if test="startTime != null and startTime!=''">
+				<![CDATA[
+				   and  a.INPUT_TIME >= #{startTime}
+				 	]]>
+				</if>
+				<if test="endTime != null and endTime!=''">
+				 <![CDATA[
+				     and a.INPUT_TIME  < (#{endTime} +   interval   '1'  day)
+				 	]]>
+				</if>
+				order by a.LATEST_POCESS_TIME desc
+  </select>
+
+  <select id="queryBuesinessEntityBykey" parameterType="string" resultType="com.ksource.liangfa.workflow.ProcBusinessEntityImpl">
+		  	select 
+		  		a.case_no procBusinessEntityNO,a.case_id businessKey,
+		  		a.case_name businessName,c.org_name publishOrgName,
+		  		b.user_name as publishUserName,
+		  		a.case_state state,a.proc_key procKey,p.proc_key_name procKeyName 
+			from 
+			${entityTableName} a
+			, user_ b,organise c,proc_key p
+			where a.case_id=#{businessKey}
+				and a.inputer=b.user_id
+				and b.org_id=c.org_code
+				and a.proc_key=p.proc_key
+				
+  </select>
+</mapper>

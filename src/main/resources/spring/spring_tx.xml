@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+    <context:component-scan base-package="com.ksource">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 配置数据源、事务管理策略、开启声明式事务 （统一由spring管理mapper类型和SqlSessionDaoSupport类型的DAO事务） -->
+    <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/liangfa_stable_frame" resource-ref="true"/>
+    <!--<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>java:comp/env/jdbcTest</value>
+        </property>
+    </bean>-->
+    <!--<bean id="dataSource"
+          class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@139.199.159.105:1521/orcl"/>
+        <property name="username" value="sulongfei"/>
+        <property name="password" value="oracle"/>
+    </bean>-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--
+        定义 myBatis的sqlSessionFactory
+        1：也可以定义configLocation文件，在里面设置settings和typeAliases等来覆写默认的配置
+        2：通过mapperLocations将mapper加入到Configuration中，供自定义的DAO使用（非mapper接口形式：如SqlSessionDaoSupport）
+        3：如果设置了configLocation文件，那么configLocation文件里也不需要再设置mapper了
+        4：综述：将mapper加入到Configuration中有几种入口：mapperLocations、configLocation的configLocation、MapperScannerConfigurer-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:com/ksource/liangfa/dao/*.xml"></property>
+        <property name="configLocation" value="classpath:spring/mybatis-config.xml"/>
+    </bean>
+    <!-- 扫描 mappers 自动配置 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ksource.liangfa.mapper"/>
+    </bean>
+    <!-- 引入activiti5工作流引擎配置 -->
+    <import resource="activiti.xml"/>
+
+    <!--  任务监听流程   -->
+    <bean id="taskProcessor" name="taskProcessor" class="com.ksource.common.task.TaskProcessor"></bean>
+    <!-- 加载数据库方言配置文件 -->
+    <!--加载配置文件-->
+    <bean id="configProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:system_config.properties"/>
+    </bean>
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="configProperties"></property>
+    </bean>
+
+    <bean id="databaseConfigBean" class="com.ksource.common.bean.DatabaseDialectBean">
+        <property name="dialect" value="${database.dialect}"/>
+    </bean>
+
+</beans>

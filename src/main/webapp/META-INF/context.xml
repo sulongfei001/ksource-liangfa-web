@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="liangfa_stable_frame" auth="Container" type="javax.sql.DataSource"
+              username="sulongfei" password="oracle" driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@139.199.159.105:1521/orcl" maxActive="100" maxWait="50000"
+              maxIdle="30"/>
+</Context>

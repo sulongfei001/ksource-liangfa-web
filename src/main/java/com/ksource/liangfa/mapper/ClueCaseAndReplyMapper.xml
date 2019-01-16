@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ksource.liangfa.mapper.ClueCaseAndReplyMapper" >
+	<resultMap type="com.ksource.liangfa.domain.ClueCaseAndReply" id="BaseResultMap">
+		<result column="ORG_NAME" property="orgName"/>
+		<result column="DEAL_TIME" property="dealTime"/>
+		<result column="DEAL_USER" property="dealUser"/>
+		<result column="DEAL_CONTENT" property="dealContent"/>
+		<result column="DEAL_TYPE" property="dealType"/>
+		<result column="CASE_ID" property="caseId"/>
+		<result column="CASE_NO" property="caseNo"/>
+	</resultMap>
+	<select id="getClueCaseList" parameterType="int" resultMap="BaseResultMap">
+	(
+	SELECT
+	O.ORG_NAME ORG_NAME,
+	CA.ACCEPT_TIME DEAL_TIME,
+	U.USER_NAME DEAL_USER,
+	CB.CASE_NAME DEAL_CONTENT,
+	'dealCase' DEAL_TYPE ,
+	CB.CASE_ID CASE_ID,
+	CB.CASE_NO CASE_NO
+	FROM CLUE_ACCEPT CA,USER_ U,ORGANISE
+	O,CASE_BASIC CB
+	WHERE CA.ACCEPT_USER=U.USER_ID AND U.ORG_ID=O.ORG_CODE
+	AND
+	CA.CASE_ID=CB.CASE_ID AND CA.CLUE_ID=#{clueInfo}
+	)
+	UNION
+	(
+	SELECT
+	O.ORG_NAME ORG_NAME,
+	CR.CREATE_TIME DEAL_TIME,
+	U.USER_NAME DEAL_USER,
+	CR.CONTENT DEAL_CONTENT,
+	'dealReply' DEAL_TYPE,
+	null CASE_ID,
+	null CASE_NO
+	FROM CLUE_REPLY CR,USER_ U,ORGANISE O
+	WHERE
+	U.USER_ID=CR.CREATE_USER_ID AND U.ORG_ID=O.ORG_CODE AND
+	CR.CLUEINFO_ID=#{clueInfo}
+	)
+	</select>
+</mapper>

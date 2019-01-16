@@ -1,0 +1,154 @@
+*{ padding:0; margin:0;}
+
+body {
+	font-size: 12px;
+}
+
+a:link,a:visited,a:active{
+	font-size: 12px;
+	color: #FFF;
+	text-decoration: none;
+}
+a:hover{
+	font-size: 12px;
+	color: #BCDAF4;
+}
+/*.headFrameBg{
+	background-image: url(../sys_images/search_bg.jpg);
+	background-repeat: repeat-x;
+	background-position: right top;
+	height: 
+}*/
+.ui-layout-north{
+	/*background-attachment: scroll;
+	background-color: #FFFFFF;
+	background-image: url(../sys_images/search_bg.jpg);
+	background-repeat: no-repeat;
+	background-position: left bottom;*/
+	/*border: 1px solid #F00;*/
+	height: 66px;
+	margin: 0px;
+}
+#ui-layout-title {
+	background-attachment: scroll;
+	background-image: url(../sys_images/title_logo.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 60px;
+	margin: 0px;
+	position: relative;
+	/*border: 1px solid #00F;*/
+}
+
+#ui-layout-message {
+	width: auto;
+	height: 60px;
+	color:#FFFFFF;
+	line-height:60px;
+	/*border: 1px solid #F00;*/
+	text-align: center;
+	display: block;
+	float: right;
+	margin: 0px;
+	position: absolute;
+    right: 10px;
+    top: 0;
+}
+#ui-layout-exit {
+	float: right;
+	height: 44px;
+	width: 95px;
+	margin: 0px;
+}
+#ui-layout-exit a{
+	height: 44px;
+	width: 95px;
+	display: block;
+	background-image: url(../sys_images/title_exit.jpg);
+	background-repeat: no-repeat;
+}
+#ui-layout-exit a:hover{
+	height: 44px;
+	width: 95px;
+	display: block;
+	background-image: url(../sys_images/title_exit_on.jpg);
+	background-repeat: no-repeat;
+}
+#ui-layout-search {
+	background-image: url(../sys_images/search_bg.jpg);
+	background-repeat: repeat-x;
+	background-position: right top;
+	height: 20px;	/*border: 1px solid #F00;*/
+	
+}
+#ui-layout-search-date {
+	font-size: 12px;
+	color: #FFF;
+	float: left;
+	width: 50%;
+	height: 20px;
+	margin-top: 10px;
+	text-align: right;
+}
+#ui-layout-search-form {
+	margin-top: 8px;
+	float: right;
+	width: 400px;
+}
+.search-input{
+	font-size: 12px;
+	color: #333;
+	background-image: url(../sys_images/search_input.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 26px;
+	width: 162px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	background-color: transparent;
+}
+#north{
+	background-color: transparent;
+	background-image: url(../sys_images/title_bg.jpg);
+	background-repeat: repeat-x;
+	background-position: left top;
+	float: left;
+	width: 410px;
+	/*border: 1px solid #F00;*/
+}
+.ui-layout-south{
+	background: url("../images/bodybg.gif") repeat-x scroll left top #FFFFFF;
+}
+/*暂时为了区别左边导航(west)区域*/
+.ui-layout-west{
+	background-color:#FFFFFF;
+	border: 1px solid #F00;
+	width:100px;
+}
+#ui-layout-menu-title {
+	background-image: url(../sys_images/menu_title.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 65px;
+	width: 150px;
+}
+
+
+/**xieyujun
+.top_bg{
+	background:url(../sys_images/title_bg.jpg.) left top;
+	
+	height:44px;
+	border: 1px solid #000000;
+}*/
+
+
+.headFrameBg{
+	background: url(../sys_images/top_bg.jpg) top repeat-x;
+}

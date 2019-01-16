@@ -1,0 +1,35 @@
+@charset "utf-8";
+/*全局css样式*/
+html,body,head,title,map,applet,iframe,pre,a,acronym,address,cite,code,font,em,img,strong,sub,sup,b,i,fieldset,form,input,label,legend,caption,tbody,tfoot,tbody,div,table,tr,td,dd,dl,dt,ul,ol,li,p,span,h1,h2,h3,h4,h5,h6 {margin:0;padding:0;font-size:12px;table-layout:fixed;word-break:break-all;word-wrap:break-word;}
+ol,li {list-style:none;}
+a:link,a:visited {color:#333;text-decoration:none;} a:hover {color:#06c;text-decoration:underline;}
+.fl {float:left;} .fr {float:right;} .clear {clear:both; height:0px;font-size:0; line-height:0;}
+.overflow {overflow:hidden;}
+.moa {margin:0 auto;}
+a{blr:expression(this.onFocus=this.blur())}
+a:focus {outline:none;}
+img{border:0;}
+
+/*login-css样式*/
+body {background:url(../images/lf_bg.jpg) repeat-x top #FFF;}
+.wrap {padding-top:3%;} 
+.logo {background:url(../images/lflogo.jpg) no-repeat;height:99px;width:644px;padding-bottom:15px;}
+.loginbg {background:url(../images/wrapbg.jpg) no-repeat top center;height:357px;width:100%;}
+.cont {padding:120px 0 0 350px;width:650px;}
+.inputbg {background:url(../images/inputbg.jpg) no-repeat;border:none;font:normal 12px/25px Arial, Helvetica, sans-serif;color:#999; text-indent:5px;height:26px;width:174px;}
+.loginbtn {
+	background:url(../images/loginbtn.jpg) no-repeat;display:block;height:38px;width:79px;margin-top:5px;text-decoration:none;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	cursor:pointer;
+}
+a.col4b91c6:link,a.col4b91c6:visited,a.col4b91c6:active {color:#4b91c6;text-decoration:underline;}
+a.col4b91c6:hover {color:#06F;}
+.font14col4b91c6 {color:#4b91c6;font:normal 14px/30px Arial, Helvetica, sans-serif;}
+.copyright {color:#4b91c6;width:1000px;text-align:center;line-height:24px;margin-top:1%;}

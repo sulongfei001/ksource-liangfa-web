@@ -1,0 +1,133 @@
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+| Copyright (c) 2002-2003 Geir Landr?              |
+|--------------------------------------------------*/
+body {
+	font-size: 12px;
+	margin: 0px; padding: 0px;
+	scrollbar-3dlight-color:#c2cbd2; /*- 鏈�宸�-*/
+   scrollbar-highlight-color:#f1f4fd; /*- 宸︿簩 -*/
+   scrollbar-face-color:#c5d6ff; /*- 闈㈠瓙 -*/
+   scrollbar-arrow-color:#666; /*- 绠ご -*/
+   scrollbar-shadow-color:#c2cbd2; /*- 鍙充簩 -*/
+   scrollbar-darkshadow-color:#f1f4fd; /*- 鍙充竴 -*/
+   scrollbar-base-color:#eef5ff; /*- 鍩鸿壊 -*/
+   scrollbar-track-color:#f7faff;/*- 婊戦亾 -*/
+}
+table {
+	font-size: 12px;
+}
+    /* LINKS */
+a,a:link{
+	color: #003366;
+}
+a:active {
+	color: #000000;
+	text-decoration: underline;
+}
+a:hover {
+	text-decoration: none;
+	color: #FF0000;
+}
+    /* END LINKS */
+	
+    /* COLOR */
+.orange{
+	color:#FF6600;
+}
+	
+    /* END COLOR */
+    /* CONTEN FRAME */
+.root {
+	background-image: url(images/root.gif);
+	height: 21px;
+	border: 1px solid #ccdafd;
+	color: #4367c8;
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+.root .foward {
+	height: 15px;
+	width: 15px;
+	float: left;
+	margin-top: 4px;
+	margin-left: 2px;
+}
+.root .rootcon {
+	line-height: 19px;
+	padding-left: 10px;
+	padding-top: 2px;
+	float: left;color: #000000;
+}
+.rootcon .news {
+	height: 18px;
+	width: 120px;
+	float: right;
+	color: #000000;
+	font-size: 12px;
+}
+
+.titleTag {
+	background-image: url(images/titleTag_bg.gif);
+	background-repeat: repeat-x;
+	height: 24px;
+	margin-top: 1px;
+	line-height: 24px;
+	color: #17418d;
+	text-indent: 10px;
+	font-weight: bold;
+}
+#pageFoot {
+	position: absolute;
+	width: 100%;
+	height: 22px;
+	bottom: 0px;
+	padding-top: 2px;
+	background-color: #d3e0f1;
+}
+.content {
+	font-size: 12px;
+	border: 1px solid #93B2EA;
+	height: 100%;
+}
+.dtree {
+	height:300PX;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #666;
+	white-space: nowrap;
+}
+.dTreeNode {width:170px; display:block; overflow:hidden; float:left;}
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+}
+.dtree a.node, .dtree a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 2px 1px 2px;
+	width:165px;
+	display:inline;
+	
+	
+}
+.dtree a.node:hover, .dtree a.nodeSel:hover {
+	color: #333;
+	text-decoration: underline;
+}
+.dtree a.nodeSel {
+	background-color: #c0d2ec;
+}
+.dtree .clip {
+	overflow: auto;
+	
+}.smallFont {
+	text-indent: 10px;
+    float: left;
+    cursor: pointer;
+    padding-left: 5px;
+}

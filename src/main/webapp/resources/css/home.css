@@ -1,0 +1,290 @@
+@charset "UTF-8";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+	font-family: "Arial", "sans-serif", "Verdana" ;
+	font-size:12px;
+}
+
+
+.ui-layout-north {
+	width: 100%;
+	height: 94px;
+	display: block;
+	background: url(../images/xzzf_02.jpg) repeat-x;
+}
+
+.ui-layout-south {
+	background: url("../images/below.jpg") repeat-x scroll left top #FFFFFF;
+}
+
+.ui-layout-west {
+	background: none repeat scroll 0 0 #DFEAF8;
+	padding-left: 6px;
+	padding-top: 2px;
+	padding-bottom: 5px;
+}
+.ui-layout-center{
+	/*padding-top: 4px;
+	padding-left: 4px;
+	*/
+}
+.ui-layout-resizer{
+	background: none repeat scroll 0 0 #DFEAF8;
+}
+
+.ui-layout-resizer-west-open {
+	width: 13px;
+	height: 325px;
+	display: block;
+	background: url(../images/xzzf_24.jpg) repeat-y;
+}
+.ui-layout-toggler-west-open {
+	background: url("../images/ww.gif") no-repeat;
+	width: 5px;
+	height: 30px;
+}
+
+.ui-layout-toggler-west-closed { /* closed toggler-button */
+	background: #CCC;
+	border-bottom: 1px solid #BBB;
+}
+
+.ui-layout-toggler .content { /* toggler-text */
+	font: 14px bolder Verdana, Verdana, Arial, Helvetica, sans-serif;
+}
+
+div.showMsg {
+	background: url("../images/success.png") no-repeat 10px 10px;
+	height: 100px;
+	display: none;
+}
+
+div.showMsg h2 {
+	color: white;
+	padding: 5px 5px 5px 75px;
+	text-align: left
+}
+
+/*------------------------*/
+/* CSS Document */
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
+.top {
+	width: 100%;
+	height: 94px;
+	display: block;
+	background: url(../images/xzzf_02.jpg) repeat-x;
+	overflow: hidden;
+}
+
+.logo {
+	width: 682px;
+	height: 25px;
+	display: block;
+	background: url(../images/xzzf_01.jpg) no-repeat;
+	display: block;
+	float: left;
+	padding-left: 90px;
+	padding-top: 69px;
+	overflow: hidden;
+}
+
+.message {
+	font-size: 12px;
+	color: #FFFFFF;
+	line-height: 25px;
+}
+
+.btn {
+	width: 220px;
+	height: 69px;
+	display: block;
+	float: left;
+	margin-top: 25px;
+}
+
+.btn1 {
+	width: 66px;
+	height: 33px;
+	display: block;
+	background: url(../images/xzzf_05.jpg) no-repeat;
+	display: block;
+	float: left;
+	font-size: 12px;
+	color: #FFFFFF;
+	padding-left: 35px;
+	padding-top: 11px;
+	cursor:pointer;
+}
+
+.btn2 {
+	width: 66px;
+	height: 33px;
+	display: block;
+	background: url(../images/xzzf_07.jpg) no-repeat;
+	display: block;
+	float: left;
+	margin-left: 6px;
+	font-size: 12px;
+	color: #FFFFFF;
+	padding-left: 35px;
+	padding-top: 11px;
+	cursor:pointer;
+}
+
+.left {
+	background: #dfeaf8;
+	width: 200px;
+	height: 100%;
+	display: block;
+	float: left;
+	padding-bottom: 20px;
+	padding-left: 6px;
+	padding-top: 2px;
+}
+
+
+
+.ui-accordion { width: 100%;}
+
+.ui-accordion .ui-accordion-header {
+	width: 197px;
+	height: 31px;
+	display: block;
+	background: url(../images/xzzf_13.jpg) no-repeat;
+	position: relative;
+}
+
+.ui-accordion .ui-accordion-header .ui-icon{
+	display:block;
+	position: absolute;
+	left: 5px;
+	top: 9px;
+}
+.ui-accordion .ui-accordion-header .ui-icon-triangle-1-s{
+	background: url(../images/nor.gif) no-repeat;
+	width: 14px;
+	height: 13px;
+}
+.ui-accordion .ui-accordion-header .ui-icon-triangle-1-e{
+	background: url(../images/add.gif) no-repeat;
+	width: 14px;
+	height: 13px;
+}
+.ui-accordion .ui-accordion-header a{
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 36px;
+	text-decoration: none;
+	color: black;
+	padding-left: 17px;
+	margin-left: 10px;
+}
+
+
+.ui-accordion .ui-accordion-content{
+	background: url(../images/xzzf_29.jpg) repeat-y;
+	width: 197px;
+	display: block;
+	height: 200px;
+}
+.menu_bot {
+    background: url("../images/xzzf_31.jpg") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 9px;
+    width: 197px;
+}
+
+.right {
+	width: 100%;
+	padding-left: 10px;
+}
+
+.right_top {
+	width: 100%;
+	height: 7px;
+	display: block;
+	background: url(../images/xzzf_15.jpg) repeat-x;
+}
+
+
+
+/* 重写jquery ui tab>>>*/
+.ui-tabs{
+	position: relative;
+}
+
+.ui-tabs .ui-tabs-nav {
+	border-bottom: 4px solid #BFD2EA;
+    display: block;
+    height: 25px;
+    padding-left: 20px;
+    padding-top: 5px;
+    width: 100%;
+    background: #FFF;
+    margin-bottom: 5px;
+}
+
+.ui-tabs .ui-tabs-nav li {
+	/*-moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #CBD1D5 #CBD1D5 -moz-use-text-color;*/
+    border-color:#CBD1D5;
+    border-style: solid solid none;
+    border-width: 1px 1px medium;
+    display: block;
+    float: left;
+    height: 25px;
+    list-style: none outside none;
+    margin-left: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background: url(../images/xzzf_19.jpg) repeat-x;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+    background: url(../images/xzzf_192.jpg) repeat-x;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+	height: 25px;
+	display: block;
+	float: left;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 25px;
+	text-decoration: none;
+	color: black;
+	padding-right: 5px;
+}
+.ui-tabs .ui-tabs-nav li .close {
+	width: 13px;
+	height: 25px;
+	display: block;
+	background: url(../images/xzzf_21.jpg) no-repeat;
+	float: left;
+	cursor:pointer;
+}
+
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected .close{
+	width: 13px;
+	height: 25px;
+	display: block;
+	background: url(../images/xzzf_212.jpg) no-repeat;
+	float: left;
+	cursor:pointer
+}
+.ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: none; }
+.ui-tabs .ui-tabs-hide { display: none !important; }
+/* <<<重写jquery ui tab*/

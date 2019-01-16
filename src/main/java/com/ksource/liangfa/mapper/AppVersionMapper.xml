@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ksource.liangfa.mapper.AppVersionMapper" >
+  <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.AppVersion" >
+    
+    <id column="VERSION_ID" property="versionId" jdbcType="DECIMAL" />
+    <result column="VERSION_NO" property="versionNo" jdbcType="DECIMAL" />
+    <result column="UPGRADE_URL" property="upgradeUrl" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="Integer" >
+    SELECT 
+    VERSION_ID, VERSION_NO, UPGRADE_URL, CONTENT, CREATE_USER, CREATE_TIME
+    FROM APP_VERSION
+    WHERE VERSION_ID = #{versionId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Integer" >
+    DELETE FROM APP_VERSION
+    WHERE VERSION_ID = #{versionId,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insert" parameterType="com.ksource.liangfa.domain.AppVersion" >
+    INSERT INTO APP_VERSION (VERSION_ID, VERSION_NO, UPGRADE_URL, 
+      CONTENT, CREATE_USER, CREATE_TIME
+      )
+    VALUES (#{versionId,jdbcType=DECIMAL}, #{versionNo,jdbcType=DECIMAL}, #{upgradeUrl,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ksource.liangfa.domain.AppVersion" >
+    INSERT INTO APP_VERSION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="versionId != null" >
+        VERSION_ID,
+      </if>
+      <if test="versionNo != null" >
+        VERSION_NO,
+      </if>
+      <if test="upgradeUrl != null" >
+        UPGRADE_URL,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="versionId != null" >
+        #{versionId,jdbcType=DECIMAL},
+      </if>
+      <if test="versionNo != null" >
+        #{versionNo,jdbcType=DECIMAL},
+      </if>
+      <if test="upgradeUrl != null" >
+        #{upgradeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.ksource.liangfa.domain.AppVersion" >
+    UPDATE APP_VERSION
+    <set >
+      <if test="versionNo != null" >
+        VERSION_NO = #{versionNo,jdbcType=DECIMAL},
+      </if>
+      <if test="upgradeUrl != null" >
+        UPGRADE_URL = #{upgradeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    WHERE VERSION_ID = #{versionId,jdbcType=DECIMAL}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ksource.liangfa.domain.AppVersion" >
+    UPDATE APP_VERSION
+    SET VERSION_NO = #{versionNo,jdbcType=DECIMAL},
+      UPGRADE_URL = #{upgradeUrl,jdbcType=VARCHAR},
+      CONTENT = #{content,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    WHERE VERSION_ID = #{versionId,jdbcType=DECIMAL}
+  </update>
+  
+  <resultMap type="com.ksource.liangfa.domain.AppVersion" id="selectAllResultMap" extends="BaseResultMap">
+    <result column="CREATE_USER_NAME" property="createUserName" jdbcType="VARCHAR"/>
+  </resultMap>
+  <select id="selectAll" parameterType="com.ksource.liangfa.domain.AppVersion" resultMap="selectAllResultMap">
+    SELECT VERSION_ID, VERSION_NO, UPGRADE_URL, CONTENT, CREATE_USER, CREATE_TIME,USER_NAME AS CREATE_USER_NAME
+    FROM APP_VERSION V,USER_ U
+    WHERE V.CREATE_USER = U.USER_ID
+      <if test="versionNo != null and versionNo != ''" >
+       AND VERSION_NO = #{versionNo}
+      </if>
+      <if test="content != null and content != '' " >
+       AND INSTR(CONTENT,#{content,jdbcType=VARCHAR}) > 0
+      </if>
+    ORDER BY CREATE_TIME DESC      
+  </select>
+  
+  <select id="selectNewVersion" resultMap="BaseResultMap">
+    SELECT VERSION_ID, VERSION_NO, UPGRADE_URL, CONTENT, CREATE_USER, CREATE_TIME
+    FROM APP_VERSION WHERE VERSION_ID = (SELECT MAX(VERSION_ID) FROM APP_VERSION)
+  </select>
+</mapper>

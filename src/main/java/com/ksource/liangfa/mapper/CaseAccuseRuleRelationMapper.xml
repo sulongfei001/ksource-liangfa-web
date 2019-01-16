@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ksource.liangfa.mapper.CaseAccuseRuleRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.CaseAccuseRuleRelation" >
+    <result column="CASE_ID" property="caseId" jdbcType="VARCHAR" />
+    <result column="RULE_ID" property="ruleId" jdbcType="DECIMAL" />
+    <result column="SCORE" property="score" jdbcType="VARCHAR" />
+  </resultMap>
+  
+
+  <delete id="delete" parameterType="com.ksource.liangfa.domain.CaseAccuseRuleRelation" >
+  
+    delete from CASE_ACCUSE_RULE_RELATION
+    <where>
+     <if test="caseId != null and caseId != ''" >
+       AND   CASE_ID = #{caseId,jdbcType=VARCHAR}
+      </if>
+      <if test="ruleId != null" >
+       AND  RULE_ID = #{ruleId,jdbcType=DECIMAL}  
+      </if>
+      </where>
+  </delete>
+  
+  <insert id="insert" parameterType="com.ksource.liangfa.domain.CaseAccuseRuleRelation" >
+   
+    insert into CASE_ACCUSE_RULE_RELATION (CASE_ID, RULE_ID)
+    values (#{caseId,jdbcType=VARCHAR}, #{ruleId,jdbcType=DECIMAL})
+  </insert>
+  
+  <select id="getCaseAccuseRuleRelation" parameterType="com.ksource.liangfa.domain.CaseAccuseRuleRelation" resultMap="BaseResultMap">
+        
+        SELECT * FROM CASE_ACCUSE_RULE_RELATION
+        <where>
+            <if test="caseId != null and caseId != ''" >
+               AND   CASE_ID = #{caseId,jdbcType=VARCHAR}
+             </if>
+             <if test="ruleId != null" >
+               AND  RULE_ID =#{ruleId,jdbcType=DECIMAL}  
+             </if>
+         </where>
+  </select>
+  <select id="selectByCaseId" resultMap="BaseResultMap">
+        select * from CASE_ACCUSE_RULE_RELATION where CASE_ID = #{caseId,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

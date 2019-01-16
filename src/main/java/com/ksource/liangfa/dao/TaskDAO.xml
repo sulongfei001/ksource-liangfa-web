@@ -1,0 +1,1128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.dao.TaskDAO">
+	<resultMap id="BaseResultMap"
+		type="org.activiti.engine.impl.persistence.entity.TaskEntity">
+		<id property="id" jdbcType="DECIMAL" column="ID_" />
+		<result property="revision" jdbcType="VARCHAR" column="REV_" />
+		<result property="executionId" jdbcType="VARCHAR" column="EXECUTION_ID_" />
+		<result property="processInstanceId" jdbcType="VARCHAR" column="PROC_INST_ID_" />
+		<result property="processDefinitionId" jdbcType="VARCHAR"
+			column="PROC_DEF_ID_" />
+		<result property="name" jdbcType="VARCHAR" column="NAME_" />
+		<result property="parentTaskId" jdbcType="VARCHAR" column="PARENT_TASK_ID_" />
+		<result property="description" jdbcType="VARCHAR" column="DESCRIPTION_" />
+		<result property="taskDefinitionKey" jdbcType="VARCHAR" column="TASK_DEF_KEY_" />
+		<result property="owner" jdbcType="VARCHAR" column="OWNER_" />
+		<result property="assignee" jdbcType="VARCHAR" column="ASSIGNEE_" />
+		<result property="priority" jdbcType="VARCHAR" column="PRIORITY_" />
+		<result property="createTime" jdbcType="TIMESTAMP" column="CREATE_TIME_" />
+		<result property="dueDate" jdbcType="TIMESTAMP" column="DUE_DATE_" />
+	</resultMap>
+
+	<select id="getTaskList" parameterType="map" resultMap="BaseResultMap">
+		select b.* from 
+		(select a.*,ahp.business_key_ from 
+		(select distinct T.*
+	  	from ACT_RU_TASK T
+	 	inner join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = T.ID_
+	 	WHERE T.ASSIGNEE_ is null
+	   	and I.TYPE_ = 'candidate'
+	   	and I.GROUP_ID_ = #{candidateGroup,jdbcType=VARCHAR}
+		union
+		select distinct T.*
+	  	from ACT_RU_TASK T
+	 	WHERE T.ASSIGNEE_ = #{userID,jdbcType=VARCHAR}) a ,act_hi_procinst ahp
+	         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>
+	         ) b, 
+	         (select c.case_id from case_basic c ,penalty_case_ext pce where c.case_id=pce.case_id(+)
+	          <if test="orgId!=null and orgId != '-1'">
+				<!-- AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} )) -->
+				AND c.INPUTER in (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				=#{orgId})
+			</if>
+			<if test="caseState != null and caseState != '' ">
+				and c.CASE_STATE = #{caseState}
+			</if>
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+	         <if test="procKey != null and procKey=='chufaProc'">
+		         and 
+		         (c.case_state = '26' and (1=2  <!-- 只过滤“检察机关查阅步骤” -->
+		         <choose>
+					<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+						<![CDATA[ or ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+								and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+						]]>
+					</when>
+					<when test="minAmountInvolved !=null">
+						<![CDATA[ or c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+					<when test="maxAmountInvolved !=null">
+						<![CDATA[ or c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+				</choose>
+				<choose>
+					<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+						<![CDATA[ or ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+								 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+						]]>
+					</when>
+					<when test="minCaseInputTime !=null">
+						<![CDATA[ or c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+					</when>
+					<when test="maxCaseInputTime !=null">
+						<![CDATA[ or c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+					</when>
+				</choose>
+				<if test="isDiscussCase!=null">
+					or pce.is_descuss=#{isDiscussCase}
+				</if>
+				<if test="chufaTimes!=null">
+					<![CDATA[ or pce.chufa_times > #{chufaTimes} ]]>
+				</if>
+				<if test="isSeriousCase!=null">
+					or pce.is_serious_case=#{isSeriousCase}
+				</if>
+				<if test="isBeyondEighty!=null">
+					or pce.is_beyond_eighty=#{isBeyondEighty}
+				</if>
+				<if test="isLowerLimitMoney!=null">
+					or c.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+				</if>
+				<if test="isIdentify!=null and isIdentify==1">
+					<![CDATA[or c.IDENTIFY_TYPE <6 ]]>
+				</if>
+				<if test="isIdentify!=null and isIdentify==0">
+					<![CDATA[or c.IDENTIFY_TYPE =6 ]]>
+				</if>
+		         ))
+	         </if>
+	         )cb where b.business_key_=cb.case_id
+		order by CREATE_TIME_ DESC		           
+	</select>
+	<select id="getTaskCount" resultType="int">
+		<!-- select distinct a.c+b.c from 
+(select distinct count(T.ID_) c
+          from ACT_RU_TASK T
+         inner join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = T.ID_
+         WHERE T.ASSIGNEE_ is null
+           and I.TYPE_ = 'candidate'
+           and I.GROUP_ID_ = #{candidateGroup,jdbcType=VARCHAR})a,         
+(select distinct count(T.ID_) c
+          from ACT_RU_TASK T WHERE T.ASSIGNEE_ = #{userID,jdbcType=VARCHAR})b -->	
+		select count(1) from 
+		(select a.*,ahp.business_key_ from 
+		(select distinct T.*
+	  	from ACT_RU_TASK T
+	 	inner join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = T.ID_
+	 	WHERE T.ASSIGNEE_ is null
+	   	and I.TYPE_ = 'candidate'
+	   	and I.GROUP_ID_ = #{candidateGroup,jdbcType=VARCHAR} 
+		union
+		select distinct T.*
+	  	from ACT_RU_TASK T
+	 	WHERE T.ASSIGNEE_ = #{userID,jdbcType=VARCHAR}) a ,act_hi_procinst ahp
+	         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>
+	         ) b, 
+	         (select c.case_id from case_basic c ,penalty_case_ext pce where c.case_id=pce.case_id(+)
+	        <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>
+			<if test="caseState != null and caseState != '' ">
+				and c.CASE_STATE = #{caseState}
+			</if>
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+	         <if test="procKey != null and procKey=='chufaProc'">
+		         and 
+		         (c.case_state = '26' and (1=2  <!-- 只过滤“检察机关查阅步骤” -->
+		         <choose>
+					<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+						<![CDATA[ or ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+								and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+						]]>
+					</when>
+					<when test="minAmountInvolved !=null">
+						<![CDATA[ or c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+					<when test="maxAmountInvolved !=null">
+						<![CDATA[ or c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+				</choose>
+				<choose>
+					<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+						<![CDATA[ or ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+								 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+						]]>
+					</when>
+					<when test="minCaseInputTime !=null">
+						<![CDATA[ or c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+					</when>
+					<when test="maxCaseInputTime !=null">
+						<![CDATA[ or c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+					</when>
+				</choose>
+				<if test="isDiscussCase!=null">
+					or pce.is_descuss=#{isDiscussCase}
+				</if>
+				<if test="chufaTimes!=null">
+					<![CDATA[ or pce.chufa_times > #{chufaTimes} ]]>
+				</if>
+				<if test="isSeriousCase!=null">
+					or pce.is_serious_case=#{isSeriousCase}
+				</if>
+				<if test="isBeyondEighty!=null">
+					or pce.is_beyond_eighty=#{isBeyondEighty}
+				</if>
+				<if test="isLowerLimitMoney!=null">
+					or c.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+				</if>
+				<if test="isIdentify!=null and isIdentify==1">
+					<![CDATA[or c.IDENTIFY_TYPE <6 ]]>
+				</if>
+				<if test="isIdentify!=null and isIdentify==0">
+					<![CDATA[or c.IDENTIFY_TYPE =6 ]]>
+				</if>
+		         ))
+	         </if>
+	         )cb where b.business_key_=cb.case_id
+	</select>
+
+	<select id="getTaskListByQuery" parameterType="map" resultMap="BaseResultMap">
+	select b.* from 
+	(select a.*,ahp.business_key_ from 
+	(select distinct T.*,T.CREATE_TIME_ AS TIME
+  	from ACT_RU_TASK T
+ 	inner join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = T.ID_
+ 	WHERE T.ASSIGNEE_ is null
+   	and I.TYPE_ = 'candidate'
+   	and I.GROUP_ID_ = #{candidateGroup,jdbcType=VARCHAR}
+	union
+	select distinct T.*,T.CREATE_TIME_ AS TIME
+  	from ACT_RU_TASK T
+ 	WHERE T.ASSIGNEE_ = #{userID,jdbcType=VARCHAR} order by TIME DESC)a ,act_hi_procinst ahp
+         where a.proc_inst_id_=ahp.proc_inst_id_
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>          
+          )b,
+         (select c.case_id from case_basic c ,penalty_case_ext pce where c.case_id=pce.case_id(+)
+        <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>
+			<if test="caseState != null and caseState != '' ">
+				and c.CASE_STATE = #{caseState}
+			</if>
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+		<choose>
+			<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+						and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL}
+				]]>
+			</when>
+			<when test="minAmountInvolved !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+			</when>
+			<when test="maxAmountInvolved !=null">
+				<![CDATA[ and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+			</when>
+		</choose>
+		
+		<choose>
+			<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+						 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) 
+				]]>
+			</when>
+			<when test="minCaseInputTime !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+			</when>
+			<when test="maxCaseInputTime !=null">
+				<![CDATA[ and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+			</when>
+		</choose>
+		
+			<if test="isDiscussCase!=null">
+				and pce.is_descuss=#{isDiscussCase}
+			</if>
+			<if test="chufaTimes!=null">
+				<![CDATA[ and pce.chufa_times > #{chufaTimes} ]]>
+			</if>
+			<if test="isSeriousCase!=null">
+				and pce.is_serious_case=#{isSeriousCase}
+			</if>
+			<if test="isBeyondEighty!=null">
+				and pce.is_beyond_eighty=#{isBeyondEighty}
+			</if>
+         )cb where b.business_key_=cb.case_id
+        order by CREATE_TIME_ DESC
+	</select>
+	<select id="getTaskCountByQuery" resultType="int">
+	select count(1) from 
+	(select a.*,ahp.business_key_ from 
+	(select distinct T.*,T.CREATE_TIME_ AS TIME
+  	from ACT_RU_TASK T
+ 	inner join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = T.ID_
+ 	WHERE T.ASSIGNEE_ is null
+   	and I.TYPE_ = 'candidate'
+   	and I.GROUP_ID_ = #{candidateGroup,jdbcType=VARCHAR}
+	union
+	select distinct T.*,T.CREATE_TIME_ AS TIME
+  	from ACT_RU_TASK T
+ 	WHERE T.ASSIGNEE_ = #{userID,jdbcType=VARCHAR} order by TIME DESC)a ,act_hi_procinst ahp
+         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>         
+         )b, 
+         (select c.case_id from case_basic c ,penalty_case_ext pce where c.case_id=pce.case_id(+)
+           <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>
+			<if test="caseState != null and caseState != '' ">
+				and c.CASE_STATE = #{caseState}
+			</if>
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+		<choose>
+			<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+						and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL}
+				]]>
+			</when>
+			<when test="minAmountInvolved !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+			</when>
+			<when test="maxAmountInvolved !=null">
+				<![CDATA[ and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+			</when>
+		</choose>
+		
+		<choose>
+			<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+						 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) 
+				]]>
+			</when>
+			<when test="minCaseInputTime !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+			</when>
+			<when test="maxCaseInputTime !=null">
+				<![CDATA[ and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+			</when>
+		</choose>
+		
+			<if test="isDiscussCase!=null">
+				and pce.is_descuss=#{isDiscussCase}
+			</if>
+			<if test="chufaTimes!=null">
+				<![CDATA[ and pce.chufa_times > #{chufaTimes} ]]>
+			</if>
+			<if test="isSeriousCase!=null">
+				and pce.is_serious_case=#{isSeriousCase}
+			</if>
+			<if test="isBeyondEighty!=null">
+				and pce.is_beyond_eighty=#{isBeyondEighty}
+			</if>
+         )cb where b.business_key_=cb.case_id
+	</select>
+	
+	<!-- 疑似犯罪案件查询 -->
+	<select id="getIllegalTaskList" parameterType="map" resultMap="BaseResultMap">
+		select b.* from 
+		(select a.*,ahp.business_key_ from 
+		(SELECT DISTINCT t.id_,t.rev_,t.execution_id_,t.proc_inst_id_,t.proc_def_id_,t.name_,t.parent_task_id_,
+            t.description_,t.task_def_key_,t.owner_,t.assignee_,t.delegation_,t.priority_,t.create_time_,
+        		t.due_date_,t.suspension_state_,t.category_,t.tenant_id_,t.form_key_,i.district_code
+                  FROM ACT_RU_TASK T
+                 INNER JOIN (
+                 SELECT ai.*,o.district_code FROM ACT_RU_IDENTITYLINK ai, POST_ P, ORGANISE O 
+                 WHERE P.ORG_ID = O.ORG_CODE
+                   AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                   AND ai.GROUP_ID_ = P.POST_ID
+                   AND O.ORG_TYPE = 2) i
+                 ON I.TASK_ID_ = T.ID_
+                 WHERE T.ASSIGNEE_ IS NULL
+                   AND I.TYPE_ = 'candidate'
+                UNION
+                 SELECT DISTINCT t.id_,t.rev_,t.execution_id_,t.proc_inst_id_,t.proc_def_id_,t.name_,t.parent_task_id_,
+						t.description_,t.task_def_key_,t.owner_,t.assignee_,t.delegation_,t.priority_,t.create_time_,
+						t.due_date_,t.suspension_state_,t.category_,t.tenant_id_,t.form_key_,o.district_code
+                  FROM ACT_RU_TASK T,USER_ U, ORGANISE O
+                 WHERE U.ORG_ID = O.ORG_CODE
+                  AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                  AND T.ASSIGNEE_ = U.USER_ID
+                  AND O.ORG_TYPE = 2
+                    ORDER BY district_code ASC,create_time_ DESC) a ,act_hi_procinst ahp
+	         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>	         
+	         ) b, 
+	         (select distinct c.case_id from case_basic c ,penalty_case_ext pce,CASE_ACCUSE_RULE_RELATION cis where c.case_id=pce.case_id(+)
+	          and c.case_id=cis.case_id
+	          and c.case_state = '26'
+	          and exists (SELECT 1 FROM ACCUSE_RULE_RELATION s WHERE s.rule_id = cis.rule_id  AND S.ACCUSE_ID != '190'
+	          	<if test="accuseIdAry != null and accuseIdAry != ''">
+	          	and s.accuse_id in
+	          		<foreach collection="accuseIdAry" open="(" close=")" separator="," item="accuseId">
+	          			#{accuseId}
+	          		</foreach>
+	          	</if>
+	        <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>
+	        <if test="districtId !=null and districtId != ''">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE district_code like concat(#{districtId},'%')))
+			</if>			
+	          )
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+		         <choose>
+					<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+						<![CDATA[ and ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+								and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+						]]>
+					</when>
+					<when test="minAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+					<when test="maxAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+				</choose>
+				<choose>
+					<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+						<![CDATA[ and ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+								 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+						]]>
+					</when>
+					<when test="minCaseInputTime !=null">
+						<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+					</when>
+					<when test="maxCaseInputTime !=null">
+						<![CDATA[ and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+					</when>
+				</choose>
+				<if test="isDiscussCase!=null">
+					and pce.is_descuss=#{isDiscussCase}
+				</if>
+				<if test="chufaTimes!=null">
+					<![CDATA[ and pce.chufa_times > #{chufaTimes} ]]>
+				</if>
+				<if test="isSeriousCase!=null">
+					and pce.is_serious_case=#{isSeriousCase}
+				</if>
+				<if test="isBeyondEighty!=null">
+					and pce.is_beyond_eighty=#{isBeyondEighty}
+				</if>			 
+	         )cb where b.business_key_=cb.case_id	           
+	</select>
+	<select id="getIllegalTaskCount" parameterType="map" resultType="int">
+		select count(1) from 
+		(select a.*,ahp.business_key_ from 
+		(SELECT DISTINCT T.*,i.district_code
+                  FROM ACT_RU_TASK T
+                 INNER JOIN (
+                 SELECT ai.*,o.district_code FROM ACT_RU_IDENTITYLINK ai, POST_ P, ORGANISE O 
+                 WHERE P.ORG_ID = O.ORG_CODE
+                   AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                   AND ai.GROUP_ID_ = P.POST_ID
+                   AND O.ORG_TYPE = 2) i
+                 ON I.TASK_ID_ = T.ID_
+                 WHERE T.ASSIGNEE_ IS NULL
+                   AND I.TYPE_ = 'candidate'
+                UNION
+                SELECT DISTINCT T.*,o.district_code
+                  FROM ACT_RU_TASK T,USER_ U, ORGANISE O
+                 WHERE U.ORG_ID = O.ORG_CODE
+                  AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                  AND T.ASSIGNEE_ = U.USER_ID
+                  AND O.ORG_TYPE = 2
+                   ) a ,act_hi_procinst ahp
+	         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>
+	         ) b, 
+	         (select distinct c.case_id from case_basic c ,penalty_case_ext pce,case_illegal_situation cis where c.case_id=pce.case_id(+)
+	          and c.case_id=cis.case_id 
+	          and c.case_state = '26'
+	          and exists (SELECT 1 FROM Illegal_Situation_Accuse s WHERE s.illegal_situation_id = cis.situation_id  AND S.ACCUSE_ID != '190'
+	          	<if test="accuseIdAry != null and accuseIdAry != ''">
+	          	and s.accuse_id in
+	          		<foreach collection="accuseIdAry" open="(" close=")" separator="," item="accuseId">
+	          			#{accuseId}
+	          		</foreach>
+	          	</if>
+	        <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>	
+			<if test="districtId !=null and districtId != ''">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE district_code like concat(#{districtId},'%')))
+			</if>
+	          )
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+		         <choose>
+					<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+						<![CDATA[ and ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+								and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+						]]>
+					</when>
+					<when test="minAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+					<when test="maxAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+				</choose>
+				<choose>
+					<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+						<![CDATA[ and ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+								 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+						]]>
+					</when>
+					<when test="minCaseInputTime !=null">
+						<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+					</when>
+					<when test="maxCaseInputTime !=null">
+						<![CDATA[ and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+					</when>
+				</choose>
+				<if test="isDiscussCase!=null">
+					and pce.is_descuss=#{isDiscussCase}
+				</if>
+				<if test="chufaTimes!=null">
+					<![CDATA[ and pce.chufa_times > #{chufaTimes} ]]>
+				</if>
+				<if test="isSeriousCase!=null">
+					and pce.is_serious_case=#{isSeriousCase}
+				</if>
+				<if test="isBeyondEighty!=null">
+					and pce.is_beyond_eighty=#{isBeyondEighty}
+				</if>
+	         )cb where b.business_key_=cb.case_id
+	</select>
+	
+	<!-- 公安立案后的待办 -->
+	<select id="queryLawsuitTodoTasksList" parameterType="map" resultMap="BaseResultMap">
+		select b.* from 
+		(select a.*,ahp.business_key_ from 
+		(select distinct T.*
+	  	from ACT_RU_TASK T
+	 	inner join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = T.ID_
+	 	WHERE T.ASSIGNEE_ is null
+	   	and I.TYPE_ = 'candidate'
+	   	and I.GROUP_ID_ = #{candidateGroup,jdbcType=VARCHAR}
+		union
+		select distinct T.*
+	  	from ACT_RU_TASK T
+	 	WHERE T.ASSIGNEE_ = #{userID,jdbcType=VARCHAR}) a ,act_hi_procinst ahp
+	         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>	         
+	         ) b, 
+	         (select distinct c.case_id from case_basic c ,penalty_case_ext pce 
+	         where c.case_id=pce.case_id(+)
+	          and c.CASE_STATE not in('6','9','10','26')
+	         <if test="caseNo !=null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName !=null and caseName != ''">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+	        <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>
+			<if test="districtId !=null and districtId != ''">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE district_code like concat(#{districtId},'%'))
+			</if>
+		         <choose>
+					<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+						<![CDATA[ and ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+								and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+						]]>
+					</when>
+					<when test="minAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+					<when test="maxAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+				</choose>
+				<choose>
+					<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+						<![CDATA[ and ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+								 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+						]]>
+					</when>
+					<when test="minCaseInputTime !=null">
+						<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+					</when>
+					<when test="maxCaseInputTime !=null">
+						<![CDATA[ and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+					</when>
+				</choose>
+				<if test="isDiscussCase!=null">
+					and pce.is_descuss=#{isDiscussCase}
+				</if>
+				<if test="chufaTimes!=null">
+					<![CDATA[ and pce.chufa_times > #{chufaTimes} ]]>
+				</if>
+				<if test="isSeriousCase!=null">
+					and pce.is_serious_case=#{isSeriousCase}
+				</if>
+				<if test="isBeyondEighty!=null">
+					and pce.is_beyond_eighty=#{isBeyondEighty}
+				</if>			 
+	         )cb where b.business_key_=cb.case_id
+		order by CREATE_TIME_ DESC		           
+	</select>
+	<select id="queryLawsuitTodoTasksConut" parameterType="map" resultType="int">
+		select count(1) from 
+		(select a.*,ahp.business_key_ from 
+		(select distinct T.*
+	  	from ACT_RU_TASK T
+	 	inner join ACT_RU_IDENTITYLINK I on I.TASK_ID_ = T.ID_
+	 	WHERE T.ASSIGNEE_ is null
+	   	and I.TYPE_ = 'candidate'
+	   	and I.GROUP_ID_ = #{candidateGroup,jdbcType=VARCHAR}
+		union
+		select distinct T.*
+	  	from ACT_RU_TASK T
+	 	WHERE T.ASSIGNEE_ = #{userID,jdbcType=VARCHAR}) a ,act_hi_procinst ahp
+	         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>
+	         ) b, 
+	         (select distinct c.case_id from case_basic c ,penalty_case_ext pce 
+	         where c.case_id=pce.case_id(+)
+	          and c.CASE_STATE not in('6','9','10','26')
+	         <if test="caseNo!=null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName !=null and caseName != ''">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+	        <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>
+			<if test="districtId !=null and districtId != ''">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE district_code like concat(#{districtId},'%'))
+			</if>
+		         <choose>
+					<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+						<![CDATA[ and ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+								and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+						]]>
+					</when>
+					<when test="minAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+					<when test="maxAmountInvolved !=null">
+						<![CDATA[ and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+				</choose>
+				<choose>
+					<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+						<![CDATA[ and ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+								 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+						]]>
+					</when>
+					<when test="minCaseInputTime !=null">
+						<![CDATA[ and c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+					</when>
+					<when test="maxCaseInputTime !=null">
+						<![CDATA[ and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+					</when>
+				</choose>
+				<if test="isDiscussCase!=null">
+					and pce.is_descuss=#{isDiscussCase}
+				</if>
+				<if test="chufaTimes!=null">
+					<![CDATA[ and pce.chufa_times > #{chufaTimes} ]]>
+				</if>
+				<if test="isSeriousCase!=null">
+					and pce.is_serious_case=#{isSeriousCase}
+				</if>
+				<if test="isBeyondEighty!=null">
+					and pce.is_beyond_eighty=#{isBeyondEighty}
+				</if>
+	         )cb where b.business_key_=cb.case_id
+	</select>	
+	<select id="queryfilingSupervisionToDoTasksList" parameterType="map" resultMap="BaseResultMap">
+	select b.* from 
+	(select a.*,ahp.business_key_ from 
+	(SELECT DISTINCT t.id_,t.rev_,t.execution_id_,t.proc_inst_id_,t.proc_def_id_,t.name_,t.parent_task_id_,
+            t.description_,t.task_def_key_,t.owner_,t.assignee_,t.delegation_,t.priority_,t.create_time_,
+        		t.due_date_,t.suspension_state_,t.category_,t.tenant_id_,t.form_key_,i.district_code
+                  FROM ACT_RU_TASK T
+                 INNER JOIN (
+                 SELECT ai.*,o.district_code FROM ACT_RU_IDENTITYLINK ai, POST_ P, ORGANISE O 
+                 WHERE P.ORG_ID = O.ORG_CODE
+                   AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                   AND ai.GROUP_ID_ = P.POST_ID
+                   AND O.ORG_TYPE = 2) i
+                 ON I.TASK_ID_ = T.ID_
+                 WHERE T.ASSIGNEE_ IS NULL
+                   AND I.TYPE_ = 'candidate'
+                UNION
+                 SELECT DISTINCT t.id_,t.rev_,t.execution_id_,t.proc_inst_id_,t.proc_def_id_,t.name_,t.parent_task_id_,
+						t.description_,t.task_def_key_,t.owner_,t.assignee_,t.delegation_,t.priority_,t.create_time_,
+						t.due_date_,t.suspension_state_,t.category_,t.tenant_id_,t.form_key_,o.district_code
+                  FROM ACT_RU_TASK T,USER_ U, ORGANISE O
+                 WHERE U.ORG_ID = O.ORG_CODE
+                  AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                  AND T.ASSIGNEE_ = U.USER_ID
+                  AND O.ORG_TYPE = 2
+                    ORDER BY district_code ASC,create_time_ DESC)a ,act_hi_procinst ahp
+         where a.proc_inst_id_=ahp.proc_inst_id_
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>          
+          )b,
+         (select c.case_id from case_basic c ,penalty_case_ext pce where c.case_id=pce.case_id(+)
+        	<if test="orgId != null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>
+			<if test="districtId !=null and districtId != ''">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE district_code like concat(#{districtId},'%')))
+			</if>			
+			<if test="caseState != null and caseState != '' ">
+				and c.CASE_STATE = #{caseState}
+			</if>
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+		<choose>
+			<when test="minAmountInvolvedS !=null and maxAmountInvolvedS !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolvedS,jdbcType=DECIMAL}
+						and c.amount_involved <= #{maxAmountInvolvedS,jdbcType=DECIMAL}
+				]]>
+			</when>
+			<when test="minAmountInvolvedS !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolvedS,jdbcType=DECIMAL} ]]>
+			</when>
+			<when test="maxAmountInvolvedS !=null">
+				<![CDATA[ and c.amount_involved <= #{maxAmountInvolvedS,jdbcType=DECIMAL} ]]>
+			</when>
+		</choose>
+		
+		<choose>
+			<when test="minCaseInputTimeS !=null and maxCaseInputTimeS !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTimeS,jdbcType=TIMESTAMP}
+						 and c.input_time < (#{maxCaseInputTimeS,jdbcType=TIMESTAMP} +   interval   '1'  day) 
+				]]>
+			</when>
+			<when test="minCaseInputTimeS !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTimeS,jdbcType=TIMESTAMP}]]>
+			</when>
+			<when test="maxCaseInputTimeS !=null">
+				<![CDATA[ and c.input_time < (#{maxCaseInputTimeS,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+			</when>
+		</choose>
+		<if test="isDiscussCaseS!=null">
+			and pce.is_descuss=#{isDiscussCaseS}
+		</if>
+		<if test="chufaTimesS!=null">
+			<![CDATA[ and pce.chufa_times > #{chufaTimesS} ]]>
+		</if>
+		<if test="isSeriousCaseS!=null">
+			and pce.is_serious_case=#{isSeriousCaseS}
+		</if>
+		<if test="isBeyondEightyS!=null">
+			and pce.is_beyond_eighty=#{isBeyondEightyS}
+		</if>
+		<if test="isIdentifyS != null and isIdentifyS == 1">
+			<![CDATA[and c.IDENTIFY_TYPE <6 ]]>
+		</if>
+		<if test="isIdentifyS != null and isIdentifyS == 0">
+			<![CDATA[and c.IDENTIFY_TYPE = 6 ]]>
+		</if>
+		<if test="isLowerLimitMoneyS!=null">
+			and c.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoneyS}
+		</if>
+	         <if test="procKey != null and procKey=='chufaProc'">
+		         and 
+		         (c.case_state = '26' and (1=2  <!-- 只过滤“检察机关查阅步骤” -->
+		         <choose>
+					<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+						<![CDATA[ or ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+								and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+						]]>
+					</when>
+					<when test="minAmountInvolved !=null">
+						<![CDATA[ or c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+					<when test="maxAmountInvolved !=null">
+						<![CDATA[ or c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+					</when>
+				</choose>
+				<choose>
+					<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+						<![CDATA[ or ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+								 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+						]]>
+					</when>
+					<when test="minCaseInputTime !=null">
+						<![CDATA[ or c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+					</when>
+					<when test="maxCaseInputTime !=null">
+						<![CDATA[ or c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+					</when>
+				</choose>
+				<if test="isDiscussCase!=null">
+					or pce.is_descuss=#{isDiscussCase}
+				</if>
+				<if test="chufaTimes!=null">
+					<![CDATA[ or pce.chufa_times > #{chufaTimes} ]]>
+				</if>
+				<if test="isSeriousCase!=null">
+					or pce.is_serious_case=#{isSeriousCase}
+				</if>
+				<if test="isBeyondEighty!=null">
+					or pce.is_beyond_eighty=#{isBeyondEighty}
+				</if>
+				<if test="isLowerLimitMoney!=null">
+					or c.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+				</if>
+				<if test="isIdentify!=null and isIdentify==1">
+					<![CDATA[or c.IDENTIFY_TYPE <6 ]]>
+				</if>
+				<if test="isIdentify!=null and isIdentify==0">
+					<![CDATA[or c.IDENTIFY_TYPE =6 ]]>
+				</if>
+		         ))
+	         </if>
+         ) cb where b.business_key_=cb.case_id
+	</select>
+	<select id="queryfilingSupervisionToDoTasksCount" resultType="int">
+	select count(1) from 
+	(select a.*,ahp.business_key_ from 
+	(SELECT DISTINCT t.id_,t.rev_,t.execution_id_,t.proc_inst_id_,t.proc_def_id_,t.name_,t.parent_task_id_,
+            t.description_,t.task_def_key_,t.owner_,t.assignee_,t.delegation_,t.priority_,t.create_time_,
+        		t.due_date_,t.suspension_state_,t.category_,t.tenant_id_,t.form_key_,i.district_code
+                  FROM ACT_RU_TASK T
+                 INNER JOIN (
+                 SELECT ai.*,o.district_code FROM ACT_RU_IDENTITYLINK ai, POST_ P, ORGANISE O 
+                 WHERE P.ORG_ID = O.ORG_CODE
+                   AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                   AND ai.GROUP_ID_ = P.POST_ID
+                   AND O.ORG_TYPE = 2) i
+                 ON I.TASK_ID_ = T.ID_
+                 WHERE T.ASSIGNEE_ IS NULL
+                   AND I.TYPE_ = 'candidate'
+                UNION
+                 SELECT DISTINCT t.id_,t.rev_,t.execution_id_,t.proc_inst_id_,t.proc_def_id_,t.name_,t.parent_task_id_,
+						t.description_,t.task_def_key_,t.owner_,t.assignee_,t.delegation_,t.priority_,t.create_time_,
+						t.due_date_,t.suspension_state_,t.category_,t.tenant_id_,t.form_key_,o.district_code
+                  FROM ACT_RU_TASK T,USER_ U, ORGANISE O
+                 WHERE U.ORG_ID = O.ORG_CODE
+                  AND O.DISTRICT_CODE LIKE CONCAT(#{districtId}, '%')
+                  AND T.ASSIGNEE_ = U.USER_ID
+                  AND O.ORG_TYPE = 2
+                    ORDER BY district_code ASC,create_time_ DESC) a ,act_hi_procinst ahp
+         where a.proc_inst_id_=ahp.proc_inst_id_ 
+	              <choose>
+			     	<when test="queryScope == 'year'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'month'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'mm') = TO_CHAR(SYSDATE,'mm')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     	<when test="queryScope == 'quarter'">
+			     		AND TO_CHAR(a.CREATE_TIME_,'q') = TO_CHAR(SYSDATE,'q')
+			     		AND TO_CHAR(a.CREATE_TIME_,'yyyy') = TO_CHAR(SYSDATE,'yyyy')
+			     	</when>
+			     </choose>         
+         )b, 
+         (select c.case_id from case_basic c ,penalty_case_form pce where c.case_id=pce.case_id(+)
+           <if test="orgId!=null and orgId != '-1'">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE ORG_CODE = #{orgId} OR
+				UP_ORG_CODE = #{orgId} ))
+			</if>		
+			<if test="districtId !=null and districtId != ''">
+				AND c.INPUTER IN (SELECT USER_ID FROM USER_ WHERE ORG_ID
+				IN
+				(SELECT ORG_CODE FROM ORGANISE WHERE district_code like concat(#{districtId},'%')))
+			</if>			
+			<if test="caseState != null and caseState != '' ">
+				and c.CASE_STATE = #{caseState}
+			</if>
+	          <if test="caseNo != null and caseNo != '' ">
+				and c.case_no like concat(concat('%',#{caseNo}),'%')
+			 </if>
+			 <if test="caseName != null and caseName != '' ">
+				and c.case_name like concat(concat('%',#{caseName}),'%')
+			 </if>
+		<choose>
+			<when test="minAmountInvolvedS !=null and maxAmountInvolvedS !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolvedS,jdbcType=DECIMAL}
+						and c.amount_involved <= #{maxAmountInvolvedS,jdbcType=DECIMAL}
+				]]>
+			</when>
+			<when test="minAmountInvolvedS !=null">
+				<![CDATA[ and c.amount_involved >= #{minAmountInvolvedS,jdbcType=DECIMAL} ]]>
+			</when>
+			<when test="maxAmountInvolvedS !=null">
+				<![CDATA[ and c.amount_involved <= #{maxAmountInvolvedS,jdbcType=DECIMAL} ]]>
+			</when>
+		</choose>
+		
+		<choose>
+			<when test="minCaseInputTimeS !=null and maxCaseInputTimeS !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTimeS,jdbcType=TIMESTAMP}
+						 and c.input_time < (#{maxCaseInputTimeS,jdbcType=TIMESTAMP} +   interval   '1'  day) 
+				]]>
+			</when>
+			<when test="minCaseInputTimeS !=null">
+				<![CDATA[ and c.input_time >= #{minCaseInputTimeS,jdbcType=TIMESTAMP}]]>
+			</when>
+			<when test="maxCaseInputTimeS !=null">
+				<![CDATA[ and c.input_time < (#{maxCaseInputTimeS,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+			</when>
+		</choose>
+		<if test="isDiscussCaseS!=null">
+			and pce.is_descuss=#{isDiscussCaseS}
+		</if>
+		<if test="chufaTimesS!=null">
+			<![CDATA[ and pce.chufa_times > #{chufaTimesS} ]]>
+		</if>
+		<if test="isSeriousCaseS!=null">
+			and pce.is_serious_case=#{isSeriousCaseS}
+		</if>
+		<if test="isBeyondEightyS!=null">
+			and pce.is_beyond_eighty=#{isBeyondEightyS}
+		</if>
+		<if test="isIdentifyS != null and isIdentifyS == 1">
+			<![CDATA[and pce.IDENTIFY_TYPE <6 ]]>
+		</if>
+		<if test="isIdentifyS != null and isIdentifyS == 0">
+			<![CDATA[and pce.IDENTIFY_TYPE =6 ]]>
+		</if>
+		<if test="isLowerLimitMoneyS!=null">
+			and pce.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoneyS}
+		</if>
+         <if test="procKey != null and procKey=='chufaProc'">
+	         and 
+	         (c.case_state = '26' and (1=2  <!-- 只过滤“检察机关查阅步骤” -->
+	         <choose>
+				<when test="minAmountInvolved !=null and maxAmountInvolved !=null">
+					<![CDATA[ or ( c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL}
+							and c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} )
+					]]>
+				</when>
+				<when test="minAmountInvolved !=null">
+					<![CDATA[ or c.amount_involved >= #{minAmountInvolved,jdbcType=DECIMAL} ]]>
+				</when>
+				<when test="maxAmountInvolved !=null">
+					<![CDATA[ or c.amount_involved <= #{maxAmountInvolved,jdbcType=DECIMAL} ]]>
+				</when>
+			</choose>
+			<choose>
+				<when test="minCaseInputTime !=null and maxCaseInputTime !=null">
+					<![CDATA[ or ( c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}
+							 and c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day) )
+					]]>
+				</when>
+				<when test="minCaseInputTime !=null">
+					<![CDATA[ or c.input_time >= #{minCaseInputTime,jdbcType=TIMESTAMP}]]>
+				</when>
+				<when test="maxCaseInputTime !=null">
+					<![CDATA[ or c.input_time < (#{maxCaseInputTime,jdbcType=TIMESTAMP} +   interval   '1'  day)]]>
+				</when>
+			</choose>
+			<if test="isDiscussCase!=null">
+				or pce.is_descuss=#{isDiscussCase}
+			</if>
+			<if test="chufaTimes!=null">
+				<![CDATA[ or pce.chufa_times > #{chufaTimes} ]]>
+			</if>
+			<if test="isSeriousCase!=null">
+				or pce.is_serious_case=#{isSeriousCase}
+			</if>
+			<if test="isBeyondEighty!=null">
+				or pce.is_beyond_eighty=#{isBeyondEighty}
+			</if>
+			<if test="isLowerLimitMoney!=null">
+				or pce.IS_LOWER_LIMIT_MONEY=#{isLowerLimitMoney}
+			</if>
+			<if test="isIdentify!=null and isIdentify==1">
+				<![CDATA[or pce.IDENTIFY_TYPE <6 ]]>
+			</if>
+			<if test="isIdentify!=null and isIdentify==0">
+				<![CDATA[or pce.IDENTIFY_TYPE =6 ]]>
+			</if>
+	         ))
+         </if>
+         ) cb where b.business_key_=cb.case_id
+	</select>	
+</mapper>

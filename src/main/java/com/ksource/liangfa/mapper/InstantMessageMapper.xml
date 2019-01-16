@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ksource.liangfa.mapper.InstantMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.InstantMessage" >
+    
+    <id column="MSG_ID" property="msgId" jdbcType="DECIMAL" />
+    <result column="MSG_TYPE" property="msgType" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_ORG" property="createOrg" jdbcType="DECIMAL" />
+    <result column="RECEIVE_USER" property="receiveUser" jdbcType="VARCHAR" />
+    <result column="BUSINESS_KEY" property="businessKey" jdbcType="VARCHAR" />
+    <result column="READ_STATUS" property="readStatus" jdbcType="DECIMAL" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    MSG_ID, MSG_TYPE, TITLE, CONTENT, CREATE_TIME, CREATE_USER, CREATE_ORG, RECEIVE_USER, 
+    BUSINESS_KEY, READ_STATUS
+  </sql>
+  
+  <resultMap type="com.ksource.liangfa.domain.InstantMessage" extends="BaseResultMap" id="selectByPrimaryKeyResultMap">
+    <result column="CREATE_USER_NAME" property="createUserName" jdbcType="VARCHAR"/>
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="selectByPrimaryKeyResultMap" parameterType="Integer" >
+    SELECT MSG_ID, MSG_TYPE, TITLE, CONTENT, CREATE_TIME, CREATE_USER, CREATE_ORG, RECEIVE_USER,BUSINESS_KEY, READ_STATUS,USER_NAME AS CREATE_USER_NAME
+    FROM INSTANT_MESSAGE,USER_
+    WHERE CREATE_USER = USER_ID 
+    AND MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Integer" >
+    DELETE FROM INSTANT_MESSAGE
+    WHERE MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </delete>
+
+  <insert id="insert" parameterType="com.ksource.liangfa.domain.InstantMessage" >
+    INSERT INTO INSTANT_MESSAGE (MSG_ID, MSG_TYPE, TITLE, 
+      CONTENT, CREATE_TIME, CREATE_USER, 
+      CREATE_ORG, RECEIVE_USER, BUSINESS_KEY, 
+      READ_STATUS)
+    VALUES (#{msgId,jdbcType=DECIMAL}, #{msgType,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+      #{createOrg,jdbcType=DECIMAL}, #{receiveUser,jdbcType=VARCHAR}, #{businessKey,jdbcType=VARCHAR}, 
+      #{readStatus,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ksource.liangfa.domain.InstantMessage" >
+    INSERT INTO INSTANT_MESSAGE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="msgType != null" >
+        MSG_TYPE,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createOrg != null" >
+        CREATE_ORG,
+      </if>
+      <if test="receiveUser != null" >
+        RECEIVE_USER,
+      </if>
+      <if test="businessKey != null" >
+        BUSINESS_KEY,
+      </if>
+      <if test="readStatus != null" >
+        READ_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        #{msgId,jdbcType=DECIMAL},
+      </if>
+      <if test="msgType != null" >
+        #{msgType,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createOrg != null" >
+        #{createOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveUser != null" >
+        #{receiveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="businessKey != null" >
+        #{businessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="readStatus != null" >
+        #{readStatus,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ksource.liangfa.domain.InstantMessage" >
+    UPDATE INSTANT_MESSAGE
+    <set >
+      <if test="msgType != null" >
+        MSG_TYPE = #{msgType,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createOrg != null" >
+        CREATE_ORG = #{createOrg,jdbcType=DECIMAL},
+      </if>
+      <if test="receiveUser != null" >
+        RECEIVE_USER = #{receiveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="businessKey != null" >
+        BUSINESS_KEY = #{businessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="readStatus != null" >
+        READ_STATUS = #{readStatus,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ksource.liangfa.domain.InstantMessage" >
+    update INSTANT_MESSAGE
+    SET MSG_TYPE = #{msgType,jdbcType=DECIMAL},
+      TITLE = #{title,jdbcType=VARCHAR},
+      CONTENT = #{content,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_ORG = #{createOrg,jdbcType=DECIMAL},
+      RECEIVE_USER = #{receiveUser,jdbcType=VARCHAR},
+      BUSINESS_KEY = #{businessKey,jdbcType=VARCHAR},
+      READ_STATUS = #{readStatus,jdbcType=DECIMAL}
+    WHERE MSG_ID = #{msgId,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="queryInstengMessageList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM INSTANT_MESSAGE
+    <where>
+      <if test="readStatus != null" >
+        AND READ_STATUS = #{readStatus}
+      </if>
+      <if test="receiveUser != null" >
+        AND RECEIVE_USER = #{receiveUser,jdbcType=VARCHAR}
+      </if>      
+      <if test="msgType != null" >
+        AND MSG_TYPE = #{msgType,jdbcType=NUMERIC}
+      </if>      
+      <if test="msgTypes != null" >
+        AND MSG_TYPE IN <foreach collection="msgTypes" open="(" close=")" separator="," item="item">#{item}</foreach>
+      </if>      
+    </where>
+    ORDER BY READ_STATUS ASC , CREATE_TIME DESC
+  </select>
+  <select id="queryInstengMessageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM INSTANT_MESSAGE
+    <where>
+      <if test="readStatus != null" >
+        AND READ_STATUS = #{readStatus}
+      </if>
+      <if test="receiveUser != null" >
+        AND RECEIVE_USER = #{receiveUser}
+      </if>  
+      <if test="msgType != null" >
+        AND MSG_TYPE = #{msgType,jdbcType=NUMERIC}
+      </if>      
+      <if test="msgTypes != null" >
+        AND MSG_TYPE IN <foreach collection="msgTypes" open="(" close=")" separator="," item="item">#{item}</foreach>
+      </if>    
+    </where>
+  </select>
+  
+  <insert id="insertBatch" parameterType="java.util.List">
+	INSERT INTO INSTANT_MESSAGE
+	(MSG_ID, MSG_TYPE, TITLE,
+	CONTENT, CREATE_TIME, CREATE_USER,
+	RECEIVE_USER, BUSINESS_KEY,
+	READ_STATUS)
+	SELECT A.MSG_ID,A.MSG_TYPE, A.TITLE,
+    A.CONTENT, A.CREATE_TIME, A.CREATE_USER,
+    A.RECEIVE_USER, A.BUSINESS_KEY,
+    A.READ_STATUS
+	FROM (
+<foreach collection="list" item="item" index="index" separator="UNION ALL">
+ SELECT 
+       GETSEQNEXTVAL('INSTANT_MESSAGE') MSG_ID,
+       #{item.msgType,jdbcType=VARCHAR} MSG_TYPE,
+       #{item.title,jdbcType=VARCHAR} TITLE,
+       #{item.content,jdbcType=VARCHAR} CONTENT,
+       #{item.createTime,jdbcType=TIMESTAMP} CREATE_TIME,
+       #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
+       #{item.receiveUser,jdbcType=VARCHAR} RECEIVE_USER,
+       #{item.businessKey,jdbcType=VARCHAR} BUSINESS_KEY,
+       #{item.readStatus,jdbcType=DECIMAL} READ_STATUS    
+     FROM DUAL
+   </foreach>
+   )
+  </insert>
+  
+  <delete id="deleteByBusinessKey" parameterType="java.lang.String">
+        DELETE FROM INSTANT_MESSAGE WHERE BUSINESS_KEY = #{businessKey}
+  </delete>
+  
+  <update id="updateReadStatus" parameterType="com.ksource.liangfa.domain.InstantMessage">
+  	 UPDATE INSTANT_MESSAGE 
+  	 <set>
+  	   READ_STATUS = #{readStatus}
+  	 </set>
+  	 <where>
+  	 	BUSINESS_KEY = #{businessKey}
+  	 	AND 
+  	 	RECEIVE_USER = #{receiveUser}
+  	 </where>
+  </update>
+  
+    
+  <resultMap id="selectMessageListMap" extends="BaseResultMap" type="com.ksource.liangfa.domain.InstantMessage">
+    <result column="NO_READ_SIZE" property="noReadSize" jdbcType="NUMERIC"/>
+  </resultMap>
+  <sql id="selectMessageList_sql" >
+    MSG_ID, MSG_TYPE, TITLE, CONTENT, CREATE_TIME, CREATE_USER, CREATE_ORG, RECEIVE_USER, 
+    BUSINESS_KEY, READ_STATUS
+  </sql>
+  
+  <select id="selectMessageCount" parameterType="com.ksource.liangfa.domain.InstantMessage" resultMap="selectMessageListMap">
+    SELECT NVL(MSG_TYPE,0) AS MSG_TYPE,COUNT(M.MSG_ID) AS NO_READ_SIZE
+    	FROM (
+    	SELECT <include refid="selectMessageList_sql"/> FROM 
+    		INSTANT_MESSAGE 
+	    	<where>
+	    		<if test="readStatus != null">
+			    	 AND READ_STATUS = #{readStatus}
+	    		</if>
+	    		<if test="receiveUser != null">
+	    			AND RECEIVE_USER = #{receiveUser,jdbcType=VARCHAR}
+	    		</if>
+	    	</where>
+    	 ) M GROUP BY MSG_TYPE
+  </select>
+  
+</mapper>

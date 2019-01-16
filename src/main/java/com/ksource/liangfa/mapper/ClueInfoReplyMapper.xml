@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ksource.liangfa.mapper.ClueInfoReplyMapper" >
+
+
+  <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.ClueInfoReply" >
+  
+    <id column="REPLY_ID" property="replyId" jdbcType="NUMERIC" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="NUMERIC" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CLUEINFO_ID" property="clueInfoId" jdbcType="NUMERIC" />
+    <result column="DISPATCH_ID" property="dispatchId" jdbcType="NUMERIC" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="EXECUTORNAME" property="executorName" jdbcType="VARCHAR" />
+    <result column="EXECUTORTIME" property="executorTime" jdbcType="TIMESTAMP" />
+    <result column="CASE_ID" property="caseId" jdbcType="NUMERIC" />
+  </resultMap>
+  
+  <sql id="column">
+  	REPLY_ID,CREATE_USER_ID,CREATE_TIME,CLUEINFO_ID,CONTENT,EXECUTORNAME,EXECUTORTIME
+  </sql>
+  
+  <insert id="add" parameterType="com.ksource.liangfa.domain.ClueInfoReply">
+  	INSERT INTO CLUE_REPLY (
+  	REPLY_ID
+  	<if test="createUserId != null and createUserId != ''">
+  		,CREATE_USER_ID
+  	</if>
+  	<if test="createTime != null and createTime != '' ">
+  		,CREATE_TIME
+  	</if>
+  	<if test="clueInfoId != null and clueInfoId != '' ">
+  		,CLUEINFO_ID
+  	</if>
+  	<if test="dispatchId != null and dispatchId != '' ">
+  		,DISPATCH_ID
+  	</if>
+  	<if test="content != null and content != '' ">
+  		,CONTENT
+  	</if>
+  	<if test="executorName != null and executorName != '' ">
+  		,EXECUTORNAME
+  	</if>
+  	<if test="executorTime != null and executorTime != '' ">
+  		,EXECUTORTIME
+  	</if>
+  	<if test="caseId != null and caseId != '' ">
+  		,CASE_ID
+  	</if>
+  	) 
+  	VALUES(
+  		 #{replyId,jdbcType=NUMERIC}
+  	<if test="createUserId != null and createUserId != ''">
+  		,#{createUserId,jdbcType=NUMERIC}
+  	</if>
+  	<if test="createTime != null and createTime != '' ">
+  		,#{createTime,jdbcType=DATE}
+  	</if>
+  	<if test="clueInfoId != null and clueInfoId != '' ">
+  		,#{clueInfoId,jdbcType=NUMERIC}
+  	</if>
+  	<if test="dispatchId != null and dispatchId != '' ">
+  		,#{dispatchId,jdbcType=NUMERIC}
+  	</if>
+  	<if test="content != null and content != '' ">
+  		,#{content,jdbcType=VARCHAR}
+  	</if>
+  	<if test="executorName != null and executorName != '' ">
+  		,#{executorName,jdbcType=VARCHAR}
+  	</if>
+  	<if test="executorTime != null and executorTime != '' ">
+  		,#{executorTime,jdbcType=DATE}
+  	</if>
+  	<if test="caseId != null and caseId != '' ">
+  		,#{caseId,jdbcType=NUMERIC}
+  	</if>
+  	)
+  </insert>
+  
+  <select id="getListByClueInfoId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT <include refid="column"/> FROM CLUE_REPLY WHERE CLUEINFO_ID = #{clueId}
+  </select>
+  
+  <select id="getReplyById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT <include refid="column"/> FROM CLUE_REPLY WHERE REPLY_ID = #{replyId}
+  </select>
+  <resultMap type="com.ksource.liangfa.domain.ClueInfoReply" id="CaseClueBaseResultMap" extends="BaseResultMap">
+  	 <result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+  	 <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+  	 <result column="CASE_NAME" property="caseName" jdbcType="VARCHAR" />
+  	 <result column="CASE_NO" property="caseNo" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="getClueCaseList" parameterType="java.lang.Integer" resultMap="CaseClueBaseResultMap">
+	SELECT CR.* ,O.ORG_NAME,U.USER_NAME,CB.CASE_NAME,CB.CASE_NO
+	FROM CLUE_REPLY CR 
+	LEFT JOIN USER_ U ON U.USER_ID=CR.CREATE_USER_ID
+	LEFT JOIN ORGANISE O ON O.ORG_CODE=U.ORG_ID
+	LEFT JOIN CASE_BASIC CB ON CB.CASE_ID=CR.CASE_ID
+	WHERE CR.CLUEINFO_ID=#{clueInfoId}
+  </select>
+  <delete id="deleteByClueId" parameterType="java.lang.Integer">
+  	DELETE FROM CLUE_REPLY CR WHERE CR.CLUEINFO_ID = #{clueId, jdbcType=NUMERIC}
+  </delete>
+</mapper>

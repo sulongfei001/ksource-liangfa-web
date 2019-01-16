@@ -1,0 +1,68 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/views/common/taglibs.jsp"%>
+<%@ taglib uri="quiee" prefix="report" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>自定义统计(按月份)报表页面</title>
+<link rel="stylesheet" type="text/css" href="${path }/resources/css/displaytagall.css" />
+<link rel="stylesheet" type="text/css" href="${path }/resources/css/common.css" />
+<script src="${path }/resources/jquery/jquery-1.7.2.min.js"></script>
+<script src="${path }/resources/script/jqueryUtil.js" type="text/javascript"></script>
+<script src="${path }/resources/jquery/jquery-ui-1.8.12.custom.min.js"></script>
+<script src="${path }/resources/jquery/jquery.blockUI.js"></script>
+<script src="${path}/resources/script/cleaner.js"></script>
+<script type="text/javascript">
+	$(function(){
+		// 报表样式修改
+	    $("div").remove(".report1");
+	    $("#report1").attr("style","width:100%");
+    	document.getElementById("reportDiv").style.display = "block";
+    	
+    	//处理报表乱码
+    	var reportHrefs=$("td[class^='report'] a");
+    	$.each(reportHrefs,function(i,n){
+    		var oldhref=$(n).attr("href");
+    		$(n).attr("href",encodeURI(oldhref));
+    	});
+	});
+	
+	//返回上一级
+	function report1_back(){
+		var showReport='${showReport}';
+		var indexList='${indexList}';
+		var yearCode='${yearCode}';
+		var districtId='${districtId}';
+		var isDqdj='${isDqdj}';
+		window.location.href="${path}/breport/o_custom_quarter_stats.do?showReport="+showReport+
+				"&indexList="+indexList+"&yearCode="+yearCode+"&districtId="+districtId+"&isDqdj="+isDqdj;
+	}
+</script>
+</head>
+<body>
+	<div class="panel">
+		<div class="panel-body">
+			<div class="panel-data">
+				<div id="reportDiv" style="display:none;">
+					<table width="100%" align="center">
+						<tr>
+							<td align="right">
+							<jsp:include page="/quiee/reportJsp/toolbar.jsp" flush="false" />
+								<report:html name="report1" srcType="file" reportFileName="custom_month_stats.raq" params="${parameter}" 
+								funcBarLocation="" 
+								 generateParamForm="no" needLinkStyle="yes" width="-1" 
+									 needPageMark="yes" needSaveAsPdf="yes" needSaveAsWord="yes" pdfExportStyle="text,0"   
+									 excelPageStyle="0" needSaveAsExcel="yes" excelUsePaperSize="no" 
+									 needPrint="yes" printButtonWidth="80" needPrintPrompt="yes" 
+									 needSelectPrinter="yes" savePrintSetup="yes" displayNoLinkPageMark="no" saveAsName="自定义统计(按月份)"  
+								 	/>
+							</td>
+						</tr>
+					</table>
+			 	</div>
+			</div>
+		</div>			
+	</div> 
+</body>
+</html>

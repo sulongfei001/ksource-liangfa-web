@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+                        "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+ <!-- ============== Tag Library Description Elements ============= -->
+ <tlibversion>1.0</tlibversion>
+ <jspversion>1.1</jspversion>
+ <shortname>STRUTS Framework Tag Library</shortname>
+ <uri>http://k-soucce/regenenergy/dictionary</uri>
+ <info>Dictionary taglib</info>
+  <tag>
+  	 <name>getDictionary</name>
+  	 <tagclass>com.ksource.common.taglib.DictionaryTag</tagclass>
+  	 <bodycontent>empty</bodycontent>
+  	 <attribute>
+  	 	<name>var</name>
+  	 	<required>true</required>
+  	 	<rtexprvalue>true</rtexprvalue>
+  	 </attribute>
+  	 <attribute>
+  	 	<name>dicCode</name>
+  	 	<rtexprvalue>true</rtexprvalue>
+  	 </attribute>
+  	 <attribute>
+  	 	<name>groupCode</name>
+  	 	<rtexprvalue>true</rtexprvalue>
+  	 </attribute>
+  	 <attribute>
+  	 	<name>forDicGroup</name>
+  	 </attribute>
+  	 <attribute>
+  	 	<name>forDicGroups</name>
+  	 </attribute>
+  </tag>
+</taglib>

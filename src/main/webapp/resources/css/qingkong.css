@@ -1,0 +1,34 @@
+@charset "utf-8";
+/* CSS Document */
+
+a.aQking,a.aQxing {
+	padding-left: 18px;
+	height: 25px;
+	line-height: 25px;
+	color: #333;
+	text-decoration: none;
+	/* margin-left:3px; */
+}
+
+a.aQking:hover,a.aQxing:hover {
+	text-decoration: none;
+	color: #1673FF;
+}
+
+a.aQking.qingkong {
+	margin-bottom: 10px;
+	background: url("../../resources/images/icon_qingkong.png") no-repeat
+		1px 0px;
+}
+a.aQxing.quanxuan {
+	margin-bottom: 10px;
+	background: url("../../resources/images/icon_quanxuan.png") no-repeat
+		1px 0px;
+}
+input.text {
+    width: 69%;
+}
+table input{ vertical-align:middle; }
+.font-red{ color:#f00; font-weight:blod; font-size:15px; margin-left:5px;}
+
+

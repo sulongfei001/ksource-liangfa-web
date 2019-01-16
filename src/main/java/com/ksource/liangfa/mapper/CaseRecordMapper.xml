@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.mapper.CaseRecordMapper">
+
+    <insert id="insert"  parameterType="com.ksource.liangfa.domain.CaseRecord">
+      insert into CASE_RECORD (USER_ID, PROC_KEY, CASE_ID,READ_STATE)
+      values (#{userId}, #{procKey}, #{caseId},#{readState})
+    </insert>
+    <update id="updateReadState" parameterType="map">
+        update CASE_RECORD SET READ_STATE=1 WHERE PROC_KEY=#{procKey}
+        and CASE_ID=#{caseId}
+        and USER_ID=#{userId}
+    </update>
+  </mapper>

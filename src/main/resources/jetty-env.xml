@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+<!-- jetty 的oracle jndi配置：用于调试 -->
+<Configure class="org.mortbay.jetty.webapp.WebAppContext">
+    <New id="DSTest" class="org.mortbay.jetty.plus.naming.Resource">
+        <Arg>liangfa_stable_frame</Arg>
+        <Arg>
+            <New class="oracle.jdbc.pool.OracleConnectionPoolDataSource">
+                <Set name="URL">jdbc:oracle:thin:@139.199.159.105:1521/orcl</Set>
+                <Set name="User">sulongfei</Set>
+                <Set name="Password">oracle</Set>
+            </New>
+        </Arg>
+    </New>
+</Configure>

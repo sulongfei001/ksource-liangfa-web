@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+	<classPathEntry location="D:\.m2\repository\com\oracle\ojdbc14\10.2.0.4.0\ojdbc14-10.2.0.4.0.jar"/>
+  <context id="context1" >
+    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:orcl" userId="LIANGFA_XINXIANG20170828" password="LIANGFA_XINXIANG20170828" />
+    <javaModelGenerator targetPackage="com.ksource.liangfa.domain" targetProject="liangfa-xinxiang" />
+    <sqlMapGenerator targetPackage="com.ksource.liangfa.mapper" targetProject="liangfa-xinxiang" />
+    <javaClientGenerator targetPackage="com.ksource.liangfa.mapper" targetProject="liangfa-xinxiang" type="XMLMAPPER" />
+    
+   <table tableName="CASE_AGREE_NOLIAN" >
+        <columnOverride column="MEMO" javaType="String"  jdbcType="VARCHAR" ></columnOverride>
+        <columnOverride column="EXPLAIN" javaType="String"  jdbcType="VARCHAR" ></columnOverride>
+   </table>
+  </context>
+</generatorConfiguration>

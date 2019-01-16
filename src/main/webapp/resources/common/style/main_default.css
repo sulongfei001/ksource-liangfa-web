@@ -1,0 +1,164 @@
+*{ padding:0; margin:0;}
+
+body {
+	font-size: 12px;
+	background-image: url(../sys_images/body_bg.jpg);
+	background-repeat: repeat-x;
+	background-position: top;
+	background-color: #A3CFF5;
+}
+
+.content_title_bg{
+	background-image: url(../sys_images/content_title_bg.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 27px;
+}
+
+.content_title_right{
+	background-image: url(../sys_images/content_title_bg.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	height: 27px;
+	width: 60px;
+}
+.content_main_bg{
+	background-image: url(../sys_images/content_main_bg.png);
+	background-repeat: repeat-y;
+	background-position: left top;
+	height: 100%;
+	
+}
+
+.content_main_right{
+	background-image: url(../sys_images/content_main_bg.png);
+	background-repeat: repeat-y;
+	background-position: right top;
+	width: 10px;
+}
+.content_foot_bg{
+	background-image: url(../sys_images/content_foot_bg.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	height: 5px;
+}
+
+.content_foot_right{
+	background-image: url(../sys_images/content_foot_bg.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	width: 10px;
+}
+.content_title{
+	font-size: 12px;
+	font-weight: bold;
+	color: #1F3379;
+
+}
+.content_padding{
+	padding-top:2px;}
+
+/* table blues----border #B5C4D2------>> */
+.blues {
+	margin: 10px 0px 0px 0px;
+	border: #507CD1 1px solid;
+	color: black;
+	border-right: none;
+	width: 100%;
+	empty-cells:show; 
+	border-collapse:collapse;
+	
+}
+
+.blues td {
+	border-right: #507CD1 1px solid;
+	border-top: #507CD1 1px solid;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	empty-cells:show;
+}
+
+.blues  .odd:hover,.blues  .even:hover {
+	background-color: #f5e2c9
+}
+
+.blues tr a,.blues tr a:visited {
+	color: #0000EE;
+	text-decoration: none;
+}
+
+.blues tr a:hover {
+	text-decoration: underline;
+	color: #0000EE;
+}
+
+table.blues thead tr {
+	background-color:#C6D3EF;
+	font-weight:bold;
+	font-size:12px;
+    background-repeat: repeat-x;
+	text-align: center;
+	height: 28px;
+}
+
+table.blues thead th {
+	border: #507CD1 1px solid;
+}
+
+table.blues td {
+	text-align: left;
+	empty-cells:show;
+}
+table.blues tr.even,table.blues tr.odd {
+	height: 25px;
+}
+table.blues tr.even {
+	background-color: #EFEFF7;
+}
+/* <<----------table blues */
+.ellipsis{
+	text-overflow: ellipsis; 
+	overflow: hidden;
+}
+.content_main_bg h1 span{
+	display:none;
+}
+.content_main_bg h1.redLight {
+    background: url("../../images/red_light.jpg") no-repeat scroll center top transparent;
+    height: 21px;
+    width: 100%;
+    margin-top: 0;
+}
+.content_main_bg h1.yellowLight {
+    background: url("../../images/yellow_light.jpg") no-repeat scroll center top transparent;
+    height: 21px;
+    width: 100%;
+    margin-top: 0;
+}
+.content_main_bg h1.greenLight {
+    background: url("../../images/green_light.jpg") no-repeat scroll center top transparent;
+    height: 21px;
+    width: 100%;
+    margin-top: 0;
+}
+/*����������ʽ*/
+#popupDiv div.titleDiv{
+	color:gray;
+	 margin:5px 0px 5px 5px;
+}
+#popupDiv div.treeDiv{
+	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
+	overflow:auto;
+	height:310px;
+	width:286px;
+}
+#popupDiv div.buttonDiv{
+	margin:5px 0px 0px 5px;
+}
+#popupDiv div.infoMsg{
+	color:red;
+	margin-left:5px;
+}

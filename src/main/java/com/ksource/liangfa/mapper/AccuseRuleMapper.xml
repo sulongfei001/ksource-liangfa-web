@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.mapper.AccuseRuleMapper">
+  <resultMap id="BaseResultMap" type="com.ksource.liangfa.domain.AccuseRule">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="RULE_INFO" jdbcType="VARCHAR" property="ruleInfo" />
+   	<result column="INPUT_USER" jdbcType="VARCHAR" property="inputUser" />
+    <result column="INPUT_TIME" jdbcType="TIMESTAMP" property="inputTime" />
+    <result column="INDUSTRY_TYPE" jdbcType="VARCHAR" property="industryType" />
+    <result column="ACCUSE_ID" jdbcType="DECIMAL" property="accuseId" />
+  </resultMap>
+ 
+	  <insert id="insert" parameterType="com.ksource.liangfa.domain.AccuseRule">
+	    insert into ACCUSE_RULE (ID, NAME, RULE_INFO,INDUSTRY_TYPE,
+	      INPUT_USER, INPUT_TIME)
+	    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{ruleInfo,jdbcType=VARCHAR}, #{industryType,jdbcType=VARCHAR},#{inputUser,jdbcType=VARCHAR}, 
+	      #{inputTime,jdbcType=TIMESTAMP})
+	  </insert>
+ 
+ 
+	 <resultMap extends="BaseResultMap" id="manualResultMap" type="com.ksource.liangfa.domain.AccuseRule">
+		   <result column="industryName" property="industryName" />
+		   <collection ofType="string" property="accuseNameList">
+				<result column="accuseName"  />
+		   </collection>
+	   </resultMap>
+	   <resultMap extends="BaseResultMap" id="accuseRuleResultMap" type="com.ksource.liangfa.domain.AccuseRule">
+		   <result column="industryName" property="industryName" />
+		   <collection ofType="com.ksource.liangfa.domain.AccuseInfo" property="accuseInfos">
+				<result column="accuseId"   property="id"/>
+				<result column="accuseName"   property="name"/>
+				<result column="clause"   property="clause"/>
+		   </collection>
+	   </resultMap>
+   
+ 
+	  <select id="getPaginationList" parameterType="map" resultMap="manualResultMap">
+			 select I.ID, I.NAME, I.RULE_INFO,I.INPUT_USER, I.INPUT_TIME,o.INDUSTRY_TYPE,
+	            O.INDUSTRY_NAME as industryName, A.name as accuseName,sa.accuse_id 
+	  	  		from ACCUSE_RULE I, INDUSTRY_INFO O,ACCUSE_RULE_RELATION SA, ACCUSE_INFO A
+	          where i.INDUSTRY_TYPE = o.INDUSTRY_TYPE
+	             and i.Id=SA.RULE_ID
+	             AND SA.ACCUSE_ID=A.ID
+			<if test="name != null">
+	        	and i.NAME like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+	      	</if>
+	      	<if test="industryType != null">
+	        	and i.INDUSTRY_TYPE = #{industryType,jdbcType=VARCHAR}
+	      	</if>
+	      	<if test="accuseName != null">
+	        	and a.name like concat(concat('%',#{accuseName,jdbcType=VARCHAR}),'%')
+	      	</if>
+		    order by i.INDUSTRY_TYPE asc
+		</select>
+	
+		<select id="getPaginationCount" resultType="int">
+			select count(distinct i.id)  
+			  from ACCUSE_RULE I, INDUSTRY_INFO O,ACCUSE_RULE_RELATION SA, ACCUSE_INFO A
+	          where i.INDUSTRY_TYPE = o.INDUSTRY_TYPE
+	             and i.Id=SA.RULE_ID
+	             AND SA.ACCUSE_ID=A.ID
+			<if test="name != null">
+	        	and i.NAME like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+	      	</if>
+	      	<if test="industryType != null">
+	        	and i.INDUSTRY_TYPE = #{industryType,jdbcType=VARCHAR}
+	      	</if>
+		</select>
+	
+		<select id="selectById" parameterType="java.lang.Long" resultMap="accuseRuleResultMap">
+				SELECT AR.*,DI.INDUSTRY_NAME,AI.ID AS accuseId,AI.NAME AS accuseName,AI.CLAUSE AS clause 
+				  FROM ACCUSE_RULE AR
+				  JOIN INDUSTRY_INFO DI
+				    ON AR.INDUSTRY_TYPE = DI.INDUSTRY_TYPE
+				  JOIN ACCUSE_RULE_RELATION ARR
+				    ON AR.ID = ARR.RULE_ID
+				  JOIN ACCUSE_INFO AI
+				    ON ARR.ACCUSE_ID = AI.ID
+				 WHERE AR.ID = #{id,jdbcType=DECIMAL}
+		  </select>
+  
+	  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+	    delete from ACCUSE_RULE
+	    where ID = #{id,jdbcType=DECIMAL}
+	  </delete>
+	  
+      <update id="updateByPrimaryKeySelective" parameterType="com.ksource.liangfa.domain.AccuseRule">
+            UPDATE ACCUSE_RULE
+            <set>
+                <if test="name != null and name != '' ">
+                    NAME = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="ruleInfo != null and ruleInfo != '' ">
+                    RULE_INFO = #{ruleInfo,jdbcType=VARCHAR},
+                </if>
+            </set>
+            WHERE ID = #{id,jdbcType=DECIMAL}
+      </update>
+
+
+	<select id="checkRuleName" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT COUNT(1) FROM ACCUSE_RULE WHERE
+		NAME = #{ruleName,jdbcType=VARCHAR}
+		<if test="ruleId != null and ruleId !=''">
+			AND ID !=#{ruleId,jdbcType=VARCHAR}	
+		</if>
+	</select>
+	
+    <select id="getByIndustryType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT I.ID, I.NAME, I.RULE_INFO,I.INPUT_USER, I.INPUT_TIME 
+          FROM ACCUSE_RULE I
+         WHERE I.INDUSTRY_TYPE = #{industryType,jdbcType=VARCHAR}
+    </select>	
+</mapper>

@@ -1,0 +1,697 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ksource.liangfa.mapper.CaseModifiedImpMapper">
+	
+	<!-- 案件信息保存到临时表 -->
+	<insert id="insertCaseBasicTemp" parameterType="com.ksource.liangfa.domain.CaseBasic">
+    insert into CASE_BASIC_TEMP (CASE_ID, CASE_NO, CASE_NAME, 
+      INPUTER, INPUT_TIME, INPUT_UNIT, 
+      AMOUNT_INVOLVED, ACCEPT_UNIT, CASE_STATE, 
+      RECORD_SRC, LATEST_POCESS_TIME, PROC_KEY, 
+      CASE_TYPE, CASE_DETAIL_NAME)
+    values (#{caseId,jdbcType=VARCHAR}, #{caseNo,jdbcType=VARCHAR}, #{caseName,jdbcType=VARCHAR}, 
+      #{inputer,jdbcType=VARCHAR}, #{inputTime,jdbcType=TIMESTAMP}, #{inputUnit,jdbcType=VARCHAR}, 
+      #{amountInvolved,jdbcType=DECIMAL}, #{acceptUnit,jdbcType=VARCHAR}, #{caseState,jdbcType=VARCHAR}, 
+      #{recordSrc,jdbcType=VARCHAR}, #{latestPocessTime,jdbcType=TIMESTAMP}, #{procKey,jdbcType=VARCHAR}, 
+      #{caseType,jdbcType=DECIMAL}, #{caseDetailName,jdbcType=CLOB})
+  </insert>
+  
+  <!-- 案件状态保存到临时表 -->
+   <insert id="insertCaseStateTemp" parameterType="com.ksource.liangfa.domain.CaseState">
+    insert into CASE_STATE_TEMP (CASE_ID, CHUFA_STATE, YISONG_STATE, 
+      LIAN_STATE, DAIBU_STATE, QISU_STATE, 
+      PANJUE_STATE, JIEAN_STATE,EXPLAIN_STATE,REQ_EXPLAIN_STATE)
+    values (#{caseId,jdbcType=VARCHAR}, #{chufaState,jdbcType=DECIMAL}, #{yisongState,jdbcType=DECIMAL}, 
+      #{lianState,jdbcType=DECIMAL}, #{daibuState,jdbcType=DECIMAL}, #{qisuState,jdbcType=DECIMAL}, 
+      #{panjueState,jdbcType=DECIMAL}, #{jieanState,jdbcType=DECIMAL},#{explainState,jdbcType=DECIMAL},#{reqExplainState,jdbcType=DECIMAL})
+  </insert>
+  
+   <!-- 案件流程保存到临时表 -->
+   <insert id="insertCaseProcessTemp" parameterType="com.ksource.liangfa.domain.CaseProcess">
+    insert into CASE_PROCESS_TEMP (CASE_ID, PROC_INST_ID, PROC_DEF_ID, 
+      START_TIME, END_TIME)
+    values (#{caseId,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{procDefId,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+   <!-- 涉嫌犯罪扩展属性保存到临时表 -->
+   <insert id="insertCrimeCaseExtTemp" parameterType="com.ksource.liangfa.domain.CrimeCaseExt">
+    insert into CRIME_CASE_EXT_TEMP (CASE_ID, YISONG_FILE_NO, PROOF_FILE_ID
+      )
+    values (#{caseId,jdbcType=VARCHAR}, #{yisongFileNo,jdbcType=VARCHAR}, #{proofFileId,jdbcType=DECIMAL}
+      )
+  </insert>
+  
+  <!-- 行政处罚扩展属性保存到临时表 -->
+   <!-- <insert id="insertPenaltyCaseExtTemp" parameterType="com.ksource.liangfa.domain.PenaltyCaseExt">
+    insert into PENALTY_CASE_EXT_TEMP (CASE_ID, ANFA_ADDRESS, ANFA_TIME, 
+      PENALTY_FILE_NO, PENALTY_FILE_ID, IS_DESCUSS, 
+      IS_BEYOND_EIGHTY, IS_SERIOUS_CASE, CHUFA_TIMES, 
+      CHUFA_TIME)
+    values (#{caseId,jdbcType=VARCHAR}, #{anfaAddress,jdbcType=VARCHAR}, #{anfaTime,jdbcType=TIMESTAMP}, 
+      #{penaltyFileNo,jdbcType=VARCHAR}, #{penaltyFileId,jdbcType=DECIMAL}, #{isDescuss,jdbcType=DECIMAL}, 
+      #{isBeyondEighty,jdbcType=DECIMAL}, #{isSeriousCase,jdbcType=DECIMAL}, #{chufaTimes,jdbcType=DECIMAL}, 
+      #{chufaTime,jdbcType=TIMESTAMP})
+  </insert> -->
+  
+  <!-- 移送行政违法扩展属性保存到临时表 -->
+    <insert id="insertPenaltyReferCaseExtTemp" parameterType="com.ksource.liangfa.domain.PenaltyReferCaseExt">
+    insert into PENALTY_REFER_CASE_EXT_TEMP (CASE_ID, ANFA_ADDRESS, ANFA_TIME, 
+      UNDERTAKER, SUBMIT_PEOPLE, SUBMIT_TIME, 
+      FILE_ID, REMARK)
+    values (#{caseId,jdbcType=VARCHAR}, #{anfaAddress,jdbcType=VARCHAR}, #{anfaTime,jdbcType=TIMESTAMP}, 
+      #{undertaker,jdbcType=VARCHAR}, #{submitPeople,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, 
+      #{fileId,jdbcType=DECIMAL}, #{remark,jdbcType=CLOB})
+  </insert>
+  
+   <!--	案件罪名保存到临时表 -->
+    <insert id="insertCaseAccuseTemp" parameterType="com.ksource.liangfa.domain.CaseAccuseKey" >
+    insert into CASE_ACCUSE_TEMP (CASE_ID, ZM_TYPE, ACCUSE_ID
+      )
+    values (#{caseId,jdbcType=VARCHAR}, #{zmType,jdbcType=DECIMAL}, #{accuseId,jdbcType=DECIMAL}
+      )
+  </insert>
+  
+  <!--案件当事人信息保存到临时表 -->
+    <insert id="insertCasePartyTemp" parameterType="com.ksource.liangfa.domain.CaseParty">
+    insert into CASE_PARTY_TEMP (PARTY_ID, CASE_ID, NAME, 
+      IDS_NO, SEX, BIRTHDAY, 
+      NATION, EDUCATION, BIRTHPLACE, 
+      PROFESSION, ADDRESS, TEL
+      )
+    values (#{partyId,jdbcType=DECIMAL}, #{caseId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{idsNo,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, 
+      #{nation,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{birthplace,jdbcType=VARCHAR}, 
+      #{profession,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <!--案件企业保存到临时表 -->
+  <insert id="insertCaseCompanyTemp" parameterType="com.ksource.liangfa.domain.CaseCompany">
+		insert into CASE_COMPANY_TEMP (ID, CASE_ID, REGISTRACTION_NUM,
+		NAME, ADDRESS, PROXY,
+		REGISTRACTION_CAPITAL, COMPANY_TYPE, REGISTRACTION_TIME,
+		TEL)
+		values (#{id,jdbcType=DECIMAL}, #{caseId,jdbcType=VARCHAR},
+		#{registractionNum,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{proxy,jdbcType=VARCHAR},
+		#{registractionCapital,jdbcType=DECIMAL},
+		#{companyType,jdbcType=VARCHAR},
+		#{registractionTime,jdbcType=TIMESTAMP},
+		#{tel,jdbcType=VARCHAR})
+	</insert>
+	
+	<!--案件嫌疑人保存到临时表 -->
+	<insert id="insertCaseXianYiRenTemp" parameterType="com.ksource.liangfa.domain.CaseXianyiren">
+    insert into CASE_XIANYIREN_TEMP (XIANYIREN_ID, CASE_ID, NAME, 
+      IDS_NO, SEX, BIRTHDAY, 
+      NATION, EDUCATION, BIRTHPLACE, 
+      PROFESSION, ADDRESS, TEL, 
+      DAIBU_STATE, TIQINGQISU_STATE, TIQIGONGSU_STATE, 
+      FAYUANPANJUE_STATE, TIQINGDAIBU_TIME, TIQINGDAIBU_CASE_INFO, 
+      PIZHUNDAIBU_TIME, PIZHUNDAIBU_CASE_INFO, 
+      NODAIBU_LY, NODAIBU_TIME, TIQINGQISU_TIME, 
+      TIQINGQISU_CASE_INFO, TIQIGONGSU_TIME, TIQIGONGSU_CASE_INFO, 
+      BUQISU_LY, BUQISU_TIME, PANJUE1_JG, 
+      PANJUE2_JG, PANJUE_EFFECT_TIME, PANJUE1_TIME, 
+      PANJUE2_TIME, CONDITION_ID)
+    values (#{xianyirenId,jdbcType=DECIMAL}, #{caseId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{idsNo,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, 
+      #{nation,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{birthplace,jdbcType=VARCHAR}, 
+      #{profession,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      #{daibuState,jdbcType=DECIMAL}, #{tiqingqisuState,jdbcType=DECIMAL}, #{tiqigongsuState,jdbcType=DECIMAL}, 
+      #{fayuanpanjueState,jdbcType=DECIMAL}, #{tiqingdaibuTime,jdbcType=TIMESTAMP}, #{tiqingdaibuCaseInfo,jdbcType=VARCHAR}, 
+      #{pizhundaibuTime,jdbcType=TIMESTAMP}, #{pizhundaibuCaseInfo,jdbcType=VARCHAR}, 
+      #{nodaibuLy,jdbcType=VARCHAR}, #{nodaibuTime,jdbcType=TIMESTAMP}, #{tiqingqisuTime,jdbcType=TIMESTAMP}, 
+      #{tiqingqisuCaseInfo,jdbcType=VARCHAR}, #{tiqigongsuTime,jdbcType=TIMESTAMP}, #{tiqigongsuCaseInfo,jdbcType=VARCHAR}, 
+      #{buqisuLy,jdbcType=VARCHAR}, #{buqisuTime,jdbcType=TIMESTAMP}, #{panjue1Jg,jdbcType=VARCHAR}, 
+      #{panjue2Jg,jdbcType=VARCHAR}, #{panjueEffectTime,jdbcType=TIMESTAMP}, #{panjue1Time,jdbcType=TIMESTAMP}, 
+      #{panjue2Time,jdbcType=TIMESTAMP}, #{conditionId,jdbcType=DECIMAL})
+  </insert>
+  
+  <!--嫌疑人罪名保存到临时表 -->
+    <insert id="insertXianYiRenAccuseTemp" parameterType="com.ksource.liangfa.domain.XianyirenAccuse">
+    insert into XIANYIREN_ACCUSE_TEMP (ACCUSE_ID, XIANYIREN_ID, ZM_TYPE, 
+      CASE_ID)
+    values (#{accuseId,jdbcType=DECIMAL}, #{xianyirenId,jdbcType=DECIMAL}, #{zmType,jdbcType=DECIMAL}, 
+      #{caseId,jdbcType=VARCHAR})
+  </insert>
+  
+  <!--案情处理跟踪保存到临时表 -->
+   <insert id="insertCaseStepTemp" parameterType="com.ksource.liangfa.domain.CaseStep">
+    insert into CASE_STEP_TEMP (STEP_ID, STEP_NAME, CASE_ID, 
+      TASK_INST_ID, TASK_DEF_ID, PROC_INST_ID, 
+      PROC_DEF_ID, PROC_DEF_KEY, CASE_STATE, 
+      START_DATE, END_DATE, ASSIGN_PERSON, 
+      FORM_DEF_ID, TASK_ACTION_ID, TASK_ACTION_NAME, 
+      TASK_TYPE, ACTION_TYPE, TARGET_TASK_DEF_ID, 
+      TARGET_ORG_TYPE, TARGET_ORG_ID)
+    values (#{stepId,jdbcType=DECIMAL}, #{stepName,jdbcType=VARCHAR}, #{caseId,jdbcType=VARCHAR}, 
+      #{taskInstId,jdbcType=VARCHAR}, #{taskDefId,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, 
+      #{procDefId,jdbcType=VARCHAR}, #{procDefKey,jdbcType=VARCHAR}, #{caseState,jdbcType=VARCHAR}, 
+      #{startDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, #{assignPerson,jdbcType=VARCHAR}, 
+      #{formDefId,jdbcType=DECIMAL}, #{taskActionId,jdbcType=DECIMAL}, #{taskActionName,jdbcType=VARCHAR}, 
+      #{taskType,jdbcType=DECIMAL}, #{actionType,jdbcType=DECIMAL}, #{targetTaskDefId,jdbcType=VARCHAR}, 
+      #{targetOrgType,jdbcType=VARCHAR}, #{targetOrgId,jdbcType=DECIMAL})
+  </insert>
+  
+  <!--案件附件保存到临时表 -->
+    <insert id="insertCaseAttachmentTemp" parameterType="com.ksource.liangfa.domain.CaseAttachment">
+    insert into CASE_ATTACHMENT_TEMP (ID, CASE_ID, PROC_KEY, 
+      ATTACHMENT_NAME, ATTACHMENT_PATH, SWF_PATH
+      )
+    values (#{id,jdbcType=DECIMAL}, #{caseId,jdbcType=VARCHAR}, #{procKey,jdbcType=VARCHAR}, 
+      #{attachmentName,jdbcType=VARCHAR}, #{attachmentPath,jdbcType=VARCHAR}, #{swfPath,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+   <!--表单字段保存到临时表 -->
+    <insert id="insertFieldInstanceTemp" parameterType="com.ksource.liangfa.domain.FieldInstance">
+    insert into FIELD_INSTANCE_TEMP (FIELD_ID, TASK_INST_ID, FIELD_STRING_VALUE, 
+      FIELD_DATE_VALUE, FIELD_INTEGER_VAL, FIELD_NUMBER_VAL, 
+      FILE_NAME, TASK_DEF_ID, PROC_INST_ID, 
+      PROC_DEF_ID, FORM_DEF_ID, FIELD_PATH, 
+      SWF_PATH)
+    values (#{fieldId,jdbcType=DECIMAL}, #{taskInstId,jdbcType=VARCHAR}, #{fieldStringValue,jdbcType=VARCHAR}, 
+      #{fieldDateValue,jdbcType=TIMESTAMP}, #{fieldIntegerVal,jdbcType=DECIMAL}, #{fieldNumberVal,jdbcType=DECIMAL}, 
+      #{fileName,jdbcType=VARCHAR}, #{taskDefId,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, 
+      #{procDefId,jdbcType=VARCHAR}, #{formDefId,jdbcType=DECIMAL}, #{fieldPath,jdbcType=VARCHAR}, 
+      #{swfPath,jdbcType=VARCHAR})
+  </insert>
+  
+  <!--任务表单保存到临时表 -->
+    <insert id="insertFormInstanceTemp" parameterType="com.ksource.liangfa.domain.FormInstance">
+    insert into FORM_INSTANCE_TEMP (TASK_INST_ID, FORM_DEF_ID, TASK_DEF_ID, 
+      PROC_DEF_ID, PROC_INST_ID, JSON_VALUE
+      )
+    values (#{taskInstId,jdbcType=VARCHAR}, #{formDefId,jdbcType=DECIMAL}, #{taskDefId,jdbcType=VARCHAR}, 
+      #{procDefId,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{jsonValue,jdbcType=CLOB}
+      )
+  </insert>
+  
+  	<!-- 案件信息保存   案件录入类型为 ‘3’ 数据导入-->
+	<update id="insertCaseBasic">	
+	merge into CASE_BASIC t  
+    using ( select * from CASE_BASIC_TEMP) t1  
+    on(t.CASE_ID = t1.CASE_ID)  
+    when not matched then 		
+    insert (CASE_ID, CASE_NO, CASE_NAME, 
+      INPUTER, INPUT_TIME, INPUT_UNIT, 
+      AMOUNT_INVOLVED, ACCEPT_UNIT, CASE_STATE, 
+      RECORD_SRC, LATEST_POCESS_TIME, PROC_KEY, 
+      CASE_TYPE, CASE_DETAIL_NAME,INPUT_TYPE)
+    values (t1.CASE_ID, t1.CASE_NO, t1.CASE_NAME, 
+      t1.INPUTER, t1.INPUT_TIME, t1.INPUT_UNIT, 
+      t1.AMOUNT_INVOLVED, t1.ACCEPT_UNIT, t1.CASE_STATE, 
+      t1.RECORD_SRC, t1.LATEST_POCESS_TIME, t1.PROC_KEY, 
+      t1.CASE_TYPE, t1.CASE_DETAIL_NAME,'3')   
+    when matched then
+    update
+     set
+      CASE_NO = t1.CASE_NO,
+      CASE_NAME = t1.CASE_NAME,
+      INPUTER = t1.INPUTER,
+      INPUT_TIME = t1.INPUT_TIME,
+      INPUT_UNIT = t1.INPUT_UNIT,
+      AMOUNT_INVOLVED = t1.AMOUNT_INVOLVED,
+      ACCEPT_UNIT = t1.ACCEPT_UNIT,
+      CASE_STATE = t1.CASE_STATE,
+      RECORD_SRC = t1.RECORD_SRC,
+      LATEST_POCESS_TIME = t1.LATEST_POCESS_TIME,
+      PROC_KEY =  t1.PROC_KEY,
+      CASE_TYPE = t1.CASE_TYPE,
+      CASE_DETAIL_NAME = t1.CASE_DETAIL_NAME     
+  </update>
+  
+    <!-- 案件状态信息保存 -->
+	<update id="insertCaseState">	
+	merge into CASE_STATE t  
+    using ( select * from CASE_STATE_TEMP) t1  
+    on(t.CASE_ID = t1.CASE_ID)  
+    when not matched then 		
+    insert (CASE_ID, CHUFA_STATE, YISONG_STATE, 
+      LIAN_STATE, DAIBU_STATE, QISU_STATE, 
+      PANJUE_STATE, JIEAN_STATE,EXPLAIN_STATE,REQ_EXPLAIN_STATE)
+    values (t1.CASE_ID, t1.CHUFA_STATE, t1.YISONG_STATE, 
+      t1.LIAN_STATE, t1.DAIBU_STATE, t1.QISU_STATE, 
+      t1.PANJUE_STATE, t1.JIEAN_STATE,t1.EXPLAIN_STATE,t1.REQ_EXPLAIN_STATE)   
+    when matched then
+    update
+     set
+      CHUFA_STATE = t1.CHUFA_STATE,
+      YISONG_STATE = t1.YISONG_STATE,
+      LIAN_STATE = t1.LIAN_STATE ,
+      DAIBU_STATE = t1.DAIBU_STATE ,
+      QISU_STATE = t1.QISU_STATE ,
+      PANJUE_STATE = t1.PANJUE_STATE ,
+      JIEAN_STATE = t1.JIEAN_STATE,
+      EXPLAIN_STATE = t1.EXPLAIN_STATE,
+      REQ_EXPLAIN_STATE = t1.REQ_EXPLAIN_STATE    
+  </update>
+  
+    <!-- 案件流程 -->
+   <update id="insertCaseProcess">
+   	merge into CASE_PROCESS t  
+    using ( select * from CASE_PROCESS_TEMP) t1  
+    on(t.CASE_ID = t1.CASE_ID)  
+    when not matched then 	
+    insert(CASE_ID, PROC_INST_ID, PROC_DEF_ID, 
+      START_TIME, END_TIME)
+    values (t1.CASE_ID, t1.PROC_INST_ID, t1.PROC_DEF_ID, 
+      t1.START_TIME, t1.END_TIME)
+     when matched then
+    update
+     set
+       PROC_INST_ID = t1.PROC_INST_ID ,
+       PROC_DEF_ID = t1.PROC_DEF_ID ,
+      START_TIME = t1.START_TIME ,
+      END_TIME = t1.END_TIME
+  </update>
+  
+    <!-- 涉嫌犯罪扩展属性表 -->
+   <update id="insertCrimeCaseExt">
+   	merge into CRIME_CASE_EXT t  
+    using ( select * from CRIME_CASE_EXT_TEMP) t1  
+    on(t.CASE_ID = t1.CASE_ID)  
+    when not matched then 	
+    insert (CASE_ID, YISONG_FILE_NO, PROOF_FILE_ID)
+    values (t1.CASE_ID, t1.YISONG_FILE_NO, t1.PROOF_FILE_ID)
+     when matched then
+    update
+     set
+		YISONG_FILE_NO = t1.YISONG_FILE_NO ,
+		PROOF_FILE_ID = t1.PROOF_FILE_ID
+  </update>
+  
+    <!-- 行政处罚扩展属性 -->
+   <!-- <update id="insertPenaltyCaseExt">
+   	 	merge into PENALTY_CASE_EXT t  
+    using ( select * from PENALTY_CASE_EXT_TEMP) t1  
+    on(t.CASE_ID = t1.CASE_ID)  
+    when not matched then 	
+    insert(CASE_ID, ANFA_ADDRESS, ANFA_TIME, 
+      PENALTY_FILE_NO, PENALTY_FILE_ID, IS_DESCUSS, 
+      IS_BEYOND_EIGHTY, IS_SERIOUS_CASE, CHUFA_TIMES, 
+      CHUFA_TIME)
+    values (t1.CASE_ID, t1.ANFA_ADDRESS, t1.ANFA_TIME, t1.PENALTY_FILE_NO, t1.PENALTY_FILE_ID, t1.IS_DESCUSS, 
+    t1.IS_BEYOND_EIGHTY, t1.IS_SERIOUS_CASE, t1.CHUFA_TIMES, t1.CHUFA_TIME)
+       when matched then
+    update
+     set
+      ANFA_ADDRESS = t1.ANFA_ADDRESS ,
+      ANFA_TIME = t1.ANFA_TIME ,
+      PENALTY_FILE_NO = t1.PENALTY_FILE_NO ,
+      PENALTY_FILE_ID = t1.PENALTY_FILE_ID ,
+      IS_DESCUSS = t1.IS_DESCUSS ,
+      IS_BEYOND_EIGHTY = t1.IS_BEYOND_EIGHTY ,
+      IS_SERIOUS_CASE = t1.IS_SERIOUS_CASE, 
+      CHUFA_TIMES = t1.CHUFA_TIMES ,
+      CHUFA_TIME = t1.CHUFA_TIME
+  </update> -->
+  
+    <!-- 移送行政违法扩展属性 -->
+    <update id="insertPenaltyReferCaseExt">
+   	merge into PENALTY_REFER_CASE_EXT t  
+    using ( select * from PENALTY_REFER_CASE_EXT_TEMP) t1  
+    on(t.CASE_ID = t1.CASE_ID)  
+    when not matched then 
+     insert(CASE_ID, ANFA_ADDRESS, ANFA_TIME, 
+      UNDERTAKER, SUBMIT_PEOPLE, SUBMIT_TIME, 
+      FILE_ID, REMARK)
+    values (t1.CASE_ID, t1.ANFA_ADDRESS, t1.ANFA_TIME, t1.UNDERTAKER, 
+    t1.SUBMIT_PEOPLE, t1.SUBMIT_TIME, 
+    t1.FILE_ID, t1.REMARK) 
+      when matched then
+    update
+     set
+  	ANFA_ADDRESS =t1.ANFA_ADDRESS,
+  	ANFA_TIME =t1.ANFA_TIME,
+    UNDERTAKER =t1.UNDERTAKER,
+    SUBMIT_PEOPLE =t1.SUBMIT_PEOPLE,
+    SUBMIT_TIME =t1.SUBMIT_TIME,
+  	 FILE_ID =t1.FILE_ID,
+  	 REMARK =t1.REMARK 
+  </update>
+
+
+   <!--	案件罪名 -->
+    <update id="insertCaseAccuse">
+    merge into CASE_ACCUSE t  
+    using ( select * from CASE_ACCUSE_TEMP) t1  
+    on(t.CASE_ID = t1.CASE_ID and t.ZM_TYPE = t1.ZM_TYPE  and t.ACCUSE_ID = t1.ACCUSE_ID )  
+    when not matched then 
+      insert(CASE_ID, ZM_TYPE, ACCUSE_ID)
+    values (t1.CASE_ID, t1.ZM_TYPE, t1.ACCUSE_ID)   
+  
+  </update>
+  
+  <!--案件当事人信息 -->
+    <update id="insertCaseParty">
+    merge into CASE_PARTY t  
+    using ( select * from CASE_PARTY_TEMP) t1  
+    on(t.PARTY_ID = t1.PARTY_ID)  
+    when not matched then 
+     insert(PARTY_ID, CASE_ID, NAME, 
+      IDS_NO, SEX, BIRTHDAY, 
+      NATION, EDUCATION, BIRTHPLACE, 
+      PROFESSION, ADDRESS, TEL
+      )
+    values (t1.PARTY_ID, t1.CASE_ID, t1.NAME, 
+      t1.IDS_NO, t1.SEX, t1.BIRTHDAY, 
+      t1.NATION, t1.EDUCATION, t1.BIRTHPLACE, 
+      t1.PROFESSION, t1.ADDRESS, t1.TEL)
+      when matched then
+    update
+     set
+    	CASE_ID = t1.CASE_ID, 
+    	NAME = t1.NAME, 
+      IDS_NO = t1.IDS_NO, 
+      SEX = t1.SEX, 
+      BIRTHDAY = t1.BIRTHDAY, 
+      NATION = t1.NATION,
+       EDUCATION = t1.EDUCATION, 
+       BIRTHPLACE = t1.BIRTHPLACE, 
+      PROFESSION = t1.PROFESSION, 
+      ADDRESS = t1.ADDRESS, 
+      TEL = t1.TEL
+   
+  </update>
+  
+  <!--案件企业-->
+  <update id="insertCaseCompany">
+  	  	merge into CASE_COMPANY t  
+    using ( select * from CASE_COMPANY_TEMP) t1  
+    on(t.ID = t1.ID)  
+    when not matched then 
+		insert(ID, CASE_ID, REGISTRACTION_NUM,
+		NAME, ADDRESS, PROXY,
+		REGISTRACTION_CAPITAL, COMPANY_TYPE, REGISTRACTION_TIME,
+		TEL)
+		values (t1.ID, t1.CASE_ID, t1.REGISTRACTION_NUM,
+		t1.NAME, t1.ADDRESS, t1.PROXY,
+		t1.REGISTRACTION_CAPITAL, t1.COMPANY_TYPE, t1.REGISTRACTION_TIME,
+		t1.TEL)  
+      when matched then
+    update
+     set
+  		CASE_ID = t1.CASE_ID,
+  		REGISTRACTION_NUM = t1.REGISTRACTION_NUM,
+		NAME = t1.NAME, 
+		ADDRESS = t1.ADDRESS, 
+		PROXY = t1.PROXY,
+		REGISTRACTION_CAPITAL = t1.REGISTRACTION_CAPITAL, 
+		COMPANY_TYPE = t1.COMPANY_TYPE, 
+		REGISTRACTION_TIME = t1.REGISTRACTION_TIME,
+		TEL = t1.TEL
+	</update>
+	
+	<!--案件嫌疑人 -->
+	<update id="insertCaseXianYiRen">
+		  	merge into CASE_XIANYIREN t  
+    using ( select * from CASE_XIANYIREN_TEMP) t1  
+    on(t.XIANYIREN_ID = t1.XIANYIREN_ID)  
+    when not matched then 
+    		
+    insert(XIANYIREN_ID, CASE_ID, NAME, 
+      IDS_NO, SEX, BIRTHDAY, 
+      NATION, EDUCATION, BIRTHPLACE, 
+      PROFESSION, ADDRESS, TEL, 
+      DAIBU_STATE, TIQINGQISU_STATE, TIQIGONGSU_STATE, 
+      FAYUANPANJUE_STATE, TIQINGDAIBU_TIME, TIQINGDAIBU_CASE_INFO, 
+      PIZHUNDAIBU_TIME, PIZHUNDAIBU_CASE_INFO, 
+      NODAIBU_LY, NODAIBU_TIME, TIQINGQISU_TIME, 
+      TIQINGQISU_CASE_INFO, TIQIGONGSU_TIME, TIQIGONGSU_CASE_INFO, 
+      BUQISU_LY, BUQISU_TIME, PANJUE1_JG, 
+      PANJUE2_JG, PANJUE_EFFECT_TIME, PANJUE1_TIME, 
+      PANJUE2_TIME, CONDITION_ID)
+    values (t1.XIANYIREN_ID, t1.CASE_ID, t1.NAME, t1.IDS_NO, 
+    t1.SEX, t1.BIRTHDAY, t1.NATION, t1.EDUCATION, t1.BIRTHPLACE, 
+    t1.PROFESSION, t1.ADDRESS, t1.TEL, t1.DAIBU_STATE, t1.TIQINGQISU_STATE,
+    t1.TIQIGONGSU_STATE, t1.FAYUANPANJUE_STATE, t1.TIQINGDAIBU_TIME, t1.TIQINGDAIBU_CASE_INFO, 
+    t1.PIZHUNDAIBU_TIME, t1.PIZHUNDAIBU_CASE_INFO, t1.NODAIBU_LY, t1.NODAIBU_TIME, t1.TIQINGQISU_TIME, 
+    t1.TIQINGQISU_CASE_INFO, t1.TIQIGONGSU_TIME, t1.TIQIGONGSU_CASE_INFO, t1.BUQISU_LY, t1.BUQISU_TIME, 
+    t1.PANJUE1_JG, t1.PANJUE2_JG, t1.PANJUE_EFFECT_TIME, t1.PANJUE1_TIME, 
+    t1.PANJUE2_TIME, t1.CONDITION_ID)
+      when matched then
+    update
+     set
+	CASE_ID = t1.CASE_ID, 
+	NAME = t1.NAME, 
+	IDS_NO = t1.IDS_NO, 
+    SEX = t1.SEX, 
+    BIRTHDAY = t1.BIRTHDAY, 
+    NATION = t1.NATION, 
+    EDUCATION = t1.EDUCATION, 
+    BIRTHPLACE = t1.BIRTHPLACE, 
+    PROFESSION = t1.PROFESSION, 
+    ADDRESS = t1.ADDRESS, 
+    TEL = t1.TEL, 
+    DAIBU_STATE = t1.DAIBU_STATE, 
+    TIQINGQISU_STATE = t1.TIQINGQISU_STATE,
+    TIQIGONGSU_STATE = t1.TIQIGONGSU_STATE, 
+    FAYUANPANJUE_STATE = t1.FAYUANPANJUE_STATE, 
+    TIQINGDAIBU_TIME = t1.TIQINGDAIBU_TIME, 
+    TIQINGDAIBU_CASE_INFO = t1.TIQINGDAIBU_CASE_INFO, 
+    PIZHUNDAIBU_TIME = t1.PIZHUNDAIBU_TIME, 
+    PIZHUNDAIBU_CASE_INFO = t1.PIZHUNDAIBU_CASE_INFO, 
+    NODAIBU_LY = t1.NODAIBU_LY, 
+    NODAIBU_TIME = t1.NODAIBU_TIME, 
+    TIQINGQISU_TIME = t1.TIQINGQISU_TIME, 
+    TIQINGQISU_CASE_INFO = t1.TIQINGQISU_CASE_INFO, 
+    TIQIGONGSU_TIME = t1.TIQIGONGSU_TIME, 
+    TIQIGONGSU_CASE_INFO = t1.TIQIGONGSU_CASE_INFO, 
+    BUQISU_LY = t1.BUQISU_LY, 
+    BUQISU_TIME = t1.BUQISU_TIME, 
+    PANJUE1_JG = t1.PANJUE1_JG, 
+    PANJUE2_JG = t1.PANJUE2_JG, 
+    PANJUE_EFFECT_TIME = t1.PANJUE_EFFECT_TIME, 
+    PANJUE1_TIME = t1.PANJUE1_TIME, 
+    PANJUE2_TIME = t1.PANJUE2_TIME, 
+   	CONDITION_ID = t1.CONDITION_ID
+  </update>
+  
+  <!--嫌疑人罪名 -->
+    <update id="insertXianYiRenAccuse">
+    	  	merge into XIANYIREN_ACCUSE t  
+    using ( select * from XIANYIREN_ACCUSE_TEMP) t1  
+    on(t.ACCUSE_ID = t1.ACCUSE_ID and  t.XIANYIREN_ID = t1.XIANYIREN_ID and t.ZM_TYPE = t1.ZM_TYPE)  
+    when not matched then 
+     insert(ACCUSE_ID, XIANYIREN_ID, ZM_TYPE,CASE_ID)
+    values (t1.ACCUSE_ID, t1.XIANYIREN_ID, t1.ZM_TYPE,t1.CASE_ID)
+     when matched then
+    update
+     set
+     CASE_ID = t1.CASE_ID
+  </update>
+  
+  <!--案情处理跟踪 -->
+   <update id="insertCaseStep">
+   	 merge into CASE_STEP t  
+    using ( select * from CASE_STEP_TEMP) t1  
+    on(t.STEP_ID = t1.STEP_ID)  
+    when not matched then    
+    insert(STEP_ID, STEP_NAME, CASE_ID, 
+      TASK_INST_ID, TASK_DEF_ID, PROC_INST_ID, 
+      PROC_DEF_ID, PROC_DEF_KEY, CASE_STATE, 
+      START_DATE, END_DATE, ASSIGN_PERSON, 
+      FORM_DEF_ID, TASK_ACTION_ID, TASK_ACTION_NAME, 
+      TASK_TYPE, ACTION_TYPE, TARGET_TASK_DEF_ID, 
+      TARGET_ORG_TYPE, TARGET_ORG_ID)
+    values (t1.STEP_ID, t1.STEP_NAME, t1.CASE_ID, 
+      t1.TASK_INST_ID, t1.TASK_DEF_ID, t1.PROC_INST_ID, 
+      t1.PROC_DEF_ID, t1.PROC_DEF_KEY, t1.CASE_STATE, 
+      t1.START_DATE, t1.END_DATE, t1.ASSIGN_PERSON, 
+      t1.FORM_DEF_ID, t1.TASK_ACTION_ID, t1.TASK_ACTION_NAME, 
+      t1.TASK_TYPE, t1.ACTION_TYPE, t1.TARGET_TASK_DEF_ID, 
+      t1.TARGET_ORG_TYPE, t1.TARGET_ORG_ID)  
+      when matched then
+    update
+     set
+   		STEP_NAME = t1.STEP_NAME, 
+   		CASE_ID = t1.CASE_ID, 
+      TASK_INST_ID = t1.TASK_INST_ID, 
+      TASK_DEF_ID = t1.TASK_DEF_ID, 
+      PROC_INST_ID = t1.PROC_INST_ID, 
+      PROC_DEF_ID = t1.PROC_DEF_ID, 
+      PROC_DEF_KEY = t1.PROC_DEF_KEY, 
+      CASE_STATE = t1.CASE_STATE, 
+      START_DATE = t1.START_DATE, 
+      END_DATE = t1.END_DATE, 
+      ASSIGN_PERSON = t1.ASSIGN_PERSON, 
+      FORM_DEF_ID = t1.FORM_DEF_ID, 
+      TASK_ACTION_ID = t1.TASK_ACTION_ID, 
+      TASK_ACTION_NAME = t1.TASK_ACTION_NAME, 
+      TASK_TYPE = t1.TASK_TYPE, 
+      ACTION_TYPE = t1.ACTION_TYPE, 
+      TARGET_TASK_DEF_ID = t1.TARGET_TASK_DEF_ID, 
+      TARGET_ORG_TYPE = t1.TARGET_ORG_TYPE, 
+      TARGET_ORG_ID = t1.TARGET_ORG_ID
+  </update>
+  
+  <!--案件附件 -->
+    <update id="insertCaseAttachment">
+    merge into CASE_ATTACHMENT t  
+    using ( select * from CASE_ATTACHMENT_TEMP) t1  
+    on(t.ID = t1.ID)  
+    when not matched then 
+    insert (ID, CASE_ID, PROC_KEY, 
+      ATTACHMENT_NAME, ATTACHMENT_PATH, SWF_PATH
+      )
+    values (t1.ID, t1.CASE_ID, t1.PROC_KEY, 
+      t1.ATTACHMENT_NAME, t1.ATTACHMENT_PATH, t1.SWF_PATH
+      )
+      when matched then
+    update
+     set 
+    	CASE_ID = t1.CASE_ID, 
+    	PROC_KEY = t1.PROC_KEY, 
+      ATTACHMENT_NAME = t1.ATTACHMENT_NAME, 
+      ATTACHMENT_PATH = t1.ATTACHMENT_PATH, 
+      SWF_PATH = t1.SWF_PATH
+  </update>
+  
+   <!--表单字段 -->
+    <update id="insertFieldInstance">
+   	merge into FIELD_INSTANCE t  
+    using ( select * from FIELD_INSTANCE_TEMP) t1  
+    on(t.FIELD_ID = t1.FIELD_ID and t.TASK_INST_ID = t1.TASK_INST_ID)  
+    when not matched then 
+     insert(FIELD_ID, TASK_INST_ID, FIELD_STRING_VALUE, 
+      FIELD_DATE_VALUE, FIELD_INTEGER_VAL, FIELD_NUMBER_VAL, 
+      FILE_NAME, TASK_DEF_ID, PROC_INST_ID, 
+      PROC_DEF_ID, FORM_DEF_ID, FIELD_PATH, 
+      SWF_PATH)
+    values (t1.FIELD_ID, t1.TASK_INST_ID, t1.FIELD_STRING_VALUE, 
+      t1.FIELD_DATE_VALUE, t1.FIELD_INTEGER_VAL, t1.FIELD_NUMBER_VAL, 
+      t1.FILE_NAME, t1.TASK_DEF_ID, t1.PROC_INST_ID, 
+      t1.PROC_DEF_ID, t1.FORM_DEF_ID, t1.FIELD_PATH, 
+      t1.SWF_PATH)
+    
+      when matched then
+    update
+     set
+   	  FIELD_STRING_VALUE = t1.FIELD_STRING_VALUE, 
+      FIELD_DATE_VALUE = t1.FIELD_DATE_VALUE, 
+      FIELD_INTEGER_VAL = t1.FIELD_INTEGER_VAL, 
+      FIELD_NUMBER_VAL = t1.FIELD_NUMBER_VAL, 
+      FILE_NAME = t1.FILE_NAME, 
+      TASK_DEF_ID = t1.TASK_DEF_ID, 
+      PROC_INST_ID = t1.PROC_INST_ID, 
+      PROC_DEF_ID = t1.PROC_DEF_ID, 
+      FORM_DEF_ID = t1.FORM_DEF_ID, 
+      FIELD_PATH = t1.FIELD_PATH, 
+      SWF_PATH = t1.SWF_PATH
+  </update>
+  
+  <!--任务表单 -->
+    <update id="insertFormInstance">
+   merge into FORM_INSTANCE t  
+    using ( select * from FORM_INSTANCE_TEMP) t1  
+    on(t.TASK_INST_ID = t1.TASK_INST_ID)  
+    when not matched then 
+      	
+    insert(TASK_INST_ID, FORM_DEF_ID, TASK_DEF_ID, 
+      PROC_DEF_ID, PROC_INST_ID, JSON_VALUE
+      )
+    values (t1.TASK_INST_ID, t1.FORM_DEF_ID, t1.TASK_DEF_ID, 
+      t1.PROC_DEF_ID, t1.PROC_INST_ID, t1.JSON_VALUE
+      )  
+      when matched then
+    update
+     set
+	  FORM_DEF_ID =t1.FORM_DEF_ID, 
+	  TASK_DEF_ID =t1.TASK_DEF_ID, 
+      PROC_DEF_ID =t1.PROC_DEF_ID, 
+      PROC_INST_ID =t1.PROC_INST_ID, 
+      JSON_VALUE =t1.JSON_VALUE   
+  </update>
+
+ <delete id="deleteCaseBasic" parameterType="java.lang.String">
+    delete from CASE_BASIC
+    where CASE_ID in (${value})
+  </delete>
+
+   <delete id="deleteCaseState" parameterType="java.lang.String">
+    delete from CASE_STATE
+    where CASE_ID in (${value})
+  </delete>
+  
+   <delete id="deleteCaseProcess" parameterType="java.lang.String">
+    delete from CASE_PROCESS
+    where CASE_ID in (${value})
+  </delete>
+  
+   <delete id="deleteCrimeCaseExt" parameterType="java.lang.String">
+    delete from CRIME_CASE_EXT
+    where CASE_ID in (${value})
+  </delete>
+  
+   <delete id="deletePenaltyCaseExt" parameterType="java.lang.String">
+    delete from PENALTY_CASE_EXT
+    where CASE_ID in (${value})
+  </delete>
+  
+   <delete id="deletePenaltyReferCaseExt" parameterType="java.lang.String">
+    delete from PENALTY_REFER_CASE_EXT
+    where CASE_ID in (${value})
+  </delete>
+  
+   <delete id="deleteCaseAccuse" parameterType="java.lang.String">
+    delete from CASE_ACCUSE
+    where CASE_ID||'-'||ZM_TYPE||'-'||ACCUSE_ID in  ( #{ids,jdbcType=VARCHAR} )
+  </delete>
+  
+   <delete id="deleteCaseParty" parameterType="java.lang.String">
+    delete from CASE_PARTY
+    where PARTY_ID in (${value})
+  </delete>
+  
+   <delete id="deleteCaseCompany" parameterType="java.lang.String">
+    delete from CASE_COMPANY
+    where ID in (${value})
+  </delete>
+  
+   <delete id="deleteCaseXianYiRen" parameterType="java.lang.String">
+    delete from CASE_XIANYIREN
+    where XIANYIREN_ID in (${value})
+  </delete>
+    
+   <delete id="deleteXianYiRenAccuse" parameterType="java.lang.String">
+    delete from XIANYIREN_ACCUSE
+    where XIANYIREN_ID||'-'||ZM_TYPE||'-'||ACCUSE_ID in ( #{ids,jdbcType=VARCHAR} )
+  </delete>
+  
+   <delete id="deleteCaseStep" parameterType="java.lang.String">
+    delete from CASE_STEP
+    where STEP_ID in (${value})
+  </delete>
+  
+   <delete id="deleteCaseAttachment" parameterType="java.lang.String">
+    delete from CASE_ATTACHMENT
+    where ID in (${value})
+  </delete>
+  
+   <delete id="deleteFieldInstance" parameterType="java.lang.String">
+    delete from FIELD_INSTANCE
+    where TASK_INST_ID||'-'||FIELD_ID in ( #{ids,jdbcType=VARCHAR} )
+  </delete>
+  
+   <delete id="deleteFormInstance" parameterType="java.lang.String">
+    delete from FORM_INSTANCE
+    where TASK_INST_ID in  (${value})
+  </delete>
+  
+  <!-- 查找删除的案件名称 -->
+	<select id="queryDeleteCaseNo" parameterType="java.lang.String" resultType="java.lang.String">
+    select CASE_NO from CASE_BASIC
+  	 where CASE_ID in  (${value})
+  </select>
+  
+  
+   <!-- 查找删除的案件附件的URL -->
+	<select id="queryCaseFileUrl" parameterType="java.lang.String" resultType="java.lang.String">
+    select ATTACHMENT_PATH from CASE_ATTACHMENT
+  	 where ID in  (${value})
+  </select>
+	
+</mapper>

@@ -1,0 +1,182 @@
+@charset "utf-8";
+.tip {
+    position: absolute;
+    z-index: 9999;
+    bottom: 1px;
+    background-color: #E5E5E5;
+    word-wrap: break-word;
+    margin: 0;
+    padding: 0;
+    color: #333333;
+    border-left: 1px solid #B4B4B4;
+    border-top: 1px solid #B4B4B4;
+    border-right: 1px solid #B4B4B4;
+}
+
+
+.icon {
+    background-repeat: no-repeat;
+    border: 0 none;
+    vertical-align: middle;
+}
+
+.window {
+    position: absolute;
+    bottom: 30px;
+    min-width: 140px;
+    border: 1px solid #52A1FA;
+    display: none;
+    width: 180px;
+    right: 0;
+    right: 0px;
+    margin-bottom: 2px;
+}
+
+.actived {
+    display: block;
+    right: -1px;
+}
+
+.window div {
+    /*background: #F6F9FC url(images/window-bg.png) repeat-x left bottom;*/
+    position: relative;
+}
+
+.window div h4 {
+    /*background: #256FB7 url(images/title.png) repeat-x left top;*/
+    line-height: 30px;
+    padding: 0 5px;
+    color: #ffffff;
+    background: #52A1FA
+}
+
+.window div menu {
+    float: right;
+    position: absolute;
+    height: 12px;
+    right: 0;
+    top: 2px;
+}
+
+.window ul {
+    background-color: #F0F5F8;
+}
+
+.window ul li {
+    background-color: white;
+    max-height: 260px;
+    padding: 5px;
+    border-bottom: 1px solid #EEE;
+}
+
+.minimize {
+    width: 14px;
+    background:url(images/minimize-bullet.png) no-repeat center center;
+    float: left;
+    margin: 0 5px;
+    cursor: pointer;
+    height: 30px;
+    list-style-type: none;
+}
+
+li {
+    list-style: none;
+}
+
+.ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 170px;
+}
+
+.ellipsis a {
+    text-decoration: none;
+}
+
+.ellipsis a:hover {
+    text-decoration: underline;
+}
+
+.activedDiv {
+    border-right: 1px solid #52A1FA;
+    border-bottom: 1px solid #52A1FA;
+    border-left: 1px solid #52A1FA;
+    top: -3px;
+    right: -1px;
+}
+
+.badge {
+    padding: 1px 5px 1px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: white;
+    background-color: #999;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+
+.badge-success:hover {
+    background-color: #356635;
+}
+
+.badge-success {
+    background-color: #468847;
+}
+
+.badge:hover {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.badge-warning {
+    background-color: #F89406;
+}
+
+.badge-warning:hover {
+    background-color: #C67605;
+}
+
+.badge-info:hover {
+    background-color: #2D6987;
+}
+
+.badge-info {
+    background-color: #3A87AD;
+}
+
+.label {
+	width: 14px;
+	height: 14px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 13px;
+    color: #ffffff;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #999999;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.label-info {
+    background-color: #66aeff;
+}
+
+.label-info:hover {
+    background-color: #2d6987;
+}
+.tip_title{
+	height: 30px;
+	line-height: 30px;
+	margin-left: 10px;
+}

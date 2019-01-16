@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TongjiDAO">
+<select id="orgTongji" parameterType="string" resultType="map">
+	select o.org_code,o.org_name,
+	nvl(sum(v.total_num),0) total_num,
+	nvl(sum(v.directyisong_num),0) directyisong_num,
+	nvl(sum(v.suggestyisong_num),0)suggestyisong_num,
+	nvl(sum(v.lian_num),0)lian_num,
+	nvl(sum(v.daibu_num),0)daibu_num,
+	nvl(sum(v.qisu_num),0)qisu_num,
+	nvl(sum(v.panjue_num),0)panjue_num,
+	nvl(sum(v.chufa_num),0)chufa_num,
+	nvl(sum(v.buchufa_num),0)buchufa_num,
+	nvl(sum(v.panjueparty_num),0)panjueparty_num,
+	nvl(sum(v.daibuparty_num),0)daibuparty_num
+	from v_fact v right join organise o
+	on v.org_code=o.org_code
+	where o.is_dept=0
+	and o.org_type=1
+	and (o.up_org_code=#{orgCode} or o.org_code=#{orgCode})
+	<if test="startTime !=null">
+		and  to_date(month_code, 'yyyymm')  &gt;= #{startTime}
+	</if>
+	<if test="endTime !=null">
+		and to_date(month_code, 'yyyymm')  &lt; (#{endTime} +   interval   '1'  month)
+	</if>
+	group by o.org_code,o.org_name order by o.org_code
+</select>
+
+<select id="getCaseStatsCount" parameterType="map" resultType="map">
+	select 
+    coalesce(sum(v.total_num),0) as caseCount,
+    coalesce(sum(v.directyisong_num),0) as zhijieyisongCount,
+    coalesce(sum(v.suggestyisong_num),0) as jianyiyisongCount,
+    coalesce(sum(v.lian_num),0) as lianCount,
+    coalesce(sum(v.daibu_num),0) as daibuCount,
+    coalesce(sum(v.panjue_num),0) as panjueCount,
+    coalesce(sum(v.chufa_num),0) as chufaCount,
+    coalesce(sum(v.buchufa_num),0) as buchufaCount,
+    coalesce(sum(v.panjueparty_num),0) as panjuePartyCount,
+    coalesce(sum(v.daibuparty_num),0) as daibuPartyCount
+    from v_fact v
+    where v.org_code in(
+               select   t.org_code from  organise t where 
+               t.district_code = #{districtId}
+              ) 
+	<if test="startTime != null">
+			<![CDATA[
+ 			   and  INPUT_TIME >= #{startTime,jdbcType=TIMESTAMP} 
+ 			 ]]> 
+	</if>				
+	<if test="endTime != null">
+			 <![CDATA[
+ 			     and INPUT_TIME  < (#{endTime,jdbcType=TIMESTAMP} +   interval   '1'  day)
+			 	]]> 
+	</if>
+</select>
+
+<select id="xingzhengCaseTongji" parameterType="map" resultType="map">
+	select 
+    coalesce(sum(v.total_num),0) as case_sum,
+    coalesce(sum(v.penalty_num),0) as penalty_sum,
+    coalesce(sum(v.crime_num),0) as crime_sum,
+    coalesce(sum(v.directyisong_num),0) as zhijieyisog_sum,
+    coalesce(sum(v.suggestyisong_num),0) as jianyiyisog_sum,
+    coalesce(sum(v.lian_num),0) as lian_sum,
+    coalesce(sum(v.daibu_num),0) as daibu_sum,
+    coalesce(sum(v.panjue_num),0) as panjue_sum,
+    coalesce(sum(v.qisu_num),0) as qisu_sum
+    from v_fact v
+    <where>
+			<choose>
+				<when test="orgId != null">
+					v.org_code in(
+                        select org_code
+                            from organise
+                            start with org_code= #{orgId}
+                            connect by org_code=up_org_code
+                  )
+				</when>		
+				<when test="districtCode!=null">
+				   v.org_code in(
+				     select   t.org_code from organise t where 
+                         t.district_code like concat(#{districtCode},'%')
+                 ) 
+				</when>
+			</choose>
+	</where>  
+</select>
+	
+	<select id="websiteTongji" parameterType="map" resultType="map">
+		SELECT NVL(SUM(V.TOTAL_NUM), 0) TOTAL_NUM,
+	           NVL(SUM(V.DIRECTYISONG_NUM), 0)+ NVL(SUM(V.SUGGESTYISONG_NUM), 0) YISONG_NUM,
+	           NVL(SUM(V.LIAN_NUM), 0) LIAN_NUM,
+	           NVL(SUM(V.QISU_NUM), 0) QISU_NUM,
+	           NVL(SUM(V.JIEAN_NUM), 0) JIEAN_NUM
+	      FROM V_FACT V WHERE V.MONTH_CODE LIKE CONCAT(CONCAT('%',#{time}),'%')
+	</select>
+	<select id="caseTongji" parameterType="map" resultType="map">
+	select 
+	    coalesce(sum(v.total_num),0) as case_sum,
+	    coalesce(sum(v.penalty_num),0) as penalty_sum,
+	    coalesce(sum(v.crime_num),0) as crime_sum,
+	    coalesce(sum(v.directyisong_num),0) as zhijieyisog_sum,
+	    coalesce(sum(v.suggestyisong_num),0) as jianyiyisog_sum,
+	    coalesce(sum(v.lian_num),0) as lian_sum,
+	    coalesce(sum(v.daibu_num),0) as daibu_sum,
+	    coalesce(sum(v.panjue_num),0) as panjue_sum,
+	    coalesce(sum(v.qisu_num),0) as qisu_sum
+                  from v_fact v
+                  where v.org_code in(
+ 				     	select  o.org_code from organise o where 
+                         	o.district_code like concat(#{districtCode},'%')
+                         	)                       
+</select>
+</mapper>
